@@ -10,25 +10,29 @@
     android:focusable="true"
     android:orientation="vertical"
     android:paddingBottom="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="10dp">
 
     <LinearLayout
         android:id="@+id/ll"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:orientation="horizontal">
+        android:layout_alignParentStart="true"
+        android:orientation="horizontal"
+        android:layout_alignParentEnd="true">
 
         <!-- username text view -->
         <TextView
             android:id="@+id/username_text_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="username"
             android:textColor="@color/lightGreen"
             android:textSize="16dp"
+            android:text="username"
+            android:paddingRight="10dp"
+            android:gravity="bottom"
             android:textStyle="bold" />
 
         <!-- time elapsed text view -->
@@ -36,18 +40,55 @@
             android:id="@+id/date_text_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="right"
-            android:text="4 hours ago" />
+            android:textSize="10dp"
+            android:text="posted less than an hour ago"
+            android:gravity="center" />
     </LinearLayout>
 
     <!-- comment body text -->
     <TextView
         android:id="@+id/comment_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
+        android:layout_alignParentStart="true"
         android:text="this is some text that previews what a comments text would look like"
         android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="45dp"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:layout_toRightOf="@+id/comment_text_view">
+
+        <ImageButton
+            android:id="@+id/upVote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:adjustViewBounds="false"
+            android:background="@drawable/ic_keyboard_arrow_up_black_24dp"
+            android:scaleType="matrix" />
+
+
+        <TextView
+            android:id="@+id/votes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="0"/>
+
+        <ImageButton
+            android:id="@+id/downVote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:adjustViewBounds="false"
+            android:background="@drawable/ic_keyboard_arrow_down_black_24dp"
+            android:scaleType="matrix" />
+
+    </LinearLayout>
 </RelativeLayout>

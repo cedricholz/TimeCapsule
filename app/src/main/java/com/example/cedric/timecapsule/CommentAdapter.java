@@ -55,6 +55,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     public TextView mUsernameTextView;
     public TextView mDateTextView;
     public TextView mCommentTextView;
+    public TextView mUpVoteTextView;
 
     public CommentViewHolder(View itemView) {
         super(itemView);
@@ -62,6 +63,9 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
         mUsernameTextView = mCommentBubbleLayout.findViewById(R.id.username_text_view);
         mDateTextView = mCommentBubbleLayout.findViewById(R.id.date_text_view);
         mCommentTextView = mCommentBubbleLayout.findViewById(R.id.comment_text_view);
+
+        mUpVoteTextView = mCommentBubbleLayout.findViewById(R.id.votes);
+
     }
 
     void bind(Comment comment) {
