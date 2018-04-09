@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- layout for Place Tile feed -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/place_tile_layout"
+    android:layout_width="match_parent"
+    android:layout_height="550dp"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        app:titleTextColor="@color/darkBlueGrey"
+        app:title="Nearby Landmarks"
+        app:subtitle=""
+        android:elevation="2dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <!-- recylcer view -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/place_tile_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/my_toolbar"
+        android:transcriptMode="alwaysScroll"
+        app:stackFromEnd="true" />
+
+    <Button
+        android:id="@+id/refresh"
+        android:layout_width="185dp"
+        android:layout_height="56dp"
+        android:layout_alignBottom="@+id/my_toolbar"
+        android:layout_alignParentEnd="true"
+        android:background="@color/white"
+        android:text="Refresh Landmarks"
+        android:textColor="@color/lightGreen" />
+
+</RelativeLayout>

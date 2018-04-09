@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- layout file for a single cell in the comment recycler view -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/comment_cell_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp">
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal">
+
+        <!-- username text view -->
+        <TextView
+            android:id="@+id/username_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="username"
+            android:textColor="@color/lightGreen"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <!-- time elapsed text view -->
+        <TextView
+            android:id="@+id/date_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:text="4 hours ago" />
+    </LinearLayout>
+
+    <!-- comment body text -->
+    <TextView
+        android:id="@+id/comment_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:text="this is some text that previews what a comments text would look like"
+        android:textSize="16sp" />
+</RelativeLayout>

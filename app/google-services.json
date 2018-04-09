@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "439283809556",
+    "firebase_url": "https://timecapsule-536a8.firebaseio.com",
+    "project_id": "timecapsule-536a8",
+    "storage_bucket": "timecapsule-536a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:439283809556:android:87d2ebc28e5ba999",
+        "android_client_info": {
+          "package_name": "com.example.cedric.timecapsule"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "439283809556-t6j7cakacjqdlgqh1ahsq1k65iq1a916.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cedric.timecapsule",
+            "certificate_hash": "fadc9d09a0b22ef1e9f5a62ec8198cc073e4be78"
+          }
+        },
+        {
+          "client_id": "439283809556-b2ggmi0pt56kljaq527cecr76css48fm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOmtku1zHZW7ZdlbNG-Ns8IAEzzcNCXdw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "439283809556-b2ggmi0pt56kljaq527cecr76css48fm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

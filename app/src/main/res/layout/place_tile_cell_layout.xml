@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- layout file for a single cell in the comment recycler view -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/place_tile_cell_relative_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp">
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal">
+
+        <!-- username text view -->
+        <ImageButton
+            android:id="@+id/place_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:textColor="@color/lightGreen"
+            android:background="@color/white"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:textSize="16dp"
+            android:src="@drawable/strawberry_creek"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- comment body text -->
+    <TextView
+        android:id="@+id/place_tile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:text="StrawBerry Creek Topiary Bear"
+        android:textSize="16sp" />
+
+
+    <TextView
+        android:id="@+id/place_tile_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/place_tile_name"
+        android:text="110 Meters Away"
+        android:textSize="10sp" />
+
+</RelativeLayout>
