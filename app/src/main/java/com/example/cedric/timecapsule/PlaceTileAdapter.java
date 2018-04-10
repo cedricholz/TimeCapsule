@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +54,7 @@ public class PlaceTileAdapter extends RecyclerView.Adapter {
 class PlaceTileViewHolder extends RecyclerView.ViewHolder {
 
     // each data item is just a string in this case
-    public RelativeLayout mCommentBubbleLayout;
+    public RelativeLayout mPlaceBubbleLayout;
     public ImageButton mPlaceImage;
     public TextView mPlaceTileName;
     public TextView mPLaceTileDistance;
@@ -69,10 +68,10 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder {
 
     public PlaceTileViewHolder(final View itemView, final ArrayList<PlaceTile> placeTiles) {
         super(itemView);
-        mCommentBubbleLayout = itemView.findViewById(R.id.place_tile_cell_relative_layout);
-        mPlaceImage = mCommentBubbleLayout.findViewById(R.id.place_image_view);
-        mPlaceTileName = mCommentBubbleLayout.findViewById(R.id.place_tile_name);
-        mPLaceTileDistance = mCommentBubbleLayout.findViewById(R.id.place_tile_distance);
+        mPlaceBubbleLayout = itemView.findViewById(R.id.place_tile_cell_relative_layout);
+        mPlaceImage = mPlaceBubbleLayout.findViewById(R.id.place_image_view);
+        mPlaceTileName = mPlaceBubbleLayout.findViewById(R.id.place_tile_name);
+        mPLaceTileDistance = mPlaceBubbleLayout.findViewById(R.id.place_tile_distance);
 
         this.placeTiles = placeTiles;
 
@@ -91,10 +90,10 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder {
                         Intent createBoxIntent = new Intent(itemView.getContext(), boxDialog.class);
                         createBoxIntent.putExtra("boxName", recyclerTile.placeName);
                         createBoxIntent.putExtra("address", recyclerTile.address);
+                        createBoxIntent.putExtra("imageName", recyclerTile.imageName);
                         itemView.getContext().startActivity(createBoxIntent);
                     } else {
                         Toast.makeText(itemView.getContext(), "You Are Too Far Away To Access This Box...", Toast.LENGTH_SHORT).show();
-
                     }
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
@@ -105,15 +104,14 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder {
 
     void bind(PlaceTile placeTile) {
         mPlaceTileName.setText(placeTile.placeName);
-        mPLaceTileDistance.setText(placeTile.distance);
+        mPLaceTileDistance.setText(placeTile.distance)
+        ;
         Context context = mPlaceImage.getContext();
 
         String imageName = placeTile.imageName;
 
         int imageId = context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
         mPlaceImage.setImageResource(imageId);
-
-
     }
 
 }

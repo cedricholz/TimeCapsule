@@ -2,7 +2,6 @@ package com.example.cedric.timecapsule;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -77,7 +76,7 @@ public class NearbyDialog extends Activity {
                 return  (ArrayList<PlaceTile>) placeTiles;
 
             } else {
-                return new ArrayList<PlaceTile>();
+                return new ArrayList<>();
         }
     }
 

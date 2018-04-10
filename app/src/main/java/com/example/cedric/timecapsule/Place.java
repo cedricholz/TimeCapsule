@@ -6,25 +6,16 @@ public class Place {
         return landmark_name;
     }
 
-    public void setLandmark_name(String landmark_name) {
-        this.landmark_name = landmark_name;
-    }
 
     public String getCoordinates() {
         return coordinates;
     }
 
-    public void setCoordinates(String coordinates) {
-        this.coordinates = coordinates;
-    }
 
     public String getFilename() {
         return filename;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
 
     private String landmark_name;
     private String coordinates;

@@ -94,12 +94,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         u = new Utils();
 
         placeTiles = new ArrayList<>();
-        AddBearLandmarksToFirebase();
+        //addBearLandmarksToFirebase();
 
         addButtonListeners();
     }
 
-    public void AddBearLandmarksToFirebase() {
+    public void addBearLandmarksToFirebase() {
 
         String jsonString = u.loadJSONFromAsset("bear_statues.json", this);
         Place[] landmarks = new Gson().fromJson(jsonString, Place[].class);
@@ -157,12 +157,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         String title = marker.getTitle();
                         String address = marker.getSnippet();
+                        String imageName = (String) marker.getTag();
 
                         if (title != null) {
                             boxDialogIntent = new Intent(MapsActivity.this, boxDialog.class);
                             boxDialogIntent.putExtra("boxName", title);
                             boxDialogIntent.putExtra("address", address);
                             boxDialogIntent.putExtra("username", username);
+                            boxDialogIntent.putExtra("imageName", imageName);
                             startActivity(boxDialogIntent);
 
                         }
@@ -346,7 +348,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void getNearbyMarkers(final LatLng loc) {
 
-
         if (lastLocation == null || u.getDistance(loc, lastLocation) >= u.getValidDistanceToRequestNewPinsKm()) {
 
             placeTiles = new ArrayList<>();
@@ -382,14 +383,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         PlaceTile pt = new PlaceTile(fileName, title, distance, address);
                         placeTiles.add(pt);
 
-
                         savePlaceTiles();
-
 
                         MarkerOptions m = new MarkerOptions();
                         m.position(markerLatLng).title(title);
                         m.position(markerLatLng).snippet(address);
-                        mMap.addMarker(m);
+
+                        Marker mark = mMap.addMarker(m);
+                        mark.setTag(fileName);
                     }
                     lastAdded = title;
                 }
@@ -419,7 +420,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     public void createBoxIfFree(LatLng loc, final String title) {
-        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(loc.latitude, loc.longitude), .1);
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(loc.latitude, loc.longitude), u.getValidDistanceFromMarkerForNewMarkerKm());
         locationMarked = false;
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
@@ -459,6 +460,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     boxDialogIntent.putExtra("boxName", title);
                     boxDialogIntent.putExtra("address", curAddress);
                     boxDialogIntent.putExtra("username", username);
+                    boxDialogIntent.putExtra("imageName", "oski_bear");
 
                     startActivity(boxDialogIntent);
                 } else {

@@ -1,7 +1,6 @@
 package com.example.cedric.timecapsule;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class PlaceTile implements Serializable {
     public String imageName;

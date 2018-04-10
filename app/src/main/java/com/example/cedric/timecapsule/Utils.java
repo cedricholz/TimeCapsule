@@ -11,10 +11,26 @@ import java.io.InputStream;
 public class Utils {
     Utils(){}
 
+    // All markers within this range in Kilometers will be visible
     private double visibleMarkerDistancekm = 100.0;
-    private double validDistanceMeters = 10;
 
-    private double validDistanceToRequestNewPinsKm = 5;
+    // A box can be accessed when you are within this distance in meters.
+    private double validDistanceMeters = 10.0;
+
+    // New boxes are not reloaded every time we get a new location, we wait until we have
+    // moved this far from our original position before updating
+    private double validDistanceToRequestNewPinsKm = 5.0;
+
+    // Markers cannot be created too close together, this is the acceptable
+    // distance between them.
+    private double validDistanceFromMarkerForNewMarkerKm = .1;
+
+    // The amount of characters you can put into a comment
+    private int maxCommentLength = 300;
+
+    public int getMaxCommentLength(){
+        return maxCommentLength;
+    }
 
 
     public double getVisibleMarkerDistancekm(){
@@ -26,15 +42,18 @@ public class Utils {
     }
 
     public double getValidDistanceKm(){
-        return validDistanceMeters/10;
+        return validDistanceMeters/1000;
     }
 
     public double getValidDistanceToRequestNewPinsKm(){
         return validDistanceToRequestNewPinsKm;
     }
 
+    public double getValidDistanceFromMarkerForNewMarkerKm(){
+        return validDistanceFromMarkerForNewMarkerKm;
+    }
 
-
+    // Gets the distance between two markers.
     public double getDistance(LatLng x, LatLng y) {
         if (x == null || y == null){
             return 0;
@@ -49,6 +68,8 @@ public class Utils {
 
         return loc1.distanceTo(loc2);
     }
+
+
 
     public String loadJSONFromAsset(String filename, Context c) {
         String json = null;

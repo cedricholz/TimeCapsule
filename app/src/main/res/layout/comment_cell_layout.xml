@@ -5,18 +5,19 @@
     android:id="@+id/comment_cell_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+
+    android:background="@drawable/border"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
-    android:paddingBottom="10dp"
-    android:paddingLeft="8dp"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="10dp">
+    android:paddingBottom="5dp"
+    android:paddingLeft="15dp"
+
+    android:paddingTop="5dp">
 
     <LinearLayout
         android:id="@+id/ll"
-        android:layout_width="250dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
@@ -35,14 +36,7 @@
             android:gravity="bottom"
             android:textStyle="bold" />
 
-        <!-- time elapsed text view -->
-        <TextView
-            android:id="@+id/date_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="10dp"
-            android:text="posted less than an hour ago"
-            android:gravity="center" />
+
     </LinearLayout>
 
     <!-- comment body text -->
@@ -61,7 +55,8 @@
         android:layout_width="45dp"
         android:orientation="vertical"
         android:layout_height="wrap_content"
-        android:paddingRight="10dp"
+
+        android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/comment_text_view">
 
         <ImageButton
@@ -79,6 +74,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textSize="18dp"
+
             android:text="0"/>
 
         <ImageButton
@@ -91,4 +88,18 @@
             android:scaleType="matrix" />
 
     </LinearLayout>
+
+    <!-- time elapsed text view -->
+    <TextView
+        android:id="@+id/date_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12dp"
+        android:text="posted less than an hour ago"
+        android:layout_alignStart="@+id/ll"
+        android:layout_below="@+id/comment_text_view" />
+
+
+
+
 </RelativeLayout>

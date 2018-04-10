@@ -1,5 +1,6 @@
 package com.example.cedric.timecapsule;
 
+import java.net.Inet4Address;
 import java.util.Date;
 
 // custom class made for storing a message. you can update this class
@@ -8,12 +9,21 @@ public class Comment {
     public String text;
     public String username;
     public Date date;
+    public String upVotes;
+    public String boxKey;
 
-    Comment(String text, String username, Date date) {
+    Comment(String text, String username, Date date, String upVotes, String boxKey) {
         this.text = text;
         this.username = username;
         this.date = date;
+        this.upVotes = upVotes;
+        this.boxKey = boxKey;
     }
+
+    public String getUpVotes(){
+        return upVotes;
+    }
+
 
     // returns a string indicating how long ago this post was made
     protected String elapsedTimeString() {
