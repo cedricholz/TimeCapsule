@@ -61,6 +61,7 @@ public class MessengerDialog extends Activity {
 
     private int commentLevel = 2;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,16 +93,17 @@ public class MessengerDialog extends Activity {
             headMessage = (String) intentExtras.get("headMessage");
             headDate = (String) intentExtras.get("headDate");
             headReplies = (String) intentExtras.get("headReplies");
+
             headVotes = (String) intentExtras.get("headVotes");
             boxKey = (String) intentExtras.get("boxKey");
 
             refKey = "locations/" + boxKey + "/messages/" + headDate + "/commentMessages";
-
             headRefString = "locations/" + boxKey + "/messages/";
 
             Comment headComment = new Comment(headMessage, headUsername, new Date(headDate), headVotes, boxKey, true, headReplies, headRefString, commentLevel);
             mComments.add(headComment);
             mCommentHashMap.put(headDate + headMessage, headComment);
+
 
         }
 
@@ -188,15 +190,18 @@ public class MessengerDialog extends Activity {
         myRef.child(curDate.toString()).child("message").setValue(commentText);
         myRef.child(curDate.toString()).child("upVotes").setValue("1");
 
-        String replies = "";
-        Comment newComment = new Comment(commentText, username, curDate, "1", boxKey, false, "", refKey, commentLevel);
+        headReplies = Integer.toString(Integer.parseInt(headReplies) + 1);
+        headRef.child(headDate).child("replies").setValue(headReplies);
+
+        String replies = "0";
+        Comment newComment = new Comment(commentText, username, curDate, "1", boxKey, false, replies, refKey, commentLevel);
 
         mComments.add(newComment);
         mComments = sortComments(mComments);
 
         mCommentHashMap.put(curDate.toString() + commentText, newComment);
 
-        //setmCommentAdapter();
+        setmCommentAdapter();
     }
 
     private void getComments() {
@@ -261,6 +266,7 @@ public class MessengerDialog extends Activity {
                 Comment c = mCommentHashMap.get(date + message);
                 if (c != null) {
                     c.upVotes = (String) dataSnapshot.child("upVotes").getValue();
+                    c.replies = (String) dataSnapshot.child("replies").getValue();
                     setmCommentAdapter();
                 }
             }

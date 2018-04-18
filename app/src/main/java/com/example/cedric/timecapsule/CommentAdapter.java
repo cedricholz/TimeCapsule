@@ -79,10 +79,9 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     DatabaseReference myRef;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
+    int commentLevel = 1;
     private ImageButton upButton;
     private ImageButton downButton;
-
-    int commentLevel = 1;
 
 
     public CommentViewHolder(View itemView) {
@@ -217,6 +216,16 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
 
         mUsernameTextView.setText(comment.username);
         boolean isHead = comment.headComment;
+
+        if (comment.replies != null && !comment.replies.equals("0")) {
+            String replyString;
+            if (comment.replies.equals("1")) {
+                replyString = comment.replies + " Reply";
+            } else {
+                replyString = comment.replies + " Replies";
+            }
+            mRepliesTextView.setText(replyString);
+        }
 
         if (isHead) {
             mUsernameTextView.setTextSize(24);

@@ -141,13 +141,12 @@ public class boxDialog extends Activity {
                 String u = (String) dataSnapshot.child("user").getValue();
                 String m = (String) dataSnapshot.child("message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
+                String replies = (String) dataSnapshot.child("replies").getValue();
 
                 if (m != null && !myLastPost.equals(u + m)){
                     String date = dataSnapshot.getKey();
 
                     Date d = new Date(date);
-
-                    String replies = "";
 
                     Comment c = new Comment(m, u, d, votes, key, false, replies, refKey, commentLevel);
 
@@ -170,6 +169,7 @@ public class boxDialog extends Activity {
                 Comment c = commentHashMap.get(date + message);
                 if (c != null) {
                     c.upVotes = (String) dataSnapshot.child("upVotes").getValue();
+                    c.replies = (String) dataSnapshot.child("replies").getValue();
                     setAdapterAndUpdateData();
                 }
 
@@ -208,10 +208,11 @@ public class boxDialog extends Activity {
         myRef.child(key).child("messages").child(curDate.toString()).child("user").setValue(username);
         myRef.child(key).child("messages").child(curDate.toString()).child("message").setValue(commentText);
         myRef.child(key).child("messages").child(curDate.toString()).child("upVotes").setValue("1");
+        myRef.child(key).child("messages").child(curDate.toString()).child("replies").setValue("0");
 
         myLastPost = username + commentText;
 
-        String replies = "";
+        String replies = "0";
 
         Comment newComment = new Comment(commentText, username, curDate, "1", key, false, replies, refKey, commentLevel);
 
