@@ -16,7 +16,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
         app:titleTextColor="@color/darkBlueGrey"
-        app:title="Nearby Landmarks"
+        app:title="Nearby Boxes"
         app:subtitle=""
         android:elevation="2dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"

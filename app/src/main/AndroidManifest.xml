@@ -43,6 +43,9 @@
             android:name=".boxDialog"
             android:theme="@style/myDialogTheme" />
         <activity
+            android:name=".MessengerDialog"
+            android:theme="@style/myDialogTheme" />
+        <activity
             android:name=".NearbyDialog"
             android:theme="@style/myDialogTheme" />
         <activity

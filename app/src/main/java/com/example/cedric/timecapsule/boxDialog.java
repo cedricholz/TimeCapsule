@@ -40,6 +40,9 @@ public class boxDialog extends Activity {
 
     private HashMap<String, Comment> commentHashMap = new HashMap<>();
 
+    private int commentLevel = 1;
+
+    String refKey = "locations";
     Utils u;
 
     private int maxCommentLength;
@@ -66,11 +69,13 @@ public class boxDialog extends Activity {
         maxCommentLength = u.getMaxCommentLength();
 
 
-
         if (intentExtras != null) {
             titleBar.setTitle((String) intentExtras.get("boxName"));
+
             titleBar.setSubtitle((String) intentExtras.get("address"));
             key = intentExtras.get("boxName") + "%" + intentExtras.get("address") + "%" + intentExtras.get("imageName");
+
+            refKey = "locations/"+ key + "/messages/";
         }
 
         database = FirebaseDatabase.getInstance();
@@ -103,10 +108,7 @@ public class boxDialog extends Activity {
                     }
                     else{
                         Toast.makeText(boxDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
-
                     }
-
-
                 }
             }
         });
@@ -145,7 +147,9 @@ public class boxDialog extends Activity {
 
                     Date d = new Date(date);
 
-                    Comment c = new Comment(m, u, d, votes, key);
+                    String replies = "";
+
+                    Comment c = new Comment(m, u, d, votes, key, false, replies, refKey, commentLevel);
 
                     mComments.add(c);
 
@@ -207,7 +211,9 @@ public class boxDialog extends Activity {
 
         myLastPost = username + commentText;
 
-        Comment newComment = new Comment(commentText, username, curDate, "1", key);
+        String replies = "";
+
+        Comment newComment = new Comment(commentText, username, curDate, "1", key, false, replies, refKey, commentLevel);
 
         mComments.add(newComment);
         mComments = sortComments(mComments);

@@ -61,10 +61,7 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder {
     public ArrayList<PlaceTile> placeTiles;
 
     Utils u;
-
-
     private long mLastClickTime = 0;
-
 
     public PlaceTileViewHolder(final View itemView, final ArrayList<PlaceTile> placeTiles) {
         super(itemView);
@@ -74,14 +71,11 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder {
         mPLaceTileDistance = mPlaceBubbleLayout.findViewById(R.id.place_tile_distance);
 
         this.placeTiles = placeTiles;
-
         u = new Utils();
-
 
         mPlaceImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-
                 if (SystemClock.elapsedRealtime() - mLastClickTime > 1000){
                     PlaceTile recyclerTile = placeTiles.get(getAdapterPosition());
                     Double distance = Double.parseDouble(recyclerTile.distance.split(" ")[0]);
@@ -99,13 +93,11 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder {
                 mLastClickTime = SystemClock.elapsedRealtime();
             }
         });
-
     }
 
     void bind(PlaceTile placeTile) {
         mPlaceTileName.setText(placeTile.placeName);
-        mPLaceTileDistance.setText(placeTile.distance)
-        ;
+        mPLaceTileDistance.setText(placeTile.distance);
         Context context = mPlaceImage.getContext();
 
         String imageName = placeTile.imageName;

@@ -169,7 +169,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         }
                     } else {
-                        Toast.makeText(MapsActivity.this, "You Are Too Far Away To Access This Landmark...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapsActivity.this, "You Are Too Far Away To Access This Box...", Toast.LENGTH_SHORT).show();
                     }
                 }
                 mLastClickTime = SystemClock.elapsedRealtime();
@@ -298,16 +298,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 new LovelyTextInputDialog(MapsActivity.this, R.style.EditTextTintTheme)
                         .setTopColorRes(R.color.lightGreen)
-//                        .setTitle("Create Memory Box")
-                        .setTitle("Create New Landmark")
+                        .setTitle("Create New Box")
                         .setConfirmButtonColor(R.color.black)
                         .setNegativeButtonColor(R.color.black)
                         .setTopTitleColor(R.color.black)
-//                        .setHint("Enter Box Name...")
-                        .setHint("Enter Landmark Name...")
+                        .setHint("Enter Box Name...")
                         .setMessage(curAddress)
-//                        .setIcon(R.drawable.newbox)
-                        .setIcon(R.drawable.ic_add_blue_24dp)
+                        .setIcon(R.drawable.newbox)
 
                         .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
                             @Override
@@ -317,7 +314,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     createBoxIfFree(userLocation, text);
                                 } else {
                                     if (userLocation == null) {
-                                        Toast.makeText(MapsActivity.this, "Unable to Create Landmark, Please Check That Your Location Is Turned On.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MapsActivity.this, "Unable to Create Box, Please Check That Your Location Is Turned On.", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }
@@ -464,7 +461,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     startActivity(boxDialogIntent);
                 } else {
-                    Toast.makeText(MapsActivity.this, "This Location Already Has A Landmark...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapsActivity.this, "This Location Already Has A Box...", Toast.LENGTH_SHORT).show();
                 }
             }
 
