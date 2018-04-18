@@ -1,4 +1,3 @@
-# prog3-cedricholz
-prog3-cedricholz created by GitHub Classroom
+# Time Capsule
 
-An application that stores conversations that can only be accessed at their corresponding landmarks.
+An application that caches conversations and media in geofenced locations.
