@@ -27,7 +27,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 
-public class MessengerDialog extends Activity {
+public class InsideCommentDialog extends Activity {
 
     public String myLastPost = "";
     android.support.v7.widget.Toolbar titleBar;
@@ -42,9 +42,6 @@ public class MessengerDialog extends Activity {
     String headDate;
     String headReplies;
 
-    //    private RecyclerView mRecyclerView;
-//    private RecyclerView.Adapter mAdapter;
-
     String headRefString = "";
 
     String headVotes;
@@ -55,7 +52,6 @@ public class MessengerDialog extends Activity {
     private String boxKey = "";
     private RecyclerView mCommentRecyclerView;
     private RecyclerView.Adapter mCommentAdapter;
-    private ArrayList<Message> mMessages = new ArrayList<>();
     private ArrayList<Comment> mComments = new ArrayList<>();
     private HashMap<String, Comment> mCommentHashMap = new HashMap<>();
 
@@ -66,19 +62,15 @@ public class MessengerDialog extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_messaging);
+        setContentView(R.layout.activity_inside_comment);
 
         titleBar = findViewById(R.id.my_toolbar);
 
         Intent thisIntent = getIntent();
         Bundle intentExtras = thisIntent.getExtras();
 
-//        mRecyclerView = findViewById(R.id.message_recycler);
-//        mRecyclerView.setHasFixedSize(true);
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-
-        mCommentRecyclerView = findViewById(R.id.message_comment_recycler);
+        mCommentRecyclerView = findViewById(R.id.inside_comment_recycler);
         mCommentRecyclerView.setHasFixedSize(true);
         mCommentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -113,7 +105,7 @@ public class MessengerDialog extends Activity {
 
         headRef = database.getReference(headRefString);
 
-        textField = findViewById(R.id.message_input_edit_text);
+        textField = findViewById(R.id.inside_comment_input_edit_text);
         sendButton = findViewById(R.id.send_button);
 
         setButtonListener();
@@ -145,7 +137,7 @@ public class MessengerDialog extends Activity {
 
                         postNewComment(text);
                     } else {
-                        Toast.makeText(MessengerDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(InsideCommentDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

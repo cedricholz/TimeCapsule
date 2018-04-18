@@ -61,10 +61,8 @@ class MessageViewHolder extends RecyclerView.ViewHolder {
     public TextView mUsernameTextView;
     public TextView mDateTextView;
     public TextView mMessageTextView;
-    public TextView mUpVoteTextView;
     public String date = "";
     public String boxKey = "";
-    public String upVotes = "1";
     public String message = "";
     FirebaseDatabase database;
     DatabaseReference myRef;
@@ -103,8 +101,6 @@ class MessageViewHolder extends RecyclerView.ViewHolder {
         mDateTextView.setText("posted " + messages.elapsedTimeString() + " ago");
 
         mMessageTextView.setText(messages.text);
-
-        //mUpVoteTextView.setText("1");
 
         date = messages.date.toString();
         boxKey = messages.boxKey;

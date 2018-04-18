@@ -24,7 +24,7 @@
 
     <!-- recylcer view -->
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/message_comment_recycler"
+        android:id="@+id/inside_comment_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -46,7 +46,7 @@
 
         <!-- new comment edit text  -->
         <EditText
-            android:id="@+id/message_input_edit_text"
+            android:id="@+id/inside_comment_input_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/send_button"

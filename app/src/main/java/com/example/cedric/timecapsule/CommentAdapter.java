@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
+import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.util.ArrayList;
 
@@ -190,16 +192,49 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
 
                 if (commentLevel == 1) {
 
-                    Intent messengerIntent = new Intent(view.getContext(), MessengerDialog.class);
-                    messengerIntent.putExtra("headUsername", username);
-                    messengerIntent.putExtra("headMessage", message);
-                    messengerIntent.putExtra("headDate", date);
-                    messengerIntent.putExtra("headReplies", replies);
-                    messengerIntent.putExtra("headVotes", upVotes);
-                    messengerIntent.putExtra("boxKey", boxKey);
+                    Intent insideCommentIntent = new Intent(view.getContext(), InsideCommentDialog.class);
+                    insideCommentIntent.putExtra("headUsername", username);
+                    insideCommentIntent.putExtra("headMessage", message);
+                    insideCommentIntent.putExtra("headDate", date);
+                    insideCommentIntent.putExtra("headReplies", replies);
+                    insideCommentIntent.putExtra("headVotes", upVotes);
+                    insideCommentIntent.putExtra("boxKey", boxKey);
 
-                    view.getContext().startActivity(messengerIntent);
+                    view.getContext().startActivity(insideCommentIntent);
+
                 }
+            }
+        });
+
+        mUsernameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                new LovelyStandardDialog(view.getContext(), LovelyStandardDialog.ButtonLayout.VERTICAL)
+                        .setTopColorRes(R.color.lightGreen)
+                        .setButtonsColorRes(R.color.darkDeepOrange)
+                        .setIcon(R.drawable.ic_mail_blue_24dp)
+                        .setTitle("Send a private message to " + username)
+//                        .setMessage(R.string.rate_message)
+                        .setPositiveButton(android.R.string.ok, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(v.getContext(), "positive clicked", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+
+
+//                Intent messengerIntent = new Intent(view.getContext(), MessageDialog.class);
+//                messengerIntent.putExtra("headUsername", username);
+//                messengerIntent.putExtra("headMessage", message);
+//                messengerIntent.putExtra("headDate", date);
+//                messengerIntent.putExtra("boxKey", boxKey);
+//
+//                view.getContext().startActivity(messengerIntent);
+
             }
         });
 
