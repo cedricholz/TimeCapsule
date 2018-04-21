@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="com.akhgupta:android-easylocation-1.0.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/android-easylocation-1.0.1.aar/9ac5c1d7496ca9b86af19dcfb31236b6/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/android-easylocation-1.0.1.aar/9ac5c1d7496ca9b86af19dcfb31236b6/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.akhgupta/android-easylocation/1.0.1/10ca2d65eb914b9bde2ddf79c246aeb0385ddee1/android-easylocation-1.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
