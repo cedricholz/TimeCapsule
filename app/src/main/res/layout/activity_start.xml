@@ -7,13 +7,13 @@
     android:background="@drawable/front_banner"
     tools:context="com.example.cedric.timecapsule.StartActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="500dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:gravity="center">
 
         <Button
@@ -21,25 +21,25 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginRight="20dp"
             android:padding="10dp"
             android:text="Sign Up"
             android:textSize="15dp"
             android:background="#ffffff"
-            android:textColor="#0080ff"/>
+            android:textColor="#0080ff"
+            android:layout_alignParentLeft="true"/>
 
         <Button
             android:id="@+id/btnLogIn"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
             android:padding="10dp"
             android:text="Log In"
             android:textSize="15dp"
             android:background="#0080ff"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:layout_alignParentRight="true"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
