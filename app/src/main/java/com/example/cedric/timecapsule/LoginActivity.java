@@ -1,132 +1,127 @@
 package com.example.cedric.timecapsule;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.TextUtils;
-import android.view.KeyEvent;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cedric.timecapsule.UserInformation.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static android.Manifest.permission.READ_CONTACTS;
-
-/**
- * A login screen that offers login via email/password.
- */
 public class LoginActivity extends AppCompatActivity {
 
-    SharedPreferences prefs;
-    // UI references.
-    private EditText userNameInput;
-    private ImageButton submitButton;
-    private FirebaseDatabase database;
-    private DatabaseReference myRef;
+    // Firebase
+    FirebaseDatabase database;
+    DatabaseReference users;
+
+    // User Input
+    EditText password, email;
+
+    // Button
+    Button cancelBtn, logInBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // Set up the login form.
-        prefs = this.getSharedPreferences(
-                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
 
-
+        // setting up firebase
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("users");
+        users = database.getReference("users");
 
-        if (prefs.contains("username")) {
-            startMapsActivity();
-        } else {
-            userNameInput = findViewById(R.id.username_edit_text);
-            submitButton = findViewById(R.id.submit_button);
+        // setting up user input
+        password = (EditText) findViewById(R.id.SignUpPassword);
+        email = (EditText) findViewById(R.id.SignUpEmail);
 
-            submitButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View arg0) {
-                    final String username = userNameInput.getText().toString();
+        // setting up buttons
+        cancelBtn = (Button) findViewById(R.id.btnCancel);
+        logInBtn = (Button) findViewById(R.id.btnLogIn);
 
+        // Check whether this view was called from SignUpActivity
+        // If yes, then fill in email address and password for newly created user
+        Intent fromSignUp = getIntent();
+        Bundle intentExtras = fromSignUp.getExtras();
 
-                    if (username.length() < 1) {
-                        userNameInput.requestFocus();
-                    } else {
-                        if (username.length() < 24) {
+        if (intentExtras != null) {
+            password.setText((String) intentExtras.get("email"));
+            email.setText((String) intentExtras.get("password"));
+        }
 
+        // user clicked cancel button (goes back to StartActivity with no input)
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(LoginActivity.this, StartActivity.class);
+                startActivity(i);
+            }
+        });
 
-                            myRef.orderByKey().equalTo(username).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
+        // user clicked login button
+        logInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                 if (isEmailValid(email.getText().toString())) {
+                     logIn(email.getText().toString(), password.getText().toString());
+                 } else {
+                     email.setError("Please enter a valid email address");
+                 }
+            }
+        });
+    }
 
-                                    if (dataSnapshot.getValue() == null) {
-                                        //Username is not in database
-                                        myRef.child(username).setValue("1");
+    private void logIn(final String email, final String password) {
 
-                                        InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                                        mgr.hideSoftInputFromWindow(userNameInput.getWindowToken(), 0);
-                                        prefs.edit().putString("username", username).commit();
-                                        startMapsActivity();
-                                    } else {
-                                        // Username is in database
-                                        Toast.makeText(LoginActivity.this, "That username is in use...", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError firebaseError) {
-                                }
-                            });
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Username too long.", Toast.LENGTH_SHORT).show();
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(encodeString(email)).exists()) {
+                    if (!email.isEmpty()) {
+                        User login = dataSnapshot.child(encodeString(email)).getValue(User.class);
+                        if (login.getPassword().equals(password)) {
+                            Toast.makeText(LoginActivity.this, "Success LogIn",
+                                    Toast.LENGTH_SHORT).show();
+                            Intent i = new Intent(LoginActivity.this, MapsActivity.class);
+                            String username = login.getUsername();
+                            i.putExtra("username", login.getUsername());
+                            startActivity(i);
+                        }
+                        else {
+                            Toast.makeText(LoginActivity.this, "Password Wrong",
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
-            });
-        }
+                else {
+                    Toast.makeText(LoginActivity.this, "Email Address is not registered",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
-    public void startMapsActivity() {
-        Intent mapsActivity = new Intent(LoginActivity.this, MapsActivity.class);
-//        mapsActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(mapsActivity);
-        ActivityCompat.finishAffinity(LoginActivity.this);
+    public static String encodeString(String string) {
+        return string.replace(".", ",");
+    }
+
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }
-

@@ -15,6 +15,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class SignUpActivity extends AppCompatActivity {
 
     // Firebase
@@ -59,31 +62,12 @@ public class SignUpActivity extends AppCompatActivity {
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final User user = new User(username.getText().toString(), password.getText().toString(),
-                        email.getText().toString());
-
-                users.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.child(encodeString(user.getEmail())).exists())
-                            Toast.makeText(SignUpActivity.this, "The Username Already Exists!",
-                                    Toast.LENGTH_SHORT).show();
-                        else {
-                            users.child(encodeString(user.getEmail())).setValue(user);
-                            Toast.makeText(SignUpActivity.this, "Success Register!",
-                                    Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(SignUpActivity.this, LoginActivity.class);
-                            i.putExtra("email", user.getEmail().toString());
-                            i.putExtra("password", user.getPassword().toString());
-                            startActivity(i);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        // work left
-                    }
-                });
+                if (isEmailValid(email.getText().toString())) {
+                    createUser(username.getText().toString(), password.getText().toString(),
+                            email.getText().toString());
+                } else {
+                    email.setError("Please enter a valid email address");
+                }
 
             }
         });
@@ -92,5 +76,39 @@ public class SignUpActivity extends AppCompatActivity {
 
     public static String encodeString(String string) {
         return string.replace(".", ",");
+    }
+
+    private void createUser(String username, String password, String email) {
+        final User user = new User(username, password, email);
+
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.child(encodeString(user.getEmail())).exists())
+                    Toast.makeText(SignUpActivity.this, "The Username Already Exists!",
+                            Toast.LENGTH_SHORT).show();
+                else {
+                    users.child(encodeString(user.getEmail())).setValue(user);
+                    Toast.makeText(SignUpActivity.this, "Success Register!",
+                            Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(SignUpActivity.this, LoginActivity.class);
+                    i.putExtra("email", user.getEmail().toString());
+                    i.putExtra("password", user.getPassword().toString());
+                    startActivity(i);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // work left
+            }
+        });
+    }
+
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }
