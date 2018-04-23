@@ -35,9 +35,16 @@
             android:textColor="@color/lightGreen"
             android:textSize="16dp"
             android:textStyle="bold" />
-
-
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/place_view"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_below="@+id/ll"
+        android:layout_toStartOf="@+id/vote_layout"
+        android:background="@drawable/oski_bear"
+        android:visibility="gone" />
 
     <!-- comment body text -->
 
@@ -46,7 +53,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/ll"
+        android:layout_below="@+id/place_view"
         android:paddingBottom="8dp"
 
         android:paddingTop="8dp"
@@ -55,6 +62,7 @@
         android:textSize="14dp" />
 
     <LinearLayout
+        android:id="@+id/vote_layout"
         android:layout_width="45dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -124,6 +132,5 @@
 
 
     </LinearLayout>
-
 
 </RelativeLayout>

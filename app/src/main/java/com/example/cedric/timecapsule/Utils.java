@@ -13,7 +13,7 @@ public class Utils {
     // All markers within this range in Kilometers will be visible
     private double visibleMarkerDistancekm = 100.0;
     // A box can be accessed when you are within this distance in meters.
-    private double validDistanceMeters = 10.0;
+    private double validDistanceMeters = 25.0;
     // New boxes are not reloaded every time we get a new location, we wait until we have
     // moved this far from our original position before updating
     private double validDistanceToRequestNewPinsKm = 5.0;
