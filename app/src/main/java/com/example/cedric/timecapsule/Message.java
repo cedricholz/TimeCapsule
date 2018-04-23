@@ -8,13 +8,13 @@ public class Message {
     public String text;
     public String username;
     public Date date;
-    public String boxKey;
+    public String messageKey;
 
-    Message(String text, String username, Date date, String boxKey) {
+    Message(String text, String username, Date date, String messageKey) {
         this.text = text;
         this.username = username;
         this.date = date;
-        this.boxKey = boxKey;
+        this.messageKey = messageKey;
     }
 
     // returns a string indicating how long ago this post was made
@@ -34,9 +34,9 @@ public class Message {
         } else if (hoursInt == 1) {
             return "1 hour";
         } else if (hoursInt > 1) {
-            return Integer.toString(hoursInt) + " hours";
+            return Integer.toString(hoursInt) + " hr";
         } else {
-            return "less than an hour";
+            return Integer.toString(minutesInt) + " min";
         }
     }
 }

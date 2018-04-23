@@ -70,6 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private boolean locationMarked = false;
     private Intent boxDialogIntent;
     private Intent nearbyDialogIntent;
+    private ImageButton messagesButton;
     private long mLastClickTime = 0;
 
     @Override
@@ -160,7 +161,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String imageName = (String) marker.getTag();
 
                         if (title != null) {
-                            boxDialogIntent = new Intent(MapsActivity.this, boxDialog.class);
+                            boxDialogIntent = new Intent(MapsActivity.this, CommentDialog.class);
                             boxDialogIntent.putExtra("boxName", title);
                             boxDialogIntent.putExtra("address", address);
                             boxDialogIntent.putExtra("username", username);
@@ -334,6 +335,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        messagesButton = findViewById(R.id.messaging);
+        messagesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Intent allMessagesIntent = new Intent(MapsActivity.this, ConversationsDialog.class);
+                startActivity(allMessagesIntent);
+            }
+        });
+
     }
 
     public void savePlaceTiles() {
@@ -453,7 +463,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     });
 
-                    boxDialogIntent = new Intent(MapsActivity.this, boxDialog.class);
+                    boxDialogIntent = new Intent(MapsActivity.this, CommentDialog.class);
                     boxDialogIntent.putExtra("boxName", title);
                     boxDialogIntent.putExtra("address", curAddress);
                     boxDialogIntent.putExtra("username", username);

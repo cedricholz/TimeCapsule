@@ -81,7 +81,7 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder {
                     Double distance = Double.parseDouble(recyclerTile.distance.split(" ")[0]);
 
                     if (distance < u.getValidDistanceKm()) {
-                        Intent createBoxIntent = new Intent(itemView.getContext(), boxDialog.class);
+                        Intent createBoxIntent = new Intent(itemView.getContext(), CommentDialog.class);
                         createBoxIntent.putExtra("boxName", recyclerTile.placeName);
                         createBoxIntent.putExtra("address", recyclerTile.address);
                         createBoxIntent.putExtra("imageName", recyclerTile.imageName);

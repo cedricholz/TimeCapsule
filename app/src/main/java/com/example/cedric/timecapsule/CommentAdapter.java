@@ -74,7 +74,9 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     public String boxKey = "";
     public String upVotes = "1";
     public String message = "";
-    public String username = "";
+    public String commentUsername = "";
+    public String myUsername = "";
+
     public String replies = "";
 
     FirebaseDatabase database;
@@ -84,6 +86,8 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     int commentLevel = 1;
     private ImageButton upButton;
     private ImageButton downButton;
+
+    private Utils u;
 
 
     public CommentViewHolder(View itemView) {
@@ -107,6 +111,9 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
 
         prefs = itemView.getContext().getSharedPreferences(
                 "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+
+        u = new Utils();
+        myUsername = u.getUsername(itemView.getContext());
 
         editor = prefs.edit();
 
@@ -193,7 +200,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
                 if (commentLevel == 1) {
 
                     Intent insideCommentIntent = new Intent(view.getContext(), InsideCommentDialog.class);
-                    insideCommentIntent.putExtra("headUsername", username);
+                    insideCommentIntent.putExtra("headUsername", commentUsername);
                     insideCommentIntent.putExtra("headMessage", message);
                     insideCommentIntent.putExtra("headDate", date);
                     insideCommentIntent.putExtra("headReplies", replies);
@@ -210,30 +217,13 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View view) {
 
+                if (!commentUsername.equals(myUsername)) {
+                    Intent messengerIntent = new Intent(view.getContext(), MessageDialog.class);
 
-                new LovelyStandardDialog(view.getContext(), LovelyStandardDialog.ButtonLayout.VERTICAL)
-                        .setTopColorRes(R.color.lightGreen)
-                        .setButtonsColorRes(R.color.darkDeepOrange)
-                        .setIcon(R.drawable.ic_mail_blue_24dp)
-                        .setTitle("Send a private message to " + username)
-//                        .setMessage(R.string.rate_message)
-                        .setPositiveButton(android.R.string.ok, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Toast.makeText(v.getContext(), "positive clicked", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .show();
+                    messengerIntent.putExtra("commentUsername", commentUsername);
 
-
-//                Intent messengerIntent = new Intent(view.getContext(), MessageDialog.class);
-//                messengerIntent.putExtra("headUsername", username);
-//                messengerIntent.putExtra("headMessage", message);
-//                messengerIntent.putExtra("headDate", date);
-//                messengerIntent.putExtra("boxKey", boxKey);
-//
-//                view.getContext().startActivity(messengerIntent);
+                    view.getContext().startActivity(messengerIntent);
+                }
 
             }
         });
@@ -241,7 +231,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     }
 
     void bind(Comment comment) {
-        username = comment.username;
+        commentUsername = comment.username;
         replies = comment.replies;
 
         commentLevel = comment.commentLevel;

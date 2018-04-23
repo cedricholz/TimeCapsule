@@ -38,6 +38,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="myToolbarDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowActionBar">false</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,8 +24,10 @@ public class MessageAdapter extends RecyclerView.Adapter {
     private ArrayList<Message> mMessages;
 
     public MessageAdapter(Context context, ArrayList<Message> messages) {
+
         mContext = context;
         mMessages = messages;
+
     }
 
     @Override
@@ -32,7 +35,6 @@ public class MessageAdapter extends RecyclerView.Adapter {
         // here, we specify what kind of view each cell should have. In our case, all of them will have a view
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.message_cell_layout, parent, false);
-
 
         return new MessageViewHolder(view);
     }
@@ -58,52 +60,72 @@ class MessageViewHolder extends RecyclerView.ViewHolder {
 
     // each data item is just a string in this case
     public RelativeLayout mMessageBubbleLayout;
-    public TextView mUsernameTextView;
-    public TextView mDateTextView;
-    public TextView mMessageTextView;
-    public String date = "";
-    public String boxKey = "";
-    public String message = "";
-    FirebaseDatabase database;
-    DatabaseReference myRef;
-    SharedPreferences prefs;
-    SharedPreferences.Editor editor;
-    private ImageButton upButton;
-    private ImageButton downButton;
 
+    public TextView mLeftUsernameTextView;
+    public TextView mRightUsernameTextView;
+
+    public TextView mLeftDateTextView;
+    public TextView mRightDateTextView;
+
+    public TextView mLeftMessageTextView;
+    public TextView mRightMessageTextView;
+
+    public String date = "";
+    public String messageKey = "";
+    public String message = "";
+
+    Utils u;
+    private String myUsername = "";
 
     public MessageViewHolder(View itemView) {
 
         super(itemView);
 
         mMessageBubbleLayout = itemView.findViewById(R.id.message_cell_layout);
-        mUsernameTextView = mMessageBubbleLayout.findViewById(R.id.username_text_view);
-        mDateTextView = mMessageBubbleLayout.findViewById(R.id.date_text_view);
-        mMessageTextView = mMessageBubbleLayout.findViewById(R.id.message_text_view);
 
-        upButton = mMessageBubbleLayout.findViewById(R.id.upVote);
-        downButton = mMessageBubbleLayout.findViewById(R.id.downVote);
+        mLeftUsernameTextView = mMessageBubbleLayout.findViewById(R.id.left_username_text_view);
+        mRightUsernameTextView = mMessageBubbleLayout.findViewById(R.id.right_username_text_view);
 
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("locations");
+        mLeftDateTextView = mMessageBubbleLayout.findViewById(R.id.left_date_text_view);
+        mRightDateTextView = mMessageBubbleLayout.findViewById(R.id.right_date_text_view);
 
-        prefs = itemView.getContext().getSharedPreferences(
-                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        mLeftMessageTextView = mMessageBubbleLayout.findViewById(R.id.left_message_text_view);
+        mRightMessageTextView = mMessageBubbleLayout.findViewById(R.id.right_message_text_view);
 
-        editor = prefs.edit();
 
-        prefs.getString("username", "Default");
+        u = new Utils();
+
+        myUsername = u.getUsername(itemView.getContext());
 
     }
 
-    void bind(Message messages) {
-        mUsernameTextView.setText(messages.username);
-        mDateTextView.setText("posted " + messages.elapsedTimeString() + " ago");
+    void bind(Message message) {
 
-        mMessageTextView.setText(messages.text);
+        String messageUser = message.username;
+        String dateText = message.elapsedTimeString();
 
-        date = messages.date.toString();
-        boxKey = messages.boxKey;
+        if (messageUser.equals(myUsername)) {
+            mLeftUsernameTextView.setVisibility(View.INVISIBLE);
+            mLeftDateTextView.setVisibility(View.INVISIBLE);
+            mLeftMessageTextView.setVisibility(View.INVISIBLE);
+
+            mRightUsernameTextView.setVisibility(View.VISIBLE);
+            mRightDateTextView.setVisibility(View.VISIBLE);
+            mRightMessageTextView.setVisibility(View.VISIBLE);
+
+            mRightUsernameTextView.setText(message.username);
+            mRightMessageTextView.setText(message.text);
+            mRightDateTextView.setText(dateText);
+        } else {
+
+            mLeftUsernameTextView.setText(message.username);
+            mLeftMessageTextView.setText(message.text);
+            mLeftDateTextView.setText(dateText);
+        }
+
+        date = message.date.toString();
+        messageKey = message.messageKey;
+
     }
 
 }

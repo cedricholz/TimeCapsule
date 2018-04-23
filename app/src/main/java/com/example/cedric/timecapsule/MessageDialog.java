@@ -3,8 +3,8 @@ package com.example.cedric.timecapsule;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,7 +21,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 
@@ -30,16 +32,16 @@ public class MessageDialog extends Activity {
     android.support.v7.widget.Toolbar titleBar;
     FirebaseDatabase database;
     DatabaseReference myRef;
-    String refKey = "locations";
+    DatabaseReference usersRef;
     Utils u;
+    String friendUsername = "";
+    String messageKey = "";
     private EditText textField;
     private ImageButton sendButton;
     private String username = "";
-    private String key = "";
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private ArrayList<Message> mMessages = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,21 +58,24 @@ public class MessageDialog extends Activity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        username = u.getUsername(this);
-
         u = new Utils();
 
+        username = u.getUsername(this);
+
         if (intentExtras != null) {
-            titleBar.setTitle((String) intentExtras.get("boxName"));
+            friendUsername = (String) intentExtras.get("commentUsername");
+            titleBar.setTitle(friendUsername + " - Private Message");
 
-            titleBar.setSubtitle((String) intentExtras.get("address"));
-            key = intentExtras.get("boxName") + "%" + intentExtras.get("address") + "%" + intentExtras.get("imageName");
+            String[] usernames = {username, friendUsername};
+            Arrays.sort(usernames);
 
-            refKey = "locations/" + key + "/messages/";
+            messageKey = usernames[0] + usernames[1] + "Message";
         }
 
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("locations");
+        myRef = database.getReference("messages");
+
+        usersRef = database.getReference("users");
 
         textField = findViewById(R.id.message_input_edit_text);
         sendButton = findViewById(R.id.message_send_button);
@@ -104,22 +109,56 @@ public class MessageDialog extends Activity {
         });
     }
 
+    private void postNewMessage(String messageText) {
+        Date curDate = new Date();
+
+        String dateString = curDate.toString();
+
+
+        String timeStamp = Long.toString(System.currentTimeMillis());
+
+        myRef.child(messageKey).child(timeStamp).child("user").setValue(username);
+        myRef.child(messageKey).child(timeStamp).child("message").setValue(messageText);
+        myRef.child(messageKey).child(timeStamp).child("date").setValue(dateString);
+
+
+        usersRef.child(username).child("conversations").child(messageKey).child("mostRecentMessage").setValue(messageText);
+        usersRef.child(username).child("conversations").child(messageKey).child("mostRecentMessenger").setValue(username);
+        usersRef.child(username).child("conversations").child(messageKey).child("mostRecentTime").setValue(dateString);
+
+        usersRef.child(username).child("conversations").child(messageKey).child("friendUsername").setValue(friendUsername);
+
+        usersRef.child(friendUsername).child("conversations").child(messageKey).child("mostRecentMessage").setValue(messageText);
+        usersRef.child(friendUsername).child("conversations").child(messageKey).child("mostRecentMessenger").setValue(username);
+        usersRef.child(friendUsername).child("conversations").child(messageKey).child("mostRecentTime").setValue(dateString);
+        usersRef.child(friendUsername).child("conversations").child(messageKey).child("friendUsername").setValue(username);
+
+
+        myLastPost = username + messageText;
+
+        Message newMessage = new Message(messageText, username, curDate, messageKey);
+
+        mMessages.add(newMessage);
+
+        setAdapterAndUpdateData();
+    }
+
 
     private void getMessages() {
 
-        myRef.child(key).child("messages").addChildEventListener(new ChildEventListener() {
+        myRef.child(messageKey).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
 
                 String u = (String) dataSnapshot.child("user").getValue();
                 String m = (String) dataSnapshot.child("message").getValue();
+                String date = (String) dataSnapshot.child("date").getValue();
 
                 if (m != null && !myLastPost.equals(u + m)) {
-                    String date = dataSnapshot.getKey();
 
                     Date d = new Date(date);
 
-                    Message message = new Message(m, u, d, key);
+                    Message message = new Message(m, u, d, messageKey);
 
                     mMessages.add(message);
 
@@ -154,27 +193,8 @@ public class MessageDialog extends Activity {
         mRecyclerView.setAdapter(mAdapter);
 
         // scroll to the first message
-        mRecyclerView.smoothScrollToPosition(0);
+//        mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+        mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 
-
-    private void postNewMessage(String messageText) {
-        Date curDate = new Date();
-
-
-        myRef.child(key).child("messages").child(curDate.toString()).child("user").setValue(username);
-        myRef.child(key).child("messages").child(curDate.toString()).child("message").setValue(messageText);
-        myRef.child(key).child("messages").child(curDate.toString()).child("upVotes").setValue("1");
-        myRef.child(key).child("messages").child(curDate.toString()).child("replies").setValue("0");
-
-        myLastPost = username + messageText;
-
-        String replies = "0";
-
-        Message newMessage = new Message(messageText, username, curDate, key);
-
-        mMessages.add(newMessage);
-
-        setAdapterAndUpdateData();
-    }
 }

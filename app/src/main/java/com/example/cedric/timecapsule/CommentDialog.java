@@ -26,10 +26,13 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 
-public class boxDialog extends Activity {
+public class CommentDialog extends Activity {
+    public String myLastPost = "";
     android.support.v7.widget.Toolbar titleBar;
     FirebaseDatabase database;
     DatabaseReference myRef;
+    String refKey = "locations";
+    Utils u;
     private EditText textField;
     private ImageButton sendButton;
     private String username = "";
@@ -37,14 +40,8 @@ public class boxDialog extends Activity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private ArrayList<Comment> mComments = new ArrayList<>();
-
     private HashMap<String, Comment> commentHashMap = new HashMap<>();
-
     private int commentLevel = 1;
-
-    String refKey = "locations";
-    Utils u;
-
     private int maxCommentLength;
 
     @Override
@@ -59,8 +56,10 @@ public class boxDialog extends Activity {
         Bundle intentExtras = thisIntent.getExtras();
 
         mRecyclerView = findViewById(R.id.comment_recycler);
-        mRecyclerView.setHasFixedSize(true);
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mRecyclerView.setNestedScrollingEnabled(false);
 
         username = getUsername();
 
@@ -75,7 +74,7 @@ public class boxDialog extends Activity {
             titleBar.setSubtitle((String) intentExtras.get("address"));
             key = intentExtras.get("boxName") + "%" + intentExtras.get("address") + "%" + intentExtras.get("imageName");
 
-            refKey = "locations/"+ key + "/messages/";
+            refKey = "locations/" + key + "/messages/";
         }
 
         database = FirebaseDatabase.getInstance();
@@ -88,7 +87,7 @@ public class boxDialog extends Activity {
         getComments();
     }
 
-    public void setButtonListener(){
+    public void setButtonListener() {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -97,7 +96,7 @@ public class boxDialog extends Activity {
                     textField.requestFocus();
                 } else {
 
-                    if (text.length() <= maxCommentLength){
+                    if (text.length() <= maxCommentLength) {
 
                         textField.setText("");
 
@@ -105,15 +104,13 @@ public class boxDialog extends Activity {
                         mgr.hideSoftInputFromWindow(textField.getWindowToken(), 0);
 
                         postNewComment(text);
-                    }
-                    else{
-                        Toast.makeText(boxDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(CommentDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
     }
-
 
     public ArrayList<Comment> sortComments(ArrayList<Comment> comments) {
         Collections.sort(comments, new Comparator<Comment>() {
@@ -130,8 +127,6 @@ public class boxDialog extends Activity {
         return prefs.getString("username", "Default");
     }
 
-    public String myLastPost = "";
-
     private void getComments() {
 
         myRef.child(key).child("messages").addChildEventListener(new ChildEventListener() {
@@ -143,7 +138,7 @@ public class boxDialog extends Activity {
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
                 String replies = (String) dataSnapshot.child("replies").getValue();
 
-                if (m != null && !myLastPost.equals(u + m)){
+                if (m != null && !myLastPost.equals(u + m)) {
                     String date = dataSnapshot.getKey();
 
                     Date d = new Date(date);
@@ -196,9 +191,8 @@ public class boxDialog extends Activity {
         mRecyclerView.setAdapter(mAdapter);
 
         // scroll to the first comment
-        mRecyclerView.smoothScrollToPosition(0);
+//        mRecyclerView.smoothScrollToPosition(0);
     }
-
 
 
     private void postNewComment(String commentText) {

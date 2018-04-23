@@ -38,7 +38,7 @@
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".boxDialog"
+            android:name=".CommentDialog"
             android:theme="@style/myDialogTheme" />
         <activity
             android:name=".InsideCommentDialog"
@@ -46,6 +46,16 @@
         <activity
             android:name=".NearbyDialog"
             android:theme="@style/myDialogTheme" />
+
+        <activity
+            android:name=".MessageDialog"
+            android:theme="@style/myToolbarDialogTheme" />
+
+
+        <activity
+            android:name=".ConversationsDialog"
+            android:theme="@style/myToolbarDialogTheme" />
+
         <activity
             android:name=".LoginActivity"
             android:theme="@style/loginTheme">

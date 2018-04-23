@@ -11,57 +11,99 @@
     android:focusable="true"
     android:orientation="vertical"
     android:paddingBottom="5dp"
+
     android:paddingLeft="15dp"
+    android:paddingRight="15dp"
 
     android:paddingTop="5dp">
 
-    <LinearLayout
-        android:id="@+id/ll"
-        android:layout_width="match_parent"
+    <!--Left-->
+
+    <!-- username text view -->
+    <TextView
+        android:id="@+id/left_username_text_view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:orientation="horizontal"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentTop="true"
 
-        <!-- username text view -->
-        <TextView
-            android:id="@+id/username_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textColor="@color/lightGreen"
-            android:textSize="16dp"
-            android:text="username"
-            android:paddingRight="10dp"
-            android:gravity="bottom"
-            android:textStyle="bold" />
+        android:gravity="bottom"
+        android:text="username"
+        android:textColor="@color/lightGreen"
+        android:textSize="16dp"
+        android:textStyle="bold" />
 
-
-    </LinearLayout>
 
     <!-- comment body text -->
     <TextView
-        android:id="@+id/message_text_view"
-        android:layout_width="300dp"
+        android:id="@+id/left_message_text_view"
+        android:layout_width="wrap_content"
+        android:paddingLeft="2dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ll"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/left_username_text_view"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp"
+
         android:text="this is some text that previews what a comments text would look like"
         android:textSize="16sp" />
 
     <!-- time elapsed text view -->
     <TextView
-        android:id="@+id/date_text_view"
+        android:id="@+id/left_date_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12dp"
-        android:text="posted less than an hour ago"
         android:layout_alignStart="@+id/ll"
-        android:layout_below="@+id/message_text_view" />
+        android:layout_below="@+id/left_message_text_view"
+        android:text="posted less than an hour ago"
+        android:textSize="12dp" />
 
 
+    <!--Right-->
+
+
+    <!-- username text view -->
+    <TextView
+        android:id="@+id/right_username_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+
+        android:gravity="bottom"
+        android:text="username"
+        android:textColor="@color/lightGreen"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+
+
+    <!-- comment body text -->
+    <TextView
+        android:id="@+id/right_message_text_view"
+        android:layout_width="wrap_content"
+        android:paddingRight="2dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/right_username_text_view"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp"
+        android:text="Ayyy"
+        android:textAlignment="textEnd"
+        android:textSize="16sp"
+        android:visibility="invisible" />
+
+    <!-- time elapsed text view -->
+    <TextView
+        android:id="@+id/right_date_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/ll"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/right_message_text_view"
+        android:text="posted less than an hour ago"
+        android:textSize="10dp"
+        android:visibility="invisible" />
 
 
 </RelativeLayout>
