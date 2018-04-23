@@ -30,9 +30,24 @@ public class LoginActivity extends AppCompatActivity {
     // Button
     Button cancelBtn, logInBtn;
 
+
+    Utils u;
+
+    public static String encodeString(String string) {
+        return string.replace(".", ",");
+    }
+
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
 
         // setting up firebase
@@ -53,8 +68,8 @@ public class LoginActivity extends AppCompatActivity {
         Bundle intentExtras = fromSignUp.getExtras();
 
         if (intentExtras != null) {
-            password.setText((String) intentExtras.get("email"));
-            email.setText((String) intentExtras.get("password"));
+            email.setText((String) intentExtras.get("email"));
+            password.setText((String) intentExtras.get("password"));
         }
 
         // user clicked cancel button (goes back to StartActivity with no input)
@@ -70,13 +85,28 @@ public class LoginActivity extends AppCompatActivity {
         logInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 if (isEmailValid(email.getText().toString())) {
-                     logIn(email.getText().toString(), password.getText().toString());
-                 } else {
-                     email.setError("Please enter a valid email address");
-                 }
+                if (isEmailValid(email.getText().toString())) {
+                    logIn(email.getText().toString(), password.getText().toString());
+                } else {
+                    email.setError("Please enter a valid email address");
+                }
             }
         });
+
+        u = new Utils();
+
+
+    }
+
+
+    private void startMaps(User user) {
+        Intent i = new Intent(LoginActivity.this, MapsActivity.class);
+        String username = user.getUsername();
+
+        u.setUsername(LoginActivity.this, username);
+
+        i.putExtra("username", user.getUsername());
+        startActivity(i);
     }
 
     private void logIn(final String email, final String password) {
@@ -88,20 +118,22 @@ public class LoginActivity extends AppCompatActivity {
                     if (!email.isEmpty()) {
                         User login = dataSnapshot.child(encodeString(email)).getValue(User.class);
                         if (login.getPassword().equals(password)) {
-                            Toast.makeText(LoginActivity.this, "Success LogIn",
+                            Toast.makeText(LoginActivity.this, "Login Successful",
                                     Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(LoginActivity.this, MapsActivity.class);
-                            String username = login.getUsername();
-                            i.putExtra("username", login.getUsername());
-                            startActivity(i);
-                        }
-                        else {
-                            Toast.makeText(LoginActivity.this, "Password Wrong",
+
+
+                            u.setUsername(LoginActivity.this, login.getUsername());
+                            u.setPassword(LoginActivity.this, login.getPassword());
+                            u.setEmail(LoginActivity.this, login.getEmail());
+
+                            startMaps(login);
+
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Password Incorrect",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
-                }
-                else {
+                } else {
                     Toast.makeText(LoginActivity.this, "Email Address is not registered",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -112,16 +144,5 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    public static String encodeString(String string) {
-        return string.replace(".", ",");
-    }
-
-    public static boolean isEmailValid(String email) {
-        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
     }
 }

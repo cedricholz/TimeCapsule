@@ -31,6 +31,17 @@ public class SignUpActivity extends AppCompatActivity {
     Button cancelBtn, createBtn;
 
 
+    public static String encodeString(String string) {
+        return string.replace(".", ",");
+    }
+
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,10 +83,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-    }
 
-    public static String encodeString(String string) {
-        return string.replace(".", ",");
     }
 
     private void createUser(String username, String password, String email) {
@@ -89,6 +97,7 @@ public class SignUpActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 else {
                     users.child(encodeString(user.getEmail())).setValue(user);
+
                     Toast.makeText(SignUpActivity.this, "Success Register!",
                             Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(SignUpActivity.this, LoginActivity.class);
@@ -103,12 +112,5 @@ public class SignUpActivity extends AppCompatActivity {
                 // work left
             }
         });
-    }
-
-    public static boolean isEmailValid(String email) {
-        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
     }
 }

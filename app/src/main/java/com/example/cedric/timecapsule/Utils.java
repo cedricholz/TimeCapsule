@@ -33,6 +33,44 @@ public class Utils {
         return prefs.getString("username", "Default");
     }
 
+    public String getPassword(Context c) {
+        SharedPreferences prefs = c.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        return prefs.getString("password", "Default");
+    }
+
+
+    public String getEmail(Context c) {
+        SharedPreferences prefs = c.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        return prefs.getString("email", "Default");
+    }
+
+
+    public void setUsername(Context c, String username) {
+        SharedPreferences prefs = c.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putString("username", username).commit();
+    }
+
+    public void setPassword(Context c, String password) {
+        SharedPreferences prefs = c.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putString("password", password).commit();
+    }
+
+    public void setEmail(Context c, String email) {
+        SharedPreferences prefs = c.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putString("email", email).commit();
+    }
+
     public int getMaxMessageLength() {
         return maxMessageLength;
     }
