@@ -30,6 +30,8 @@ public class SignUpActivity extends AppCompatActivity {
     // Button
     Button cancelBtn, createBtn;
 
+    Utils u;
+
 
     public static String encodeString(String string) {
         return string.replace(".", ",");
@@ -46,6 +48,8 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        u = new Utils();
 
         // setting up firebase
         database = FirebaseDatabase.getInstance();
@@ -79,15 +83,15 @@ public class SignUpActivity extends AppCompatActivity {
                 } else {
                     email.setError("Please enter a valid email address");
                 }
-
             }
         });
 
 
     }
 
-    private void createUser(String username, String password, String email) {
-        final User user = new User(username, password, email);
+    private void createUser(String username, final String password, String email) {
+
+        final User user = new User(username, u.getHashedPassword(password), email);
 
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -102,7 +106,7 @@ public class SignUpActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(SignUpActivity.this, LoginActivity.class);
                     i.putExtra("email", user.getEmail().toString());
-                    i.putExtra("password", user.getPassword().toString());
+                    i.putExtra("password", password);
                     startActivity(i);
                 }
             }

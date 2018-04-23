@@ -8,6 +8,9 @@ import android.widget.Button;
 
 import com.example.cedric.timecapsule.UserInformation.User;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+
 public class StartActivity extends AppCompatActivity {
 
     Button signUpBtn, logInBtn;

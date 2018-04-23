@@ -8,6 +8,11 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
+import java.util.Random;
 
 public class Utils {
     // All markers within this range in Kilometers will be visible
@@ -27,48 +32,28 @@ public class Utils {
     Utils() {
     }
 
-    public String getUsername(Context c) {
-        SharedPreferences prefs = c.getSharedPreferences(
-                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
-        return prefs.getString("username", "Default");
-    }
-
-    public String getPassword(Context c) {
-        SharedPreferences prefs = c.getSharedPreferences(
-                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
-        return prefs.getString("password", "Default");
-    }
-
-
-    public String getEmail(Context c) {
-        SharedPreferences prefs = c.getSharedPreferences(
-                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
-        return prefs.getString("email", "Default");
-    }
-
-
-    public void setUsername(Context c, String username) {
-        SharedPreferences prefs = c.getSharedPreferences(
-                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putString("username", username).commit();
-    }
-
-    public void setPassword(Context c, String password) {
-        SharedPreferences prefs = c.getSharedPreferences(
-                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putString("password", password).commit();
-    }
-
-    public void setEmail(Context c, String email) {
-        SharedPreferences prefs = c.getSharedPreferences(
-                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-
-        editor.putString("email", email).commit();
+    public static String getHashedPassword(String passwordToHash) {
+        String generatedPassword = null;
+        byte [] salt = {-92, 83, -14, -80, 44, 64, 96, -13, 98, 102, 46, 34, -108, -40, 100, 3};
+        try {
+            // Create MessageDigest instance for MD5
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            //Add password bytes to digest
+            md.update(salt);
+            //Get the hash's bytes
+            byte[] bytes = md.digest(passwordToHash.getBytes());
+            //This bytes[] has bytes in decimal format;
+            //Convert it to hexadecimal format
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < bytes.length; i++) {
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            //Get complete hashed password in hex format
+            generatedPassword = sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return generatedPassword;
     }
 
     public int getMaxMessageLength() {
@@ -115,7 +100,6 @@ public class Utils {
         return loc1.distanceTo(loc2);
     }
 
-
     public String loadJSONFromAsset(String filename, Context c) {
         String json = null;
         try {
@@ -130,6 +114,48 @@ public class Utils {
             return null;
         }
         return json;
+    }
+
+    public String getUsername(Context c) {
+        SharedPreferences prefs = c.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        return prefs.getString("username", "Default");
+    }
+
+    public String getPassword(Context c) {
+        SharedPreferences prefs = c.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        return prefs.getString("password", "Default");
+    }
+
+    public String getEmail(Context c) {
+        SharedPreferences prefs = c.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        return prefs.getString("email", "Default");
+    }
+
+    public void setUsername(Context c, String username) {
+        SharedPreferences prefs = c.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putString("username", username).commit();
+    }
+
+    public void setPassword(Context c, String password) {
+        SharedPreferences prefs = c.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putString("password", password).commit();
+    }
+
+    public void setEmail(Context c, String email) {
+        SharedPreferences prefs = c.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putString("email", email).commit();
     }
 
 }

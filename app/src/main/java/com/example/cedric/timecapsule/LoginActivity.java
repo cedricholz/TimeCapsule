@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (dataSnapshot.child(encodeString(email)).exists()) {
                     if (!email.isEmpty()) {
                         User login = dataSnapshot.child(encodeString(email)).getValue(User.class);
-                        if (login.getPassword().equals(password)) {
+                        if (login.getPassword().equals(u.getHashedPassword(password))) {
                             Toast.makeText(LoginActivity.this, "Login Successful",
                                     Toast.LENGTH_SHORT).show();
 
