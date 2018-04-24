@@ -1,6 +1,7 @@
 package com.example.cedric.timecapsule;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,11 +20,16 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,9 +44,14 @@ public class CommentDialog extends Activity {
     public String myLastPost = "";
     android.support.v7.widget.Toolbar titleBar;
     FirebaseDatabase database;
+    FirebaseStorage storage;
     DatabaseReference myRef;
+    StorageReference storageRef;
     String refKey = "locations";
     Utils u;
+    UploadTask uploadTask;
+    ProgressDialog mProgress;
+    Uri photoURI;
     private EditText textField;
     private ImageButton sendButton;
     private ImageButton cameraButton;
@@ -51,6 +63,8 @@ public class CommentDialog extends Activity {
     private HashMap<String, Comment> commentHashMap = new HashMap<>();
     private int commentLevel = 1;
     private int maxCommentLength;
+
+    private static final int CAMERA_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +89,6 @@ public class CommentDialog extends Activity {
 
         maxCommentLength = u.getMaxCommentLength();
 
-
         if (intentExtras != null) {
             titleBar.setTitle((String) intentExtras.get("boxName"));
 
@@ -86,7 +99,10 @@ public class CommentDialog extends Activity {
         }
 
         database = FirebaseDatabase.getInstance();
+        storage = FirebaseStorage.getInstance();
+
         myRef = database.getReference("locations");
+        storageRef = storage.getReference();
 
         textField = findViewById(R.id.comment_input_edit_text);
         sendButton = findViewById(R.id.send_button);
@@ -95,6 +111,8 @@ public class CommentDialog extends Activity {
         setCameraButtonListener();
 
         getComments();
+
+        mProgress = new ProgressDialog(this);
     }
 
     public void setSendButtonListener() {
@@ -133,7 +151,10 @@ public class CommentDialog extends Activity {
 
     public void takePictureIntent() {
         Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
         if (pictureIntent.resolveActivity(getPackageManager()) != null) {
+
+            // Create the File where the photo should go
             File photoFile = null;
             try {
                 photoFile = createImageFile();
@@ -141,15 +162,18 @@ public class CommentDialog extends Activity {
                 // failed while creating the file
             }
 
+            // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
+                photoURI = FileProvider.getUriForFile(this,
                         "com.example.android.fileprovider", photoFile);
                 pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(pictureIntent, 1);
+                startActivityForResult(pictureIntent, CAMERA_REQUEST_CODE);
             }
 
         }
     }
+
+    String mCurrentPhotoPath;
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -161,7 +185,33 @@ public class CommentDialog extends Activity {
                 storageDir
         );
 
+        mCurrentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK){
+            mProgress.setMessage("Uploading...");
+            mProgress.show();
+            Uri uri = photoURI;
+
+            StorageReference filepath = storageRef.child("Photos").child(uri.getLastPathSegment());
+            filepath.putFile(photoURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(CommentDialog.this, "Upload Successful!",    Toast.LENGTH_SHORT).show();
+                    mProgress.dismiss();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(CommentDialog.this, "Upload Failed!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     public ArrayList<Comment> sortComments(ArrayList<Comment> comments) {
