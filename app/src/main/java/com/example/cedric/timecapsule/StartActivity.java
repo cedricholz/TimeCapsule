@@ -64,7 +64,7 @@ public class StartActivity extends AppCompatActivity {
 
         String username = u.getUsername(StartActivity.this);
 
-        if (!username.equals("Default")) {
+        if (!username.equals("Default") && !username.equals("")) {
 
             String password = u.getPassword(StartActivity.this);
             String email = u.getEmail(StartActivity.this);

@@ -38,6 +38,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.io.IOException;
@@ -56,6 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LatLng lastLocation;
     private LatLng userLocation;
     private ImageButton addButton;
+    private ImageButton logoutButton;
     private ImageButton boxesButton;
     private String curAddress = "";
     private String username = "DEFAULT";
@@ -128,7 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
 
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
             Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
@@ -145,9 +147,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return u.getDistance(x, y) <= u.getValidDistanceMeters();
     }
 
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -186,6 +190,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         this, mapStyle));
 
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
 
         locationListener = new LocationListener() {
             @Override
@@ -341,6 +346,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View arg0) {
                 Intent allMessagesIntent = new Intent(MapsActivity.this, ConversationsDialog.class);
                 startActivity(allMessagesIntent);
+            }
+        });
+
+
+
+
+        logoutButton = findViewById(R.id.logout);
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+
+                new LovelyStandardDialog(MapsActivity.this, LovelyStandardDialog.ButtonLayout.HORIZONTAL)
+                        .setTopColorRes(R.color.indigo)
+                        .setButtonsColorRes(R.color.darkDeepOrange)
+                        .setIcon(R.drawable.ic_power_settings_white_24dp)
+                        .setTitle("Log Out")
+                        .setMessage("Do you want to log out?")
+                        .setPositiveButton(android.R.string.ok, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                u.setUsername(MapsActivity.this, "");
+                                Intent allMessagesIntent = new Intent(MapsActivity.this, StartActivity.class);
+                                startActivity(allMessagesIntent);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
             }
         });
 

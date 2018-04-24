@@ -9,7 +9,6 @@
     android:background="#ffffff"
     android:orientation="vertical">
 
-    <!-- TODO: replace "temp title" with a landmark name -->
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
@@ -21,6 +20,7 @@
         android:elevation="2dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
 
     <!-- recylcer view -->
     <android.support.v7.widget.RecyclerView
@@ -85,4 +85,6 @@
             android:textSize="18sp" />
 
     </RelativeLayout>
+
+
 </RelativeLayout>
