@@ -197,7 +197,7 @@ public class CommentDialog extends Activity {
         if(requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK){
 
             // user clicked "post" button from Preview Activity
-            if (data.getStringExtra("user_permission") != null) {
+            if (data != null && data.getStringExtra("user_permission") != null) {
                 mProgress.setMessage("Uploading...");
                 mProgress.show();
                 Uri uri = photoURI;
@@ -243,6 +243,7 @@ public class CommentDialog extends Activity {
     public void postImage(String caption, String downloadURL) {
         if (caption.length() <= maxCommentLength) {
             postNewComment(caption, downloadURL);
+            myRef.child(key).child("PhotoGallery").child(downloadURL).setValue(1);
         } else {
             Toast.makeText(CommentDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
         }
