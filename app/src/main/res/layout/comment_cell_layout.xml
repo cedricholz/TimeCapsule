@@ -39,8 +39,8 @@
 
     <ImageButton
         android:id="@+id/place_view"
-        android:layout_width="350dp"
-        android:layout_height="300dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         android:layout_below="@+id/ll"
         android:layout_toStartOf="@+id/vote_layout"
         android:background="@drawable/oski_bear"

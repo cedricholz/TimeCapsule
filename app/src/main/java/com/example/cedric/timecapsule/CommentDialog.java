@@ -274,10 +274,6 @@ public class CommentDialog extends Activity {
     }
 
     public ArrayList<Comment> sortComments(ArrayList<Comment> comments) {
-        for (Comment c:comments){
-            System.out.println(c.upVotes);
-        }
-
         Collections.sort(comments, new Comparator<Comment>() {
             public int compare(Comment c1, Comment c2) {
                 return c2.upVotes.compareTo(c1.upVotes);

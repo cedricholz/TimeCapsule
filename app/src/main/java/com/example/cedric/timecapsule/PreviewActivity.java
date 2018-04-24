@@ -10,6 +10,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -24,8 +25,7 @@ public class PreviewActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageRef;
     private ImageView capturedImage;
-    private Button cancelBtn;
-    private Button postBtn;
+    private ImageButton postBtn;
     private EditText caption;
     private String mCurrentPath;
 
@@ -34,7 +34,7 @@ public class PreviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
-        cancelBtn = findViewById(R.id.btnCancel);
+
         postBtn = findViewById(R.id.btnPost);
         capturedImage = findViewById(R.id.capturedImg);
         caption = findViewById(R.id.comment_input_edit_text);
@@ -48,16 +48,9 @@ public class PreviewActivity extends AppCompatActivity {
             capturedImage.setImageBitmap(bitmap);
         }
 
-        setCancelButtonListener();
         setPostButtonListener();
     }
 
-    public void setCancelButtonListener() {
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) { onBackPressed(); }
-        });
-    }
 
     public void setPostButtonListener() {
         postBtn.setOnClickListener(new View.OnClickListener() {
