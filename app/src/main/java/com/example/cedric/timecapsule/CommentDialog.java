@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -20,6 +24,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -35,6 +42,7 @@ public class CommentDialog extends Activity {
     Utils u;
     private EditText textField;
     private ImageButton sendButton;
+    private ImageButton cameraButton;
     private String username = "";
     private String key = "";
     private RecyclerView mRecyclerView;
@@ -82,12 +90,14 @@ public class CommentDialog extends Activity {
 
         textField = findViewById(R.id.comment_input_edit_text);
         sendButton = findViewById(R.id.send_button);
-        setButtonListener();
+        cameraButton = findViewById(R.id.camera_button);
+        setSendButtonListener();
+        setCameraButtonListener();
 
         getComments();
     }
 
-    public void setButtonListener() {
+    public void setSendButtonListener() {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -110,6 +120,48 @@ public class CommentDialog extends Activity {
                 }
             }
         });
+    }
+
+    public void setCameraButtonListener() {
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                takePictureIntent();
+            }
+        });
+    }
+
+    public void takePictureIntent() {
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (pictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // failed while creating the file
+            }
+
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider", photoFile);
+                pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(pictureIntent, 1);
+            }
+
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+
+        return image;
     }
 
     public ArrayList<Comment> sortComments(ArrayList<Comment> comments) {
