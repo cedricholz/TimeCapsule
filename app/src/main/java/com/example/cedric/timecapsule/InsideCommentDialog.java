@@ -159,7 +159,7 @@ public class InsideCommentDialog extends Activity {
 
             Collections.sort(comments, new Comparator<Comment>() {
                 public int compare(Comment c1, Comment c2) {
-                    return c2.getUpVotes().compareTo(c1.getUpVotes());
+                    return c2.upVotes.compareTo(c1.upVotes);
                 }
             });
 
@@ -217,11 +217,13 @@ public class InsideCommentDialog extends Activity {
                 String replies = "";
                 Comment c = new Comment(m, u, d, votes, boxKey, false, replies, refKey, 2, "");
 
+                if (votes != null) {
 
-                mComments.add(c);
-                mComments = sortComments(mComments);
-                mCommentHashMap.put(d.toString() + m, c);
-                setmCommentAdapter();
+                    mComments.add(c);
+                    mComments = sortComments(mComments);
+                    mCommentHashMap.put(d.toString() + m, c);
+                    setmCommentAdapter();
+                }
 
             }
 

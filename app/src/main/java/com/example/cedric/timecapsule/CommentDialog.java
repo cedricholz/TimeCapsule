@@ -262,9 +262,13 @@ public class CommentDialog extends Activity {
     }
 
     public ArrayList<Comment> sortComments(ArrayList<Comment> comments) {
+        for (Comment c:comments){
+            System.out.println(c.upVotes);
+        }
+
         Collections.sort(comments, new Comparator<Comment>() {
             public int compare(Comment c1, Comment c2) {
-                return c2.getUpVotes().compareTo(c1.getUpVotes());
+                return c2.upVotes.compareTo(c1.upVotes);
             }
         });
         return comments;
@@ -293,13 +297,15 @@ public class CommentDialog extends Activity {
                 Comment c = new Comment(m, u, d, votes, key, false, replies,
                         refKey, commentLevel, photoUrl);
 
-                mComments.add(c);
+                if (votes != null) {
+                    mComments.add(c);
 
-                mComments = sortComments(mComments);
+                    mComments = sortComments(mComments);
 
-                commentHashMap.put(d.toString() + m, c);
+                    commentHashMap.put(d.toString() + m, c);
 
-                setAdapterAndUpdateData();
+                    setAdapterAndUpdateData();
+                }
             }
 
             @Override

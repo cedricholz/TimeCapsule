@@ -183,7 +183,7 @@ public class MessageDialog extends Activity {
 
 
                 if (m == null){
-                    getNewMessage(date);
+                    getNewMessage(dataSnapshot.getKey());
                 }
 
                 if (m != null) {
