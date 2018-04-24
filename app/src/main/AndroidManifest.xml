@@ -14,11 +14,13 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-
     <!-- camera -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -52,20 +54,15 @@
         <activity
             android:name=".NearbyDialog"
             android:theme="@style/myDialogTheme" />
-
         <activity
             android:name=".MessageDialog"
             android:theme="@style/myToolbarDialogTheme" />
-
-
         <activity
             android:name=".ConversationsDialog"
             android:theme="@style/myToolbarDialogTheme" />
-
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/loginTheme">
-        </activity>
+            android:theme="@style/loginTheme"></activity>
         <activity
             android:name=".SignUpActivity"
             android:label="@string/title_activity_sign_up"
@@ -74,11 +71,17 @@
             android:name=".StartActivity"
             android:label="@string/title_activity_start"
             android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ImageActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <provider
@@ -88,7 +91,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 

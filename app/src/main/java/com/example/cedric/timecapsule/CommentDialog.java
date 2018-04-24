@@ -194,23 +194,33 @@ public class CommentDialog extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK){
-            mProgress.setMessage("Uploading...");
-            mProgress.show();
-            Uri uri = photoURI;
+            if (data.getStringExtra("user_permission") != null) {
+                mProgress.setMessage("Uploading...");
+                mProgress.show();
+                Uri uri = photoURI;
 
-            StorageReference filepath = storageRef.child("Photos").child(uri.getLastPathSegment());
-            filepath.putFile(photoURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(CommentDialog.this, "Upload Successful!",    Toast.LENGTH_SHORT).show();
-                    mProgress.dismiss();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(CommentDialog.this, "Upload Failed!", Toast.LENGTH_SHORT).show();
-                }
-            });
+                StorageReference filepath = storageRef.child("Photos").child(uri.getLastPathSegment());
+                filepath.putFile(photoURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(CommentDialog.this, "Upload Successful!",    Toast.LENGTH_SHORT).show();
+                        mProgress.dismiss();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(CommentDialog.this, "Upload Failed!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+
+            } else {
+                Intent i = new Intent(CommentDialog.this, ImageActivity.class);
+                i.putExtra("image", mCurrentPhotoPath);
+
+                startActivityForResult(i, 1);
+            }
         }
     }
 
