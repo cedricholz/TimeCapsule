@@ -56,6 +56,33 @@
     </RelativeLayout>
 
 
+
+    <RelativeLayout
+
+        android:layout_width="60dp"
+        android:layout_height="55dp"
+        android:layout_gravity="bottom|left"
+        android:layout_margin="7dp"
+        android:background="@drawable/background_card"
+        android:orientation="vertical">
+
+
+
+        <ImageButton
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="9dp"
+            android:paddingRight="3dp"
+            android:background="@color/white"
+            android:src="@drawable/ic_power_settings_new_black_24dp" />
+
+
+    </RelativeLayout>
+
+
 </FrameLayout>
 
 

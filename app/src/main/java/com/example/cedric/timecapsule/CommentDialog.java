@@ -13,6 +13,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -70,7 +73,7 @@ public class CommentDialog extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_dialog);
+        setContentView(R.layout.activity_comment_dialog);
 
         titleBar = findViewById(R.id.my_toolbar);
 
@@ -113,7 +116,12 @@ public class CommentDialog extends Activity {
         getComments();
 
         mProgress = new ProgressDialog(this);
+
+
     }
+
+
+
 
     public void setSendButtonListener() {
         sendButton.setOnClickListener(new View.OnClickListener() {

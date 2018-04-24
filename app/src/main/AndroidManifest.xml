@@ -47,7 +47,7 @@
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".CommentDialog"
-            android:theme="@style/myDialogTheme" />
+            android:theme="@style/commentDialogTheme" />
         <activity
             android:name=".InsideCommentDialog"
             android:theme="@style/myDialogTheme" />
