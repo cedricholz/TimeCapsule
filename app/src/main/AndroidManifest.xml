@@ -62,7 +62,7 @@
             android:theme="@style/myToolbarDialogTheme" />
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/loginTheme"></activity>
+            android:theme="@style/loginTheme" />
         <activity
             android:name=".SignUpActivity"
             android:label="@string/title_activity_sign_up"
@@ -71,18 +71,15 @@
             android:name=".StartActivity"
             android:label="@string/title_activity_start"
             android:theme="@style/AppTheme.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".PreviewActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -93,6 +90,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <activity
+            android:name=".GalleryActivity"
+            android:theme="@style/myDialogTheme"></activity>
+        <activity android:name=".ImageCell"></activity>
     </application>
 
 </manifest>
