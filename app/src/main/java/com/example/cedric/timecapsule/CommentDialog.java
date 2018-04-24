@@ -263,7 +263,7 @@ public class CommentDialog extends Activity {
                     Date d = new Date(date);
 
                     Comment c = new Comment(m, u, d, votes, key, false, replies,
-                            refKey, commentLevel);
+                            refKey, commentLevel,"");
 
                     mComments.add(c);
 
@@ -328,7 +328,7 @@ public class CommentDialog extends Activity {
         String replies = "0";
 
         Comment newComment = new Comment(commentText, username, curDate, "1", key, false,
-                replies, refKey, commentLevel);
+                replies, refKey, commentLevel, "");
 
         mComments.add(newComment);
         mComments = sortComments(mComments);

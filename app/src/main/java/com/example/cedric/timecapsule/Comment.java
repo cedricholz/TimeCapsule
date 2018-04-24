@@ -15,10 +15,11 @@ public class Comment {
     public String replies;
     public String refKey;
     public int commentLevel;
+    public String photoUrl;
 
 
     Comment(String text, String username, Date date, String upVotes, String boxKey, Boolean headComment, String replies,
-            String refKey, int commentLevel) {
+            String refKey, int commentLevel, String photoUrl) {
         this.text = text;
         this.username = username;
         this.date = date;
@@ -29,6 +30,8 @@ public class Comment {
         this.refKey = refKey;
 
         this.commentLevel = commentLevel;
+
+        this.photoUrl = photoUrl;
     }
 
     public String getUpVotes(){

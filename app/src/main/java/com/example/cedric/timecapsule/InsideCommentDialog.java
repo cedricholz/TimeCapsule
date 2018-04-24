@@ -92,7 +92,7 @@ public class InsideCommentDialog extends Activity {
             refKey = "locations/" + boxKey + "/messages/" + headDate + "/commentMessages";
             headRefString = "locations/" + boxKey + "/messages/";
 
-            Comment headComment = new Comment(headMessage, headUsername, new Date(headDate), headVotes, boxKey, true, headReplies, headRefString, commentLevel);
+            Comment headComment = new Comment(headMessage, headUsername, new Date(headDate), headVotes, boxKey, true, headReplies, headRefString, commentLevel, "");
             mComments.add(headComment);
             mCommentHashMap.put(headDate + headMessage, headComment);
 
@@ -186,7 +186,7 @@ public class InsideCommentDialog extends Activity {
         headRef.child(headDate).child("replies").setValue(headReplies);
 
         String replies = "0";
-        Comment newComment = new Comment(commentText, username, curDate, "1", boxKey, false, replies, refKey, commentLevel);
+        Comment newComment = new Comment(commentText, username, curDate, "1", boxKey, false, replies, refKey, commentLevel, "");
 
         mComments.add(newComment);
         mComments = sortComments(mComments);
@@ -208,7 +208,7 @@ public class InsideCommentDialog extends Activity {
                 String date = dataSnapshot.getKey();
                 Date d = new Date(date);
                 String replies = "";
-                Comment c = new Comment(m, u, d, votes, boxKey, false, replies, refKey, 2);
+                Comment c = new Comment(m, u, d, votes, boxKey, false, replies, refKey, 2, "");
 
                 if (c != null && m != null) {
                     mComments.add(c);
