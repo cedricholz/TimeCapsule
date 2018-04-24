@@ -121,7 +121,6 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Login Successful",
                                     Toast.LENGTH_SHORT).show();
 
-
                             u.setUsername(LoginActivity.this, login.getUsername());
                             u.setPassword(LoginActivity.this, login.getPassword());
                             u.setEmail(LoginActivity.this, login.getEmail());
@@ -133,7 +132,8 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
-                } else {
+                }
+                 else {
                     Toast.makeText(LoginActivity.this, "Email Address is not registered",
                             Toast.LENGTH_SHORT).show();
                 }

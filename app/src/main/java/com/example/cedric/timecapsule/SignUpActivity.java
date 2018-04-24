@@ -23,6 +23,7 @@ public class SignUpActivity extends AppCompatActivity {
     // Firebase
     FirebaseDatabase database;
     DatabaseReference users;
+    DatabaseReference userNames;
 
     // User Input
     EditText username, password, email;
@@ -55,6 +56,8 @@ public class SignUpActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         users = database.getReference("users");
 
+        userNames = database.getReference("usernames");
+
         // setting up user input
         username = (EditText) findViewById(R.id.SignUpUsername);
         password = (EditText) findViewById(R.id.SignUpPassword);
@@ -78,36 +81,28 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (isEmailValid(email.getText().toString())) {
-                    createUser(username.getText().toString(), password.getText().toString(),
-                            email.getText().toString());
+                    User user = new User(username.getText().toString(), password.getText().toString(), email.getText().toString());
+
+                    checkEmailFree(user);
                 } else {
                     email.setError("Please enter a valid email address");
                 }
             }
         });
 
-
     }
 
-    private void createUser(String username, final String password, String email) {
 
-        final User user = new User(username, u.getHashedPassword(password), email);
-
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void checkEmailFree(final User user) {
+        users.child(encodeString(user.getEmail())).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(encodeString(user.getEmail())).exists())
-                    Toast.makeText(SignUpActivity.this, "The Username Already Exists!",
-                            Toast.LENGTH_SHORT).show();
-                else {
-                    users.child(encodeString(user.getEmail())).setValue(user);
 
-                    Toast.makeText(SignUpActivity.this, "Success Register!",
+                if (dataSnapshot.getValue() != null) {
+                    Toast.makeText(SignUpActivity.this, "That Email Address Already Exists!",
                             Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(SignUpActivity.this, LoginActivity.class);
-                    i.putExtra("email", user.getEmail().toString());
-                    i.putExtra("password", password);
-                    startActivity(i);
+                } else {
+                    checkUsernameFree(user);
                 }
             }
 
@@ -116,5 +111,45 @@ public class SignUpActivity extends AppCompatActivity {
                 // work left
             }
         });
+    }
+
+    private void checkUsernameFree(final User user) {
+        userNames.child(encodeString(user.getUsername())).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.getValue() != null) {
+                    Toast.makeText(SignUpActivity.this, "That Username Already Exists!",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    createUser(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // work left
+            }
+        });
+    }
+
+    private void createUser(User user) {
+
+        String plainTextPassword = user.getPassword();
+        user.setPassword(u.getHashedPassword(plainTextPassword));
+
+        users.child(encodeString(user.getEmail())).setValue(user);
+
+
+        userNames.child(encodeString(user.getUsername())).setValue("1");
+
+        Toast.makeText(SignUpActivity.this, "Success Register!",
+                Toast.LENGTH_SHORT).show();
+
+        Intent i = new Intent(SignUpActivity.this, LoginActivity.class);
+        i.putExtra("email", user.getEmail().toString());
+        i.putExtra("password", plainTextPassword);
+        startActivity(i);
+
     }
 }

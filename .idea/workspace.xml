@@ -20,10 +20,8 @@
       <change beforePath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" afterPath="$PROJECT_DIR$/.gradle/4.1/taskHistory/taskHistory.lock" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/LoginActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/LoginActivity.java" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/MessageDialog.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/MessageDialog.java" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/SignUpActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/SignUpActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/StartActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/StartActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/UserInformation/User.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/UserInformation/User.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/Utils.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/Utils.java" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -42,14 +40,24 @@
       <file leaf-file-name="LoginActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/LoginActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="615">
-              <caret line="119" column="84" lean-forward="false" selection-start-line="119" selection-start-column="84" selection-end-line="119" selection-end-column="84" />
+            <state relative-caret-position="229">
+              <caret line="119" column="64" lean-forward="false" selection-start-line="119" selection-start-column="60" selection-end-line="119" selection-end-column="64" />
               <folding>
                 <element signature="e#2444#2677#0" expanded="true" />
                 <element signature="e#2676#2677#0" expanded="true" />
                 <element signature="e#2754#3140#0" expanded="true" />
                 <element signature="e#3139#3140#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MessageDialog.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/MessageDialog.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="440">
+              <caret line="74" column="43" lean-forward="false" selection-start-line="74" selection-start-column="43" selection-end-line="74" selection-end-column="43" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -67,19 +75,11 @@
       <file leaf-file-name="SignUpActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/SignUpActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="98" column="62" lean-forward="false" selection-start-line="98" selection-start-column="62" selection-end-line="98" selection-end-column="62" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="User.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/UserInformation/User.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="638">
-              <caret line="41" column="5" lean-forward="false" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="5" />
-              <folding />
+            <state relative-caret-position="207">
+              <caret line="115" column="43" lean-forward="false" selection-start-line="115" selection-start-column="43" selection-end-line="115" selection-end-column="43" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -127,8 +127,12 @@
       <find>.commit</find>
       <find>username</find>
       <find>login</find>
-      <find>createuser</find>
       <find>password</find>
+      <find>getemail</find>
+      <find>createuser</find>
+      <find>exists</find>
+      <find>hash</find>
+      <find>email</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -2008,7 +2012,6 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/comment_cell_layout.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/InsideCommentDialog.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/CommentAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/MessageDialog.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/CommentDialog.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/Message.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/MessageAdapter.java" />
@@ -2023,6 +2026,7 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/UserInformation/User.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/Utils.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/StartActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/MessageDialog.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/LoginActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/SignUpActivity.java" />
       </list>
@@ -2331,7 +2335,14 @@
       <option name="project" value="LOCAL" />
       <updated>1524525582522</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="now hashing passwords with a MD5 and a salt instead of in plaintext">
+      <created>1524527723764</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1524527723764</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -2353,14 +2364,14 @@
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2207304" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16004297" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46620047" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.031468533" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.018648019" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Device File Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -2377,11 +2388,13 @@
     <MESSAGE value="added images to comments and made the distance to open boxes larger" />
     <MESSAGE value="put all the messaging that didn't get uploaded" />
     <MESSAGE value="added user info to shared preferences when user logs on. Doesn't require another login if the user has logged in. Also fixed bug where password was being set to username in login after sign in" />
-    <option name="LAST_COMMIT_MESSAGE" value="added user info to shared preferences when user logs on. Doesn't require another login if the user has logged in. Also fixed bug where password was being set to username in login after sign in" />
+    <MESSAGE value="now hashing passwords with a MD5 and a salt instead of in plaintext" />
+    <MESSAGE value="was downloading entire firebase users to check if email existed. Fixed that and made it so you can't choose a username that's the same as someone else either" />
+    <option name="LAST_COMMIT_MESSAGE" value="was downloading entire firebase users to check if email existed. Fixed that and made it so you can't choose a username that's the same as someone else either" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="7" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -2411,14 +2424,6 @@
       </provider>
       <provider editor-type-id="android-designer2">
         <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/MessageDialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="662">
-          <caret line="199" column="1" lean-forward="false" selection-start-line="199" selection-start-column="1" selection-end-line="199" selection-end-column="1" />
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/CommentDialog.java">
@@ -2574,18 +2579,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/MessageDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="74" column="43" lean-forward="false" selection-start-line="74" selection-start-column="43" selection-end-line="74" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/UserInformation/User.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="638">
-          <caret line="41" column="5" lean-forward="false" selection-start-line="41" selection-start-column="5" selection-end-line="41" selection-end-column="5" />
+        <state relative-caret-position="199">
+          <caret line="13" column="42" lean-forward="true" selection-start-line="13" selection-start-column="42" selection-end-line="13" selection-end-column="42" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/LoginActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="119" column="84" lean-forward="false" selection-start-line="119" selection-start-column="84" selection-end-line="119" selection-end-column="84" />
+        <state relative-caret-position="229">
+          <caret line="119" column="64" lean-forward="false" selection-start-line="119" selection-start-column="60" selection-end-line="119" selection-end-column="64" />
           <folding>
             <element signature="e#2444#2677#0" expanded="true" />
             <element signature="e#2676#2677#0" expanded="true" />
@@ -2597,9 +2610,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/cedric/timecapsule/SignUpActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="98" column="62" lean-forward="false" selection-start-line="98" selection-start-column="62" selection-end-line="98" selection-end-column="62" />
-          <folding />
+        <state relative-caret-position="207">
+          <caret line="115" column="43" lean-forward="false" selection-start-line="115" selection-start-column="43" selection-end-line="115" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
