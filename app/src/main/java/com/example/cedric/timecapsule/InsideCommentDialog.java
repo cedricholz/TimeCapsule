@@ -20,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,6 +47,9 @@ public class InsideCommentDialog extends Activity {
 
     String headVotes;
     String refKey = "locations";
+
+    String photoUrl = "";
+
     private EditText textField;
     private ImageButton sendButton;
     private String username = "";
@@ -89,10 +93,13 @@ public class InsideCommentDialog extends Activity {
             headVotes = (String) intentExtras.get("headVotes");
             boxKey = (String) intentExtras.get("boxKey");
 
+
+            photoUrl = (String) intentExtras.get("photoUrl");
+
             refKey = "locations/" + boxKey + "/messages/" + headDate + "/commentMessages";
             headRefString = "locations/" + boxKey + "/messages/";
 
-            Comment headComment = new Comment(headMessage, headUsername, new Date(headDate), headVotes, boxKey, true, headReplies, headRefString, commentLevel, "");
+            Comment headComment = new Comment(headMessage, headUsername, new Date(headDate), headVotes, boxKey, true, headReplies, headRefString, commentLevel, photoUrl);
             mComments.add(headComment);
             mCommentHashMap.put(headDate + headMessage, headComment);
 
@@ -185,15 +192,44 @@ public class InsideCommentDialog extends Activity {
         headReplies = Integer.toString(Integer.parseInt(headReplies) + 1);
         headRef.child(headDate).child("replies").setValue(headReplies);
 
-        String replies = "0";
-        Comment newComment = new Comment(commentText, username, curDate, "1", boxKey, false, replies, refKey, commentLevel, "");
+//        String replies = "0";
+//        Comment newComment = new Comment(commentText, username, curDate, "1", boxKey, false, replies, refKey, commentLevel, "");
+//
+//        mComments.add(newComment);
+//        mComments = sortComments(mComments);
+//
+//        mCommentHashMap.put(curDate.toString() + commentText, newComment);
 
-        mComments.add(newComment);
-        mComments = sortComments(mComments);
+//        setmCommentAdapter();
+    }
 
-        mCommentHashMap.put(curDate.toString() + commentText, newComment);
+    private void getNewChildData(String commentKey) {
+        myRef.child(commentKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-        setmCommentAdapter();
+                String u = (String) dataSnapshot.child("user").getValue();
+                String m = (String) dataSnapshot.child("message").getValue();
+                String votes = (String) dataSnapshot.child("upVotes").getValue();
+
+                String date = dataSnapshot.getKey();
+                Date d = new Date(date);
+                String replies = "";
+                Comment c = new Comment(m, u, d, votes, boxKey, false, replies, refKey, 2, "");
+
+
+                mComments.add(c);
+                mComments = sortComments(mComments);
+                mCommentHashMap.put(d.toString() + m, c);
+                setmCommentAdapter();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // work left
+            }
+        });
     }
 
     private void getComments() {
@@ -209,6 +245,11 @@ public class InsideCommentDialog extends Activity {
                 Date d = new Date(date);
                 String replies = "";
                 Comment c = new Comment(m, u, d, votes, boxKey, false, replies, refKey, 2, "");
+
+                if (m == null) {
+                    getNewChildData(date);
+                }
+
 
                 if (c != null && m != null) {
                     mComments.add(c);

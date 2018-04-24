@@ -19,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -133,13 +134,40 @@ public class MessageDialog extends Activity {
         usersRef.child(friendUsername).child("conversations").child(messageKey).child("friendUsername").setValue(username);
 
 
-        myLastPost = username + messageText;
-
-        Message newMessage = new Message(messageText, username, curDate, messageKey);
-
-        mMessages.add(newMessage);
+//        myLastPost = username + messageText;
+//
+//        Message newMessage = new Message(messageText, username, curDate, messageKey);
+//
+//        mMessages.add(newMessage);
 
         setAdapterAndUpdateData();
+    }
+
+    private void getNewMessage(String k) {
+        myRef.child(messageKey).child(k).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String u = (String) dataSnapshot.child("user").getValue();
+                String m = (String) dataSnapshot.child("message").getValue();
+                String date = (String) dataSnapshot.child("date").getValue();
+
+
+                Date d = new Date(date);
+
+                Message message = new Message(m, u, d, messageKey);
+
+                mMessages.add(message);
+
+                setAdapterAndUpdateData();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // work left
+            }
+        });
     }
 
 
@@ -153,7 +181,12 @@ public class MessageDialog extends Activity {
                 String m = (String) dataSnapshot.child("message").getValue();
                 String date = (String) dataSnapshot.child("date").getValue();
 
-                if (m != null && !myLastPost.equals(u + m)) {
+
+                if (m == null){
+                    getNewMessage(date);
+                }
+
+                if (m != null) {
 
                     Date d = new Date(date);
 

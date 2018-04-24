@@ -96,6 +96,8 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     private ImageButton downButton;
     private ImageView placeView;
 
+    private String photoUrl;
+
     private Utils u;
 
 
@@ -218,6 +220,8 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
                     insideCommentIntent.putExtra("headReplies", replies);
                     insideCommentIntent.putExtra("headVotes", upVotes);
                     insideCommentIntent.putExtra("boxKey", boxKey);
+                    insideCommentIntent.putExtra("photoUrl", photoUrl);
+
 
                     view.getContext().startActivity(insideCommentIntent);
 
@@ -243,6 +247,8 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     }
 
     void bind(Comment comment) {
+
+        photoUrl = comment.photoUrl;
         commentUsername = comment.username;
         replies = comment.replies;
 
@@ -266,7 +272,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
         if (isHead) {
             mUsernameTextView.setTextSize(24);
             mCommentTextView.setTextSize(18);
-            mCommentTextView.setPadding(2, 8, 0, 200);
+            mCommentTextView.setPadding(2, 8, 0, 100);
             mDateTextView.setTextSize(18);
             mRepliesTextView.setTextSize(18);
         }

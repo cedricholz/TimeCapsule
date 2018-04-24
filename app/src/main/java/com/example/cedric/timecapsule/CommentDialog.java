@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.cedric.timecapsule.UserInformation.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -31,6 +32,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -45,6 +47,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class CommentDialog extends Activity {
+    private static final int CAMERA_REQUEST_CODE = 1;
     public String myLastPost = "";
     android.support.v7.widget.Toolbar titleBar;
     FirebaseDatabase database;
@@ -56,6 +59,7 @@ public class CommentDialog extends Activity {
     UploadTask uploadTask;
     ProgressDialog mProgress;
     Uri photoURI;
+    String mCurrentPhotoPath;
     private EditText textField;
     private ImageButton sendButton;
     private ImageButton cameraButton;
@@ -67,8 +71,6 @@ public class CommentDialog extends Activity {
     private HashMap<String, Comment> commentHashMap = new HashMap<>();
     private int commentLevel = 1;
     private int maxCommentLength;
-
-    private static final int CAMERA_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,9 +122,6 @@ public class CommentDialog extends Activity {
 
 
     }
-
-
-
 
     public void setSendButtonListener() {
         sendButton.setOnClickListener(new View.OnClickListener() {
@@ -182,8 +181,6 @@ public class CommentDialog extends Activity {
         }
     }
 
-    String mCurrentPhotoPath;
-
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -202,7 +199,7 @@ public class CommentDialog extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK){
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
 
             // user clicked "post" button from Preview Activity
             if (data != null && data.getStringExtra("user_permission") != null) {
@@ -216,7 +213,7 @@ public class CommentDialog extends Activity {
                 filepath.putFile(photoURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(CommentDialog.this, "Upload Successful!",    Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CommentDialog.this, "Upload Successful!", Toast.LENGTH_SHORT).show();
                         mProgress.dismiss();
 
                         filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -272,11 +269,46 @@ public class CommentDialog extends Activity {
         return prefs.getString("username", "Default");
     }
 
+    private void getNewChildData(String commentKey) {
+        myRef.child(key).child("messages").child(commentKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String u = (String) dataSnapshot.child("user").getValue();
+                String m = (String) dataSnapshot.child("message").getValue();
+                String votes = (String) dataSnapshot.child("upVotes").getValue();
+                String replies = (String) dataSnapshot.child("replies").getValue();
+                String photoUrl = (String) dataSnapshot.child("photoURL").getValue();
+                String date = dataSnapshot.getKey();
+
+                Date d = new Date(date);
+
+                Comment c = new Comment(m, u, d, votes, key, false, replies,
+                        refKey, commentLevel, photoUrl);
+
+                mComments.add(c);
+
+                mComments = sortComments(mComments);
+
+                commentHashMap.put(d.toString() + m, c);
+
+                setAdapterAndUpdateData();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // work left
+            }
+        });
+    }
+
+
     private void getComments() {
 
         myRef.child(key).child("messages").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+
 
                 String u = (String) dataSnapshot.child("user").getValue();
                 String m = (String) dataSnapshot.child("message").getValue();
@@ -284,7 +316,12 @@ public class CommentDialog extends Activity {
                 String replies = (String) dataSnapshot.child("replies").getValue();
                 String photoUrl = (String) dataSnapshot.child("photoURL").getValue();
 
-                if (m != null && !myLastPost.equals(u + m)) {
+                if (m == null) {
+                    getNewChildData(dataSnapshot.getKey());
+                }
+
+
+                if (m != null) {
                     String date = dataSnapshot.getKey();
 
                     Date d = new Date(date);
@@ -351,18 +388,20 @@ public class CommentDialog extends Activity {
         myRef.child(key).child("messages").child(curDate.toString()).child("replies").setValue("0");
         myRef.child(key).child("messages").child(curDate.toString()).child("photoURL").setValue(photoURL);
 
-        myLastPost = username + commentText;
 
-        String replies = "0";
+//        myLastPost = username + commentText;
+//
+//        String replies = "0";
+//
+//        Comment newComment = new Comment(commentText, username, curDate, "1", key, false,
+//                replies, refKey, commentLevel, photoURL);
+//
+//        mComments.add(newComment);
+//        mComments = sortComments(mComments);
+//
+//        commentHashMap.put(curDate.toString() + commentText, newComment);
+//        setAdapterAndUpdateData();
 
-        Comment newComment = new Comment(commentText, username, curDate, "1", key, false,
-                replies, refKey, commentLevel, photoURL);
 
-        mComments.add(newComment);
-        mComments = sortComments(mComments);
-
-        commentHashMap.put(curDate.toString() + commentText, newComment);
-
-        setAdapterAndUpdateData();
     }
 }
