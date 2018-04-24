@@ -251,10 +251,17 @@ public class CommentDialog extends Activity {
     public void postImage(String caption, String downloadURL) {
         if (caption.length() <= maxCommentLength) {
             postNewComment(caption, downloadURL);
-            myRef.child(key).child("PhotoGallery").child(downloadURL).setValue(1);
         } else {
             Toast.makeText(CommentDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static String encodeURL(String string) {
+        return string.replace(".", ",");
+    }
+
+    public static String deocodeURL(String string) {
+        return string.replace(",", ".");
     }
 
     public ArrayList<Comment> sortComments(ArrayList<Comment> comments) {
@@ -344,6 +351,8 @@ public class CommentDialog extends Activity {
 
     private void postNewComment(String commentText, String photoURL) {
         Date curDate = new Date();
+
+        myRef.child(key).child("Photo Gallery").child(curDate.toString()).setValue(photoURL);
 
         myRef.child(key).child("messages").child(curDate.toString()).child("user").setValue(username);
         myRef.child(key).child("messages").child(curDate.toString()).child("message").setValue(commentText);
