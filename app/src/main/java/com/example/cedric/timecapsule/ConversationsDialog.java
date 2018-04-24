@@ -100,7 +100,6 @@ public class ConversationsDialog extends Activity {
         mAdapter = new ConversationsAdapter(this, mConversations);
         mRecyclerView.setAdapter(mAdapter);
 
-
         mRecyclerView.smoothScrollToPosition(mRecyclerView.getAdapter().getItemCount() - 1);
 
     }

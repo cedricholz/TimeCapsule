@@ -29,12 +29,14 @@ public class Utils {
     private int maxCommentLength = 300;
     private int maxMessageLength = 300;
 
+    private double distanceChangeToMoveCamera = 20;
+
     Utils() {
     }
 
     public static String getHashedPassword(String passwordToHash) {
         String generatedPassword = null;
-        byte [] salt = {-92, 83, -14, -80, 44, 64, 96, -13, 98, 102, 46, 34, -108, -40, 100, 3};
+        byte[] salt = {-92, 83, -14, -80, 44, 64, 96, -13, 98, 102, 46, 34, -108, -40, 100, 3};
         try {
             // Create MessageDigest instance for MD5
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -54,6 +56,10 @@ public class Utils {
             e.printStackTrace();
         }
         return generatedPassword;
+    }
+
+    public double getDistanceChangeToMoveCamera() {
+        return distanceChangeToMoveCamera;
     }
 
     public int getMaxMessageLength() {

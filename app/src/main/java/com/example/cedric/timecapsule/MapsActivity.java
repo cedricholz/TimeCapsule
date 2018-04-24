@@ -197,13 +197,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onLocationChanged(Location location) {
 
+                if (u.getDistance(lastLocation, userLocation) > u.getDistanceChangeToMoveCamera()) {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
+                }
+
                 lastLocation = userLocation;
+
                 userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 //                mMap.clear();
 
                 getNearbyMarkers(userLocation);
 
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
 
                 Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
 
@@ -349,8 +353,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivity(allMessagesIntent);
             }
         });
-
-
 
 
         logoutButton = findViewById(R.id.logout);
