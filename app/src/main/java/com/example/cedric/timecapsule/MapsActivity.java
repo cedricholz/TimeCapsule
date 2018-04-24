@@ -30,6 +30,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
@@ -428,6 +429,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         MarkerOptions m = new MarkerOptions();
                         m.position(markerLatLng).title(title);
                         m.position(markerLatLng).snippet(address);
+                        m.icon(BitmapDescriptorFactory.fromResource(R.drawable.orange));
 
                         Marker mark = mMap.addMarker(m);
                         mark.setTag(fileName);
@@ -483,6 +485,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     MarkerOptions m = new MarkerOptions();
                     m.position(userLocation).title(title);
                     m.position(userLocation).snippet(curAddress);
+                    m.icon(BitmapDescriptorFactory.fromResource(R.drawable.orange));
                     mMap.addMarker(m);
 
                     geoFire.setLocation(title + "%" + curAddress + "%oski_bear", new GeoLocation(userLocation.latitude, userLocation.longitude), new GeoFire.CompletionListener() {
