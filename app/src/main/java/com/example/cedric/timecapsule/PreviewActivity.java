@@ -16,7 +16,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 
-public class ImageActivity extends AppCompatActivity {
+public class PreviewActivity extends AppCompatActivity {
 
     private FirebaseStorage storage;
     private StorageReference storageRef;
