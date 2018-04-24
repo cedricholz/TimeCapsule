@@ -56,13 +56,13 @@ public class CommentDialog extends Activity {
     StorageReference storageRef;
     String refKey = "locations";
     Utils u;
-    UploadTask uploadTask;
     ProgressDialog mProgress;
     Uri photoURI;
     String mCurrentPhotoPath;
     private EditText textField;
     private ImageButton sendButton;
     private ImageButton cameraButton;
+    private ImageButton photoGalleryButton;
     private String username = "";
     private String key = "";
     private RecyclerView mRecyclerView;
@@ -113,13 +113,15 @@ public class CommentDialog extends Activity {
         textField = findViewById(R.id.comment_input_edit_text);
         sendButton = findViewById(R.id.send_button);
         cameraButton = findViewById(R.id.camera_button);
+        photoGalleryButton = findViewById(R.id.photo_gallery);
+
         setSendButtonListener();
         setCameraButtonListener();
+        setPhotoGalleryButtonListener();
 
         getComments();
 
         mProgress = new ProgressDialog(this);
-
 
     }
 
@@ -153,6 +155,16 @@ public class CommentDialog extends Activity {
             @Override
             public void onClick(View arg0) {
                 takePictureIntent();
+            }
+        });
+    }
+
+    public void setPhotoGalleryButtonListener() {
+        photoGalleryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Intent i = new Intent(CommentDialog.this, GalleryActivity.class);
+                startActivity(i);
             }
         });
     }
