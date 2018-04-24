@@ -65,6 +65,7 @@ public class PreviewActivity extends AppCompatActivity {
             public void onClick(View arg0) {
                 Intent intent = new Intent();
                 intent.putExtra("user_permission", "true");
+                intent.putExtra("caption", caption.getText().toString());
                 setResult(RESULT_OK, intent);
                 finish();
             }

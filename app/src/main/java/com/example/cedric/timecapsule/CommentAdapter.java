@@ -9,12 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
@@ -70,22 +74,27 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     public TextView mRepliesTextView;
     public TextView mCommentTextView;
     public TextView mUpVoteTextView;
+
     public String date = "";
     public String boxKey = "";
     public String upVotes = "1";
     public String message = "";
     public String commentUsername = "";
     public String myUsername = "";
+    public String downloadURL = "";
 
     public String replies = "";
 
     FirebaseDatabase database;
+    FirebaseStorage storage;
     DatabaseReference myRef;
+    StorageReference storageRef;
     SharedPreferences prefs;
     SharedPreferences.Editor editor;
     int commentLevel = 1;
     private ImageButton upButton;
     private ImageButton downButton;
+    private ImageView placeView;
 
     private Utils u;
 
@@ -105,7 +114,10 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
         upButton = mCommentBubbleLayout.findViewById(R.id.upVote);
         downButton = mCommentBubbleLayout.findViewById(R.id.downVote);
 
+        placeView = mCommentBubbleLayout.findViewById(R.id.place_view);
+
         database = FirebaseDatabase.getInstance();
+        storage = FirebaseStorage.getInstance();
 
         setButtonListeners();
 
@@ -238,7 +250,6 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
 
         myRef = database.getReference(comment.refKey);
 
-
         mUsernameTextView.setText(comment.username);
         boolean isHead = comment.headComment;
 
@@ -273,6 +284,11 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
         boxKey = comment.boxKey;
 
         handleVoteButtonColor();
+
+        System.out.println(comment.photoUrl);
+        // imageView
+        Picasso.get().load(comment.photoUrl).into(placeView);
+        placeView.setVisibility(View.VISIBLE);
     }
 
     public void handleVoteButtonColor() {
@@ -281,7 +297,6 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
         } else {
             upButton.setBackgroundResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
         }
-
 
         if (getIfVoted("down").equals("1")) {
             downButton.setBackgroundResource(R.drawable.ic_keyboard_arrow_down_green_24dp);
