@@ -16,6 +16,8 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 
+// Allows user to preview the image/video one last time before posting
+
 public class PreviewActivity extends AppCompatActivity {
 
     private FirebaseStorage storage;

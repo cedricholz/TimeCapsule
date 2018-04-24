@@ -80,7 +80,7 @@
         </activity>
 
         <activity
-            android:name=".ImageActivity"
+            android:name=".PreviewActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 

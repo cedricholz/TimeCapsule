@@ -17,7 +17,8 @@ public class Comment {
     public int commentLevel;
 
 
-    Comment(String text, String username, Date date, String upVotes, String boxKey, Boolean headComment, String replies, String refKey, int commentLevel) {
+    Comment(String text, String username, Date date, String upVotes, String boxKey, Boolean headComment, String replies,
+            String refKey, int commentLevel) {
         this.text = text;
         this.username = username;
         this.date = date;

@@ -194,6 +194,8 @@ public class CommentDialog extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK){
+
+            // user clicked "post" button from Preview Activity
             if (data.getStringExtra("user_permission") != null) {
                 mProgress.setMessage("Uploading...");
                 mProgress.show();
@@ -205,6 +207,7 @@ public class CommentDialog extends Activity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(CommentDialog.this, "Upload Successful!",    Toast.LENGTH_SHORT).show();
                         mProgress.dismiss();
+                        postImage();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -213,15 +216,18 @@ public class CommentDialog extends Activity {
                     }
                 });
 
-
-
-            } else {
-                Intent i = new Intent(CommentDialog.this, ImageActivity.class);
+            } else { // Takes user to the Preview Activity
+                Intent i = new Intent(CommentDialog.this, PreviewActivity.class);
                 i.putExtra("image", mCurrentPhotoPath);
 
                 startActivityForResult(i, 1);
             }
         }
+    }
+
+    public void postImage() {
+
+
     }
 
     public ArrayList<Comment> sortComments(ArrayList<Comment> comments) {
@@ -249,13 +255,15 @@ public class CommentDialog extends Activity {
                 String m = (String) dataSnapshot.child("message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
                 String replies = (String) dataSnapshot.child("replies").getValue();
+                String imageUrl = (String) dataSnapshot.child("imageURL").getValue();
 
                 if (m != null && !myLastPost.equals(u + m)) {
                     String date = dataSnapshot.getKey();
 
                     Date d = new Date(date);
 
-                    Comment c = new Comment(m, u, d, votes, key, false, replies, refKey, commentLevel);
+                    Comment c = new Comment(m, u, d, votes, key, false, replies,
+                            refKey, commentLevel);
 
                     mComments.add(c);
 
@@ -310,7 +318,6 @@ public class CommentDialog extends Activity {
     private void postNewComment(String commentText) {
         Date curDate = new Date();
 
-
         myRef.child(key).child("messages").child(curDate.toString()).child("user").setValue(username);
         myRef.child(key).child("messages").child(curDate.toString()).child("message").setValue(commentText);
         myRef.child(key).child("messages").child(curDate.toString()).child("upVotes").setValue("1");
@@ -320,7 +327,8 @@ public class CommentDialog extends Activity {
 
         String replies = "0";
 
-        Comment newComment = new Comment(commentText, username, curDate, "1", key, false, replies, refKey, commentLevel);
+        Comment newComment = new Comment(commentText, username, curDate, "1", key, false,
+                replies, refKey, commentLevel);
 
         mComments.add(newComment);
         mComments = sortComments(mComments);
