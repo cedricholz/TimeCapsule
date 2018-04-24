@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -25,6 +26,7 @@ public class PreviewActivity extends AppCompatActivity {
     private ImageView capturedImage;
     private Button cancelBtn;
     private Button postBtn;
+    private EditText caption;
     private String mCurrentPath;
 
     @Override
@@ -35,6 +37,7 @@ public class PreviewActivity extends AppCompatActivity {
         cancelBtn = findViewById(R.id.btnCancel);
         postBtn = findViewById(R.id.btnPost);
         capturedImage = findViewById(R.id.capturedImg);
+        caption = findViewById(R.id.comment_input_edit_text);
 
         Intent i = getIntent();
         Bundle intentExtras = i.getExtras();
@@ -62,6 +65,7 @@ public class PreviewActivity extends AppCompatActivity {
             public void onClick(View arg0) {
                 Intent intent = new Intent();
                 intent.putExtra("user_permission", "true");
+                intent.putExtra("caption", caption.getText().toString());
                 setResult(RESULT_OK, intent);
                 finish();
             }

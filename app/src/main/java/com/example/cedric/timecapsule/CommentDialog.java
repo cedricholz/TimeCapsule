@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -139,7 +140,7 @@ public class CommentDialog extends Activity {
                         InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         mgr.hideSoftInputFromWindow(textField.getWindowToken(), 0);
 
-                        postNewComment(text);
+                        postNewComment(text, "");
                     } else {
                         Toast.makeText(CommentDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
                     }
@@ -209,13 +210,27 @@ public class CommentDialog extends Activity {
                 mProgress.show();
                 Uri uri = photoURI;
 
-                StorageReference filepath = storageRef.child("Photos").child(uri.getLastPathSegment());
+                final String caption = (String) data.getStringExtra("caption");
+
+                final StorageReference filepath = storageRef.child("Photos").child(uri.getLastPathSegment());
                 filepath.putFile(photoURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(CommentDialog.this, "Upload Successful!",    Toast.LENGTH_SHORT).show();
                         mProgress.dismiss();
-                        postImage();
+
+                        filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String downloadURL = uri.toString();
+                                postImage(caption, downloadURL);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle any errors
+                            }
+                        });
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -233,9 +248,12 @@ public class CommentDialog extends Activity {
         }
     }
 
-    public void postImage() {
-
-
+    public void postImage(String caption, String downloadURL) {
+        if (caption.length() <= maxCommentLength) {
+            postNewComment(caption, downloadURL);
+        } else {
+            Toast.makeText(CommentDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public ArrayList<Comment> sortComments(ArrayList<Comment> comments) {
@@ -263,7 +281,7 @@ public class CommentDialog extends Activity {
                 String m = (String) dataSnapshot.child("message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
                 String replies = (String) dataSnapshot.child("replies").getValue();
-                String imageUrl = (String) dataSnapshot.child("imageURL").getValue();
+                String photoUrl = (String) dataSnapshot.child("photoURL").getValue();
 
                 if (m != null && !myLastPost.equals(u + m)) {
                     String date = dataSnapshot.getKey();
@@ -271,7 +289,7 @@ public class CommentDialog extends Activity {
                     Date d = new Date(date);
 
                     Comment c = new Comment(m, u, d, votes, key, false, replies,
-                            refKey, commentLevel,"");
+                            refKey, commentLevel, photoUrl);
 
                     mComments.add(c);
 
@@ -323,20 +341,21 @@ public class CommentDialog extends Activity {
     }
 
 
-    private void postNewComment(String commentText) {
+    private void postNewComment(String commentText, String photoURL) {
         Date curDate = new Date();
 
         myRef.child(key).child("messages").child(curDate.toString()).child("user").setValue(username);
         myRef.child(key).child("messages").child(curDate.toString()).child("message").setValue(commentText);
         myRef.child(key).child("messages").child(curDate.toString()).child("upVotes").setValue("1");
         myRef.child(key).child("messages").child(curDate.toString()).child("replies").setValue("0");
+        myRef.child(key).child("messages").child(curDate.toString()).child("photoURL").setValue(photoURL);
 
         myLastPost = username + commentText;
 
         String replies = "0";
 
         Comment newComment = new Comment(commentText, username, curDate, "1", key, false,
-                replies, refKey, commentLevel, "");
+                replies, refKey, commentLevel, photoURL);
 
         mComments.add(newComment);
         mComments = sortComments(mComments);
