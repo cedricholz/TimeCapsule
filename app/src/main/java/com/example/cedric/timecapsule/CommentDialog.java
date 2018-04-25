@@ -283,11 +283,6 @@ public class CommentDialog extends Activity {
             }
         });
 
-
-        for(Comment c: comments){
-            System.out.println(c.upVotes);
-        }
-
         return comments;
     }
 
@@ -382,7 +377,6 @@ public class CommentDialog extends Activity {
                     mComments = sortComments(mComments);
                     setAdapterAndUpdateData();
                 }
-
             }
 
             @Override
