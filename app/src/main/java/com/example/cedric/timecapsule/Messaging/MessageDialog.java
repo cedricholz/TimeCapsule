@@ -122,12 +122,12 @@ public class MessageDialog extends Activity {
         myRef.child(messageKey).child(timeStamp).child("date").setValue(dateString);
 
 
-        usersRef.child(username).child("conversations").child(messageKey).child("mostRecentMessage").setValue(messageText);
+        usersRef.child(username).child("conversations").child(messageKey).child("mostRecentMessage").setValue(username +": " + messageText);
         usersRef.child(username).child("conversations").child(messageKey).child("mostRecentMessenger").setValue(username);
         usersRef.child(username).child("conversations").child(messageKey).child("mostRecentTime").setValue(dateString);
         usersRef.child(username).child("conversations").child(messageKey).child("friendUsername").setValue(friendUsername);
 
-        usersRef.child(friendUsername).child("conversations").child(messageKey).child("mostRecentMessage").setValue(messageText);
+        usersRef.child(friendUsername).child("conversations").child(messageKey).child("mostRecentMessage").setValue(username +": " + messageText);
         usersRef.child(friendUsername).child("conversations").child(messageKey).child("mostRecentMessenger").setValue(username);
         usersRef.child(friendUsername).child("conversations").child(messageKey).child("mostRecentTime").setValue(dateString);
         usersRef.child(friendUsername).child("conversations").child(messageKey).child("friendUsername").setValue(username);
