@@ -6,7 +6,6 @@
     android:id="@+id/image_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
     android:orientation="vertical">
 
 
@@ -17,8 +16,8 @@
         android:layout_alignParentStart="true"
 
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/loading_image"
-        android:scaleType="fitXY" />
+        android:background="@drawable/black_screen"/>
+        <!--android:scaleType="fitXY" />-->
 
 
     <LinearLayout
