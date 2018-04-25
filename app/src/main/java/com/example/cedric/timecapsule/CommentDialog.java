@@ -247,11 +247,11 @@ public class CommentDialog extends Activity {
                 mProgress.setMessage("Uploading...");
                 mProgress.show();
 
-                try {
-                    resizeImage(mCurrentPhotoPath, mCurrentPhotoPath);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    resizeImage(mCurrentPhotoPath, mCurrentPhotoPath);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 
                 Uri uri = photoURI;
 

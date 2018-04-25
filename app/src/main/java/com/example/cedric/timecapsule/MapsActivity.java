@@ -176,7 +176,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             boxDialogIntent.putExtra("username", username);
                             boxDialogIntent.putExtra("imageName", imageName);
                             startActivity(boxDialogIntent);
-
                         }
                     } else {
                         Toast.makeText(MapsActivity.this, "You Are Too Far Away To Access This Box...", Toast.LENGTH_SHORT).show();
@@ -325,7 +324,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .setHint("Enter Box Name...")
                         .setMessage(curAddress)
                         .setIcon(R.drawable.newbox)
-
                         .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
                             @Override
                             public void onTextInputConfirmed(String text) {
