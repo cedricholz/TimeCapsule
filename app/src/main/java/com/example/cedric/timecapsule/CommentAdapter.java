@@ -75,7 +75,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     public TextView mCommentTextView;
     public TextView mUpVoteTextView;
 
-    public String date = "";
+    public String timeStamp = "";
     public String boxKey = "";
     public String upVotes = "1";
     public String message = "";
@@ -136,7 +136,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     }
 
     public String getVotedKey(String upOrDown) {
-        return boxKey + date + message + upOrDown;
+        return boxKey + timeStamp + message + upOrDown;
     }
 
     public String getIfVoted(String upOrDown) {
@@ -195,7 +195,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View view) {
                 handleVotes("up");
-                myRef.child(date).child("upVotes").setValue(upVotes);
+                myRef.child(timeStamp).child("upVotes").setValue(upVotes);
             }
         });
 
@@ -203,7 +203,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View view) {
                 handleVotes("down");
-                myRef.child(date).child("upVotes").setValue(upVotes);
+                myRef.child(timeStamp).child("upVotes").setValue(upVotes);
             }
         });
 
@@ -216,7 +216,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
                     Intent insideCommentIntent = new Intent(view.getContext(), InsideCommentDialog.class);
                     insideCommentIntent.putExtra("headUsername", commentUsername);
                     insideCommentIntent.putExtra("headMessage", message);
-                    insideCommentIntent.putExtra("headDate", date);
+                    insideCommentIntent.putExtra("headDate", timeStamp);
                     insideCommentIntent.putExtra("headReplies", replies);
                     insideCommentIntent.putExtra("headVotes", upVotes);
                     insideCommentIntent.putExtra("boxKey", boxKey);
@@ -286,7 +286,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
 
         mUpVoteTextView.setText(upVotes);
 
-        date = comment.date.toString();
+        timeStamp = comment.timeStamp;
         boxKey = comment.boxKey;
 
         handleVoteButtonColor();

@@ -99,7 +99,7 @@ public class InsideCommentDialog extends Activity {
             refKey = "locations/" + boxKey + "/messages/" + headDate + "/commentMessages";
             headRefString = "locations/" + boxKey + "/messages/";
 
-            Comment headComment = new Comment(headMessage, headUsername, new Date(headDate), headVotes, boxKey, true, headReplies, headRefString, commentLevel, photoUrl);
+            Comment headComment = new Comment(headMessage, headUsername, headDate, headVotes, boxKey, true, headReplies, headRefString, commentLevel, photoUrl);
             mComments.add(headComment);
             mCommentHashMap.put(headDate + headMessage, headComment);
 
@@ -184,10 +184,11 @@ public class InsideCommentDialog extends Activity {
 
     private void postNewComment(String commentText) {
         Date curDate = new Date();
+        String timeStamp = Long.toString(System.currentTimeMillis());
 
-        myRef.child(curDate.toString()).child("user").setValue(username);
-        myRef.child(curDate.toString()).child("my_message").setValue(commentText);
-        myRef.child(curDate.toString()).child("upVotes").setValue("1");
+        myRef.child(timeStamp).child("user").setValue(username);
+        myRef.child(timeStamp).child("my_message").setValue(commentText);
+        myRef.child(timeStamp).child("upVotes").setValue("1");
 
         headReplies = Integer.toString(Integer.parseInt(headReplies) + 1);
         headRef.child(headDate).child("replies").setValue(headReplies);
@@ -212,16 +213,18 @@ public class InsideCommentDialog extends Activity {
                 String m = (String) dataSnapshot.child("my_message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
 
-                String date = dataSnapshot.getKey();
-                Date d = new Date(date);
+
+                String timeStamp =  dataSnapshot.getKey();
+
+
                 String replies = "";
-                Comment c = new Comment(m, u, d, votes, boxKey, false, replies, refKey, 2, "");
+                Comment c = new Comment(m, u, timeStamp, votes, boxKey, false, replies, refKey, 2, "");
 
                 if (votes != null) {
 
                     mComments.add(c);
                     mComments = sortComments(mComments);
-                    mCommentHashMap.put(d.toString() + m, c);
+                    mCommentHashMap.put(timeStamp + m, c);
                     setmCommentAdapter();
                 }
 
@@ -243,20 +246,20 @@ public class InsideCommentDialog extends Activity {
                 String m = (String) dataSnapshot.child("my_message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
 
-                String date = dataSnapshot.getKey();
-                Date d = new Date(date);
+                String timeStamp = dataSnapshot.getKey();
+
                 String replies = "";
-                Comment c = new Comment(m, u, d, votes, boxKey, false, replies, refKey, 2, "");
+                Comment c = new Comment(m, u, timeStamp, votes, boxKey, false, replies, refKey, 2, "");
 
                 if (m == null) {
-                    getNewChildData(date);
+                    getNewChildData(timeStamp);
                 }
 
 
                 if (c != null && m != null) {
                     mComments.add(c);
                     mComments = sortComments(mComments);
-                    mCommentHashMap.put(d.toString() + m, c);
+                    mCommentHashMap.put(timeStamp + m, c);
                     setmCommentAdapter();
                 }
 

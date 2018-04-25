@@ -406,7 +406,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             savePlaceTiles();
 
-
             GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(loc.latitude, loc.longitude), u.getVisibleMarkerDistancekm());
 
             geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {

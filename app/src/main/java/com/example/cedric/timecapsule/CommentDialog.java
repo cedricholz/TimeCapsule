@@ -185,8 +185,6 @@ public class CommentDialog extends Activity {
             try {
                 photoFile = createImageFile();
 
-                resizeImage(mCurrentPhotoPath, mCurrentPhotoPath);
-
             } catch (IOException ex) {
                 // failed while creating the file
                 System.out.println("Failed to create Image");
@@ -248,9 +246,14 @@ public class CommentDialog extends Activity {
             if (data != null && data.getStringExtra("user_permission") != null) {
                 mProgress.setMessage("Uploading...");
                 mProgress.show();
+
+                try {
+                    resizeImage(mCurrentPhotoPath, mCurrentPhotoPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 Uri uri = photoURI;
-
-
 
                 final String caption = (String) data.getStringExtra("caption");
 
@@ -278,6 +281,7 @@ public class CommentDialog extends Activity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(CommentDialog.this, "Upload Failed!", Toast.LENGTH_SHORT).show();
+                        mProgress.dismiss();
                     }
                 });
 
@@ -335,11 +339,11 @@ public class CommentDialog extends Activity {
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
                 String replies = (String) dataSnapshot.child("replies").getValue();
                 String photoUrl = (String) dataSnapshot.child("photoURL").getValue();
-                String date = dataSnapshot.getKey();
 
-                Date d = new Date(date);
+                String timeStamp = dataSnapshot.getKey();
 
-                Comment c = new Comment(m, u, d, votes, key, false, replies,
+
+                Comment c = new Comment(m, u, timeStamp, votes, key, false, replies,
                         refKey, commentLevel, photoUrl);
 
                 if (votes != null) {
@@ -347,7 +351,7 @@ public class CommentDialog extends Activity {
 
                     mComments = sortComments(mComments);
 
-                    commentHashMap.put(d.toString() + m, c);
+                    commentHashMap.put(timeStamp + m, c);
 
                     setAdapterAndUpdateData();
                 }
@@ -378,20 +382,18 @@ public class CommentDialog extends Activity {
                     getNewChildData(dataSnapshot.getKey());
                 }
 
-
                 if (m != null) {
-                    String date = dataSnapshot.getKey();
+                    String timestamp = dataSnapshot.getKey();
 
-                    Date d = new Date(date);
 
-                    Comment c = new Comment(m, u, d, votes, key, false, replies,
+                    Comment c = new Comment(m, u, timestamp, votes, key, false, replies,
                             refKey, commentLevel, photoUrl);
 
                     mComments.add(c);
 
-                    mComments = sortComments(mComments);
+                    commentHashMap.put(timestamp + m, c);
 
-                    commentHashMap.put(d.toString() + m, c);
+                    mComments = sortComments(mComments);
 
                     setAdapterAndUpdateData();
                 }
@@ -401,10 +403,10 @@ public class CommentDialog extends Activity {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {
 
-                String date = dataSnapshot.getKey();
+                String timestamp = dataSnapshot.getKey();
                 String message = (String) dataSnapshot.child("my_message").getValue();
-                Comment c = commentHashMap.get(date + message);
-                if (c != null) {
+                Comment c = commentHashMap.get(timestamp + message);
+                if (c != null && message != null && dataSnapshot.child("upVotes") != null && dataSnapshot.child("replies") != null) {
                     c.upVotes = (String) dataSnapshot.child("upVotes").getValue();
                     c.replies = (String) dataSnapshot.child("replies").getValue();
                     mComments = sortComments(mComments);
@@ -438,15 +440,16 @@ public class CommentDialog extends Activity {
 
 
     private void postNewComment(String commentText, String photoURL) {
-        Date curDate = new Date();
 
-        myRef.child(key).child("Photo Gallery").child(curDate.toString()).setValue(photoURL);
+        String timeStamp = Long.toString(System.currentTimeMillis());
 
-        myRef.child(key).child("messages").child(curDate.toString()).child("user").setValue(username);
-        myRef.child(key).child("messages").child(curDate.toString()).child("my_message").setValue(commentText);
-        myRef.child(key).child("messages").child(curDate.toString()).child("upVotes").setValue("1");
-        myRef.child(key).child("messages").child(curDate.toString()).child("replies").setValue("0");
-        myRef.child(key).child("messages").child(curDate.toString()).child("photoURL").setValue(photoURL);
+        myRef.child(key).child("Photo Gallery").child(timeStamp).setValue(photoURL);
+
+        myRef.child(key).child("messages").child(timeStamp).child("user").setValue(username);
+        myRef.child(key).child("messages").child(timeStamp).child("my_message").setValue(commentText);
+        myRef.child(key).child("messages").child(timeStamp).child("upVotes").setValue("1");
+        myRef.child(key).child("messages").child(timeStamp).child("replies").setValue("0");
+        myRef.child(key).child("messages").child(timeStamp).child("photoURL").setValue(photoURL);
 
 
 //        myLastPost = username + commentText;

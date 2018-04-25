@@ -8,7 +8,7 @@ public class Comment {
 
     public String text;
     public String username;
-    public Date date;
+    public String timeStamp;
     public String upVotes;
     public String boxKey;
     public Boolean headComment;
@@ -17,12 +17,11 @@ public class Comment {
     public int commentLevel;
     public String photoUrl;
 
-
-    Comment(String text, String username, Date date, String upVotes, String boxKey, Boolean headComment, String replies,
+    Comment(String text, String username, String timeStamp, String upVotes, String boxKey, Boolean headComment, String replies,
             String refKey, int commentLevel, String photoUrl) {
         this.text = text;
         this.username = username;
-        this.date = date;
+        this.timeStamp = timeStamp;
         this.upVotes = upVotes;
         this.boxKey = boxKey;
         this.headComment = headComment;
@@ -32,15 +31,21 @@ public class Comment {
         this.commentLevel = commentLevel;
 
         this.photoUrl = photoUrl;
+
+
+
     }
 
-    public String getUpVotes(){
+    public String getUpVotes() {
         return upVotes;
     }
 
 
     // returns a string indicating how long ago this post was made
     protected String elapsedTimeString() {
+
+        Date date = new Date(Long.parseLong(timeStamp));
+
         long diff = new Date().getTime() - date.getTime();
         long seconds = diff / 1000;
         long minutes = seconds / 60;
