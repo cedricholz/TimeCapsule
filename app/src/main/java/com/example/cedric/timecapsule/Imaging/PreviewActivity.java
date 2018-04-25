@@ -1,4 +1,4 @@
-package com.example.cedric.timecapsule;
+package com.example.cedric.timecapsule.Imaging;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.example.cedric.timecapsule.R;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 

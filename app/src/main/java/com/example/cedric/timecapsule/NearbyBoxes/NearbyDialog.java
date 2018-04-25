@@ -1,4 +1,4 @@
-package com.example.cedric.timecapsule;
+package com.example.cedric.timecapsule.NearbyBoxes;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
+import com.example.cedric.timecapsule.R;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;

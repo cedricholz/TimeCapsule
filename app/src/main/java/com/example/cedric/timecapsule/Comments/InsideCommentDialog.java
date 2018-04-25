@@ -1,4 +1,4 @@
-package com.example.cedric.timecapsule;
+package com.example.cedric.timecapsule.Comments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -21,6 +21,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.cedric.timecapsule.Imaging.PreviewActivity;
+import com.example.cedric.timecapsule.R;
+import com.example.cedric.timecapsule.Utils.Utils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;

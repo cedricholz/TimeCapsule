@@ -1,4 +1,4 @@
-package com.example.cedric.timecapsule;
+package com.example.cedric.timecapsule.NearbyBoxes;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,10 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.cedric.timecapsule.Comments.CommentDialog;
+import com.example.cedric.timecapsule.R;
+import com.example.cedric.timecapsule.Utils.Utils;
 
 import java.util.ArrayList;
 
@@ -29,7 +33,7 @@ public class PlaceTileAdapter extends RecyclerView.Adapter {
         // here, we specify what kind of view each cell should have. In our case, all of them will have a view
         // made from comment_cell_layout
         View view = LayoutInflater.from(mContext).inflate(R.layout.place_tile_cell_layout, parent, false);
-        return new com.example.cedric.timecapsule.PlaceTileViewHolder(view, mPlaceTile);
+        return new PlaceTileViewHolder(view, mPlaceTile);
     }
 
     // - get element from your dataset at this position
@@ -40,7 +44,7 @@ public class PlaceTileAdapter extends RecyclerView.Adapter {
         // everytime the recycler view is refreshed, this method is called getItemCount() times (because
         // it needs to recreate every cell).
         PlaceTile placeTile = mPlaceTile.get(position);
-        ((com.example.cedric.timecapsule.PlaceTileViewHolder) holder).bind(placeTile);
+        ((PlaceTileViewHolder) holder).bind(placeTile);
 
     }
 

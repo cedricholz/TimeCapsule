@@ -1,12 +1,13 @@
-package com.example.cedric.timecapsule;
+package com.example.cedric.timecapsule.Messaging;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Window;
 
+import com.example.cedric.timecapsule.R;
+import com.example.cedric.timecapsule.Utils.Utils;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,7 +15,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class ConversationsDialog extends Activity {

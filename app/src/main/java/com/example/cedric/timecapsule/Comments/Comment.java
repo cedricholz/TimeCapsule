@@ -1,6 +1,5 @@
-package com.example.cedric.timecapsule;
+package com.example.cedric.timecapsule.Comments;
 
-import java.net.Inet4Address;
 import java.util.Date;
 
 // custom class made for storing a message. you can update this class

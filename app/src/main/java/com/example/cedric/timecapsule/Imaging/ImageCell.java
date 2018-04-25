@@ -1,4 +1,4 @@
-package com.example.cedric.timecapsule;
+package com.example.cedric.timecapsule.Imaging;
 
 public class ImageCell {
     private String downloadURL;

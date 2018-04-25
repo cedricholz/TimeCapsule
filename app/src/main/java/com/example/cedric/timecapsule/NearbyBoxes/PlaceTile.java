@@ -1,4 +1,4 @@
-package com.example.cedric.timecapsule;
+package com.example.cedric.timecapsule.NearbyBoxes;
 
 import java.io.Serializable;
 
@@ -18,7 +18,7 @@ public class PlaceTile implements Serializable {
 
     public String address;
 
-    PlaceTile(String imageName, String placeName, String distance, String address) {
+    public PlaceTile(String imageName, String placeName, String distance, String address) {
         this.imageName = imageName;
         this.placeName = placeName;
         this.distance = distance;

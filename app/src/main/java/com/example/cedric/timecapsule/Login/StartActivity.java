@@ -1,4 +1,4 @@
-package com.example.cedric.timecapsule;
+package com.example.cedric.timecapsule.Login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,10 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.cedric.timecapsule.Maps.MapsActivity;
+import com.example.cedric.timecapsule.R;
 import com.example.cedric.timecapsule.UserInformation.User;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
+import com.example.cedric.timecapsule.Utils.Utils;
 
 public class StartActivity extends AppCompatActivity {
 

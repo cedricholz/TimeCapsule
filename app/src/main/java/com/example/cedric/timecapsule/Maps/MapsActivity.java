@@ -1,4 +1,4 @@
-package com.example.cedric.timecapsule;
+package com.example.cedric.timecapsule.Maps;
 
 import android.Manifest;
 import android.content.Context;
@@ -22,6 +22,14 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.cedric.timecapsule.Comments.CommentDialog;
+import com.example.cedric.timecapsule.Login.StartActivity;
+import com.example.cedric.timecapsule.Messaging.ConversationsDialog;
+import com.example.cedric.timecapsule.NearbyBoxes.NearbyDialog;
+import com.example.cedric.timecapsule.NearbyBoxes.Place;
+import com.example.cedric.timecapsule.NearbyBoxes.PlaceTile;
+import com.example.cedric.timecapsule.R;
+import com.example.cedric.timecapsule.Utils.Utils;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;

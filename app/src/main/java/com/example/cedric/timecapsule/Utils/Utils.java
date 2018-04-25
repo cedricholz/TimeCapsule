@@ -1,4 +1,4 @@
-package com.example.cedric.timecapsule;
+package com.example.cedric.timecapsule.Utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,9 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
-import java.util.Random;
+
 
 public class Utils {
     // All markers within this range in Kilometers will be visible
@@ -31,7 +29,7 @@ public class Utils {
 
     private double distanceChangeToMoveCamera = 20;
 
-    Utils() {
+    public Utils() {
     }
 
     public static String getHashedPassword(String passwordToHash) {

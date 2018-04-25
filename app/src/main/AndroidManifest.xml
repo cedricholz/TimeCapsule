@@ -43,32 +43,32 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".Maps.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
-            android:name=".CommentDialog"
+            android:name=".Comments.CommentDialog"
             android:theme="@style/commentDialogTheme" />
         <activity
-            android:name=".InsideCommentDialog"
+            android:name=".Comments.InsideCommentDialog"
             android:theme="@style/myDialogTheme" />
         <activity
-            android:name=".NearbyDialog"
+            android:name=".NearbyBoxes.NearbyDialog"
             android:theme="@style/myDialogTheme" />
         <activity
-            android:name=".MessageDialog"
+            android:name=".Messaging.MessageDialog"
             android:theme="@style/myToolbarDialogTheme" />
         <activity
-            android:name=".ConversationsDialog"
+            android:name=".Messaging.ConversationsDialog"
             android:theme="@style/myToolbarDialogTheme" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".Login.LoginActivity"
             android:theme="@style/loginTheme" />
         <activity
-            android:name=".SignUpActivity"
+            android:name=".Login.SignUpActivity"
             android:label="@string/title_activity_sign_up"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".StartActivity"
+            android:name=".Login.StartActivity"
             android:label="@string/title_activity_start"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -78,7 +78,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PreviewActivity"
+            android:name=".Imaging.PreviewActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
@@ -92,11 +92,11 @@
         </provider>
 
         <activity
-            android:name=".GalleryActivity"
+            android:name=".Imaging.GalleryActivity"
             android:theme="@style/myDialogTheme" />
 
         <activity
-            android:name=".FullImageActivty"
+            android:name=".Imaging.FullImageActivty"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
