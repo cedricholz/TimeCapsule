@@ -55,8 +55,6 @@
 
     </RelativeLayout>
 
-
-
     <RelativeLayout
 
         android:layout_width="60dp"
@@ -65,7 +63,6 @@
         android:layout_margin="7dp"
         android:background="@drawable/background_card"
         android:orientation="vertical">
-
 
         <ImageButton
             android:id="@+id/logout"
@@ -78,9 +75,7 @@
             android:background="@color/white"
             android:src="@drawable/ic_power_settings_new_black_24dp" />
 
-
     </RelativeLayout>
-
 
 </FrameLayout>
 

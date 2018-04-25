@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "439283809556-rqu2u9t2jjsuvlcquo803makaf8k3ng2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cedric.timecapsule",
+            "certificate_hash": "a190cfe74ba5a5258cac28dc8b0e371f0586cf49"
+          }
+        },
+        {
           "client_id": "439283809556-t6j7cakacjqdlgqh1ahsq1k65iq1a916.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

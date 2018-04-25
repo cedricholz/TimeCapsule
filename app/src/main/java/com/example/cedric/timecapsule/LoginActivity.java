@@ -114,6 +114,7 @@ public class LoginActivity extends AppCompatActivity {
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                System.out.println("comes here");
                 if (dataSnapshot.child(encodeString(email)).exists()) {
                     if (!email.isEmpty()) {
                         User login = dataSnapshot.child(encodeString(email)).getValue(User.class);

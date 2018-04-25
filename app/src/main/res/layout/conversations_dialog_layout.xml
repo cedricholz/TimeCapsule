@@ -9,7 +9,6 @@
     android:background="#ffffff"
     android:orientation="vertical">
 
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/conversations_toolbar"
         android:layout_width="match_parent"
@@ -29,7 +28,6 @@
         android:layout_height="425dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/conversations_toolbar"
-        android:layout_above="@+id/llSend"
-        />
+        android:layout_above="@+id/llSend" />
 
 </RelativeLayout>

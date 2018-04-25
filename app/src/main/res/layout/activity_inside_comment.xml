@@ -9,19 +9,6 @@
     android:background="#ffffff"
     android:orientation="vertical">
 
-    <!--&lt;!&ndash; TODO: replace "temp title" with a landmark name &ndash;&gt;-->
-    <!--<android.support.v7.widget.Toolbar-->
-        <!--android:id="@+id/my_toolbar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="?attr/actionBarSize"-->
-        <!--android:background="@color/white"-->
-        <!--app:titleTextColor="@color/darkBlueGrey"-->
-        <!--app:title="Jacobs Hall Messages"-->
-        <!--app:subtitle=""-->
-        <!--android:elevation="2dp"-->
-        <!--android:theme="@style/ThemeOverlay.AppCompat.ActionBar"-->
-        <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>-->
-
     <!-- recylcer view -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/inside_comment_recycler"
@@ -34,7 +21,6 @@
         android:transcriptMode="alwaysScroll"
         app:stackFromEnd="true" />
 
-
     <RelativeLayout
         android:id="@+id/llSend"
         android:layout_width="match_parent"
@@ -44,7 +30,19 @@
         android:paddingBottom="10dp"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
-        android:paddingTop="5dp">
+        android:paddingTop="10dp">
+
+        <!-- camera button -->
+        <ImageButton
+            android:id="@+id/camera_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:background="@color/white"
+            android:src="@drawable/camera"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
 
         <!-- new comment edit text  -->
         <EditText
@@ -52,11 +50,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/send_button"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="16dp"
             android:layout_toLeftOf="@+id/send_button"
+            android:layout_toRightOf="@+id/camera_button"
+            android:layout_centerInParent="true"
             android:gravity="top"
-            android:hint="Enter a message..."
+            android:hint="say something about this place..."
             android:inputType="textShortMessage" />
 
         <!-- send button  -->
@@ -65,14 +63,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="5dp"
             android:background="@color/white"
             android:text="send"
             android:layout_marginTop="20dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
 
             android:src="@drawable/ic_send_black_24dp"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
     </RelativeLayout>
+
 </RelativeLayout>

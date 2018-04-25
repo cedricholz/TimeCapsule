@@ -44,6 +44,7 @@
         android:layout_below="@+id/ll"
         android:layout_toStartOf="@+id/vote_layout"
         android:background="@drawable/loading_image"
+        android:scaleType="fitXY"
         android:visibility="gone" />
 
     <!-- comment body text -->

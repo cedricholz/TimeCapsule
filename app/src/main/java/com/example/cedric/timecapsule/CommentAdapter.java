@@ -43,7 +43,7 @@ public class CommentAdapter extends RecyclerView.Adapter {
         View view = LayoutInflater.from(mContext).inflate(R.layout.comment_cell_layout, parent, false);
 
 
-        return new CommentViewHolder(view);
+        return new CommentViewHolder(view, mContext);
     }
 
 
@@ -84,6 +84,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     public String downloadURL = "";
 
     public String replies = "";
+    public Context mContext;
 
     FirebaseDatabase database;
     FirebaseStorage storage;
@@ -101,9 +102,11 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     private Utils u;
 
 
-    public CommentViewHolder(View itemView) {
+    public CommentViewHolder(View itemView, Context mContext) {
 
         super(itemView);
+
+        this.mContext = mContext;
 
         mCommentBubbleLayout = itemView.findViewById(R.id.comment_cell_layout);
         mUsernameTextView = mCommentBubbleLayout.findViewById(R.id.username_text_view);
@@ -292,9 +295,18 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
         handleVoteButtonColor();
 
         // imageView
-        if (comment.photoUrl != null && comment.photoUrl.length() >= 1) {
-            Picasso.get().load(comment.photoUrl).into(placeView);
+        if (photoUrl != null && photoUrl.length() >= 1) {
+            Picasso.get().load(photoUrl).into(placeView);
             placeView.setVisibility(View.VISIBLE);
+            placeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "Image", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, FullImageActivty.class);
+                    intent.putExtra("image", photoUrl);
+                    mContext.startActivity(intent);
+                }
+            });
         }
     }
 

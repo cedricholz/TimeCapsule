@@ -170,6 +170,7 @@ public class CommentDialog extends Activity {
             @Override
             public void onClick(View arg0) {
                 Intent i = new Intent(CommentDialog.this, GalleryActivity.class);
+                i.putExtra("key", key);
                 startActivity(i);
             }
         });
@@ -205,7 +206,6 @@ public class CommentDialog extends Activity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-
 
         File image = File.createTempFile(
                 imageFileName,
@@ -287,9 +287,6 @@ public class CommentDialog extends Activity {
 
             } else { // Takes user to the Preview Activity
                 Intent i = new Intent(CommentDialog.this, PreviewActivity.class);
-
-
-
                 i.putExtra("image", mCurrentPhotoPath);
 
                 startActivityForResult(i, 1);
@@ -363,7 +360,6 @@ public class CommentDialog extends Activity {
             }
         });
     }
-
 
     private void getComments() {
 
@@ -443,7 +439,9 @@ public class CommentDialog extends Activity {
 
         String timeStamp = Long.toString(System.currentTimeMillis());
 
-        myRef.child(key).child("Photo Gallery").child(timeStamp).setValue(photoURL);
+        if (photoURL != "") {
+            myRef.child(key).child("Photo Gallery").child(timeStamp).setValue(photoURL);
+        }
 
         myRef.child(key).child("messages").child(timeStamp).child("user").setValue(username);
         myRef.child(key).child("messages").child(timeStamp).child("my_message").setValue(commentText);

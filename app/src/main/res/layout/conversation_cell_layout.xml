@@ -38,7 +38,6 @@
             android:textSize="16dp"
             android:textStyle="bold" />
 
-
         <TextView
             android:id="@+id/conversation_date_text_view"
             android:layout_width="0dp"
@@ -51,8 +50,6 @@
 
             android:textSize="14dp"
             android:textStyle="bold" />
-
-
 
     </LinearLayout>
 

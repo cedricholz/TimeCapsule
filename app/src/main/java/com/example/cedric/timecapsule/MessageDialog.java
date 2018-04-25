@@ -133,13 +133,6 @@ public class MessageDialog extends Activity {
         usersRef.child(friendUsername).child("conversations").child(messageKey).child("mostRecentTime").setValue(dateString);
         usersRef.child(friendUsername).child("conversations").child(messageKey).child("friendUsername").setValue(username);
 
-
-//        myLastPost = username + messageText;
-//
-//        Message newMessage = new Message(messageText, username, curDate, messageKey);
-//
-//        mMessages.add(newMessage);
-
         setAdapterAndUpdateData();
     }
 

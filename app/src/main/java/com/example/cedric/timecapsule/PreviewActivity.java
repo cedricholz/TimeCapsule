@@ -44,6 +44,9 @@ public class PreviewActivity extends AppCompatActivity {
         if(intentExtras !=null) {
             mCurrentPath = (String) intentExtras.get("image");
             Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPath);
+            if (bitmap.getHeight() > bitmap.getWidth()) { // the photo was taken portrait
+                capturedImage.setScaleType(ImageView.ScaleType.FIT_XY);
+            }
             capturedImage.setImageBitmap(bitmap);
         }
 
