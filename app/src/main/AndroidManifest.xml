@@ -93,8 +93,13 @@
 
         <activity
             android:name=".GalleryActivity"
-            android:theme="@style/myDialogTheme"></activity>
-        <activity android:name=".ImageCell"></activity>
+            android:theme="@style/myDialogTheme" />
+
+        <activity
+            android:name=".FullImageActivty"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>

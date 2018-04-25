@@ -1,13 +1,13 @@
 package com.example.cedric.timecapsule;
 
 public class ImageCell {
-    private Integer img;
+    private String downloadURL;
 
-    public Integer getImg() {
-        return img;
+    public String getImg() {
+        return downloadURL;
     }
 
-    public void setImg(Integer img) {
-        this.img = img;
+    public void setImg(String downloadURL) {
+        this.downloadURL = downloadURL;
     }
 }

@@ -22,7 +22,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <ImageButton
-            android:id="@+id/photo_gallery"
+            android:id="@+id/chat_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/chat_button"
