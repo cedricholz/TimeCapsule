@@ -419,7 +419,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     String[] splitString = key.split("%");
                     String title = "";
                     String address = "";
-                    String fileName = "";
+                    String fileName = "oski_bear";
 
                     if (splitString.length > 1) {
                         title = splitString[0];
@@ -497,7 +497,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     m.position(userLocation).title(title);
                     m.position(userLocation).snippet(curAddress);
                     m.icon(BitmapDescriptorFactory.fromResource(R.drawable.orange));
-                    mMap.addMarker(m);
+
+                    Marker mark = mMap.addMarker(m);
+                    mark.setTag("oski_bear");
 
                     geoFire.setLocation(title + "%" + curAddress + "%oski_bear", new GeoLocation(userLocation.latitude, userLocation.longitude), new GeoFire.CompletionListener() {
                         @Override
