@@ -62,7 +62,8 @@
             android:layout_centerVertical="true"
             android:background="@color/white"
             android:paddingRight="10dp"
-            android:src="@drawable/cameraicon" />
+            android:paddingTop="10dp"
+            android:src="@drawable/ic_camera_alt_black_24dp" />
 
         <!-- new comment edit text  -->
         <EditText
@@ -87,6 +88,7 @@
             android:src="@drawable/ic_send_black_24dp"
             android:layout_centerVertical="true"
             android:text="send"
+            android:paddingTop="10dp"
             android:textColor="@color/white"
        />
 
