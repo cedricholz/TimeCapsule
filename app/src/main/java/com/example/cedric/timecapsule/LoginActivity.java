@@ -85,8 +85,9 @@ public class LoginActivity extends AppCompatActivity {
         logInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isEmailValid(email.getText().toString())) {
-                    logIn(email.getText().toString(), password.getText().toString());
+                String emailAddress = email.getText().toString().toLowerCase();
+                if (isEmailValid(emailAddress)) {
+                    logIn(emailAddress, password.getText().toString());
                 } else {
                     email.setError("Please enter a valid email address");
                 }
@@ -132,8 +133,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
-                }
-                 else {
+                } else {
                     Toast.makeText(LoginActivity.this, "Email Address is not registered",
                             Toast.LENGTH_SHORT).show();
                 }

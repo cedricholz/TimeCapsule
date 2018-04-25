@@ -6,6 +6,12 @@
 
     <color name="holo_foreground">#FFFF00</color>
 
+    <color name="darkViolet">#9400D3</color>
+
+    <color name="lightBlue">#3b5998</color>
+
+
+
     <color name="indigo">#3F51B5</color>
     <color name="teal">#009688</color>
     <color name="darkDeepOrange">#E64A19</color>

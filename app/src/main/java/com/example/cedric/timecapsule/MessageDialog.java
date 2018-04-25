@@ -119,7 +119,7 @@ public class MessageDialog extends Activity {
         String timeStamp = Long.toString(System.currentTimeMillis());
 
         myRef.child(messageKey).child(timeStamp).child("user").setValue(username);
-        myRef.child(messageKey).child(timeStamp).child("message").setValue(messageText);
+        myRef.child(messageKey).child(timeStamp).child("my_message").setValue(messageText);
         myRef.child(messageKey).child(timeStamp).child("date").setValue(dateString);
 
 
@@ -149,7 +149,7 @@ public class MessageDialog extends Activity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 String u = (String) dataSnapshot.child("user").getValue();
-                String m = (String) dataSnapshot.child("message").getValue();
+                String m = (String) dataSnapshot.child("my_message").getValue();
                 String date = (String) dataSnapshot.child("date").getValue();
 
 
@@ -178,7 +178,7 @@ public class MessageDialog extends Activity {
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
 
                 String u = (String) dataSnapshot.child("user").getValue();
-                String m = (String) dataSnapshot.child("message").getValue();
+                String m = (String) dataSnapshot.child("my_message").getValue();
                 String date = (String) dataSnapshot.child("date").getValue();
 
 
@@ -224,7 +224,7 @@ public class MessageDialog extends Activity {
         mAdapter = new MessageAdapter(this, mMessages);
         mRecyclerView.setAdapter(mAdapter);
 
-        // scroll to the first message
+        // scroll to the first my_message
 //        mRecyclerView.smoothScrollToPosition(mAdapter.getItemCount() - 1);
         mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
     }

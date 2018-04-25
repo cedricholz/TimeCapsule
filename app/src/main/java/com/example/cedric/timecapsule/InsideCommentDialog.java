@@ -186,7 +186,7 @@ public class InsideCommentDialog extends Activity {
         Date curDate = new Date();
 
         myRef.child(curDate.toString()).child("user").setValue(username);
-        myRef.child(curDate.toString()).child("message").setValue(commentText);
+        myRef.child(curDate.toString()).child("my_message").setValue(commentText);
         myRef.child(curDate.toString()).child("upVotes").setValue("1");
 
         headReplies = Integer.toString(Integer.parseInt(headReplies) + 1);
@@ -209,7 +209,7 @@ public class InsideCommentDialog extends Activity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 String u = (String) dataSnapshot.child("user").getValue();
-                String m = (String) dataSnapshot.child("message").getValue();
+                String m = (String) dataSnapshot.child("my_message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
 
                 String date = dataSnapshot.getKey();
@@ -240,7 +240,7 @@ public class InsideCommentDialog extends Activity {
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
 
                 String u = (String) dataSnapshot.child("user").getValue();
-                String m = (String) dataSnapshot.child("message").getValue();
+                String m = (String) dataSnapshot.child("my_message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
 
                 String date = dataSnapshot.getKey();
@@ -265,7 +265,7 @@ public class InsideCommentDialog extends Activity {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {
                 String date = dataSnapshot.getKey();
-                String message = (String) dataSnapshot.child("message").getValue();
+                String message = (String) dataSnapshot.child("my_message").getValue();
                 Comment c = mCommentHashMap.get(date + message);
                 if (c != null) {
                     c.upVotes = (String) dataSnapshot.child("upVotes").getValue();
@@ -297,7 +297,7 @@ public class InsideCommentDialog extends Activity {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {
                 String date = dataSnapshot.getKey();
-                String message = (String) dataSnapshot.child("message").getValue();
+                String message = (String) dataSnapshot.child("my_message").getValue();
                 Comment c = mCommentHashMap.get(date + message);
                 if (c != null) {
                     c.upVotes = (String) dataSnapshot.child("upVotes").getValue();

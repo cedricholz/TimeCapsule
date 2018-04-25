@@ -294,7 +294,7 @@ public class CommentDialog extends Activity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 String u = (String) dataSnapshot.child("user").getValue();
-                String m = (String) dataSnapshot.child("message").getValue();
+                String m = (String) dataSnapshot.child("my_message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
                 String replies = (String) dataSnapshot.child("replies").getValue();
                 String photoUrl = (String) dataSnapshot.child("photoURL").getValue();
@@ -332,7 +332,7 @@ public class CommentDialog extends Activity {
 
 
                 String u = (String) dataSnapshot.child("user").getValue();
-                String m = (String) dataSnapshot.child("message").getValue();
+                String m = (String) dataSnapshot.child("my_message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
                 String replies = (String) dataSnapshot.child("replies").getValue();
                 String photoUrl = (String) dataSnapshot.child("photoURL").getValue();
@@ -365,7 +365,7 @@ public class CommentDialog extends Activity {
             public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {
 
                 String date = dataSnapshot.getKey();
-                String message = (String) dataSnapshot.child("message").getValue();
+                String message = (String) dataSnapshot.child("my_message").getValue();
                 Comment c = commentHashMap.get(date + message);
                 if (c != null) {
                     c.upVotes = (String) dataSnapshot.child("upVotes").getValue();
@@ -406,7 +406,7 @@ public class CommentDialog extends Activity {
         myRef.child(key).child("Photo Gallery").child(curDate.toString()).setValue(photoURL);
 
         myRef.child(key).child("messages").child(curDate.toString()).child("user").setValue(username);
-        myRef.child(key).child("messages").child(curDate.toString()).child("message").setValue(commentText);
+        myRef.child(key).child("messages").child(curDate.toString()).child("my_message").setValue(commentText);
         myRef.child(key).child("messages").child(curDate.toString()).child("upVotes").setValue("1");
         myRef.child(key).child("messages").child(curDate.toString()).child("replies").setValue("0");
         myRef.child(key).child("messages").child(curDate.toString()).child("photoURL").setValue(photoURL);

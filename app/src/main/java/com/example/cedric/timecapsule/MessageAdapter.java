@@ -84,7 +84,7 @@ class MessageViewHolder extends RecyclerView.ViewHolder {
         mMessageBubbleLayout = itemView.findViewById(R.id.message_cell_layout);
 
         mLeftUsernameTextView = mMessageBubbleLayout.findViewById(R.id.left_username_text_view);
-        mRightUsernameTextView = mMessageBubbleLayout.findViewById(R.id.right_username_text_view);
+
 
         mLeftDateTextView = mMessageBubbleLayout.findViewById(R.id.left_date_text_view);
         mRightDateTextView = mMessageBubbleLayout.findViewById(R.id.right_date_text_view);
@@ -105,15 +105,13 @@ class MessageViewHolder extends RecyclerView.ViewHolder {
         String dateText = message.elapsedTimeString();
 
         if (messageUser.equals(myUsername)) {
-            mLeftUsernameTextView.setVisibility(View.INVISIBLE);
-            mLeftDateTextView.setVisibility(View.INVISIBLE);
-            mLeftMessageTextView.setVisibility(View.INVISIBLE);
+            mLeftUsernameTextView.setVisibility(View.GONE);
+            mLeftDateTextView.setVisibility(View.GONE);
+            mLeftMessageTextView.setVisibility(View.GONE);
 
-            mRightUsernameTextView.setVisibility(View.VISIBLE);
             mRightDateTextView.setVisibility(View.VISIBLE);
             mRightMessageTextView.setVisibility(View.VISIBLE);
 
-            mRightUsernameTextView.setText(message.username);
             mRightMessageTextView.setText(message.text);
             mRightDateTextView.setText(dateText);
         } else {

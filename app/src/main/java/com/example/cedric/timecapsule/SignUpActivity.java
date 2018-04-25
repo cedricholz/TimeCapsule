@@ -80,8 +80,9 @@ public class SignUpActivity extends AppCompatActivity {
         createBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isEmailValid(email.getText().toString())) {
-                    User user = new User(username.getText().toString(), password.getText().toString(), email.getText().toString());
+                String emailAddress = email.getText().toString().toLowerCase();
+                if (isEmailValid(emailAddress)) {
+                    User user = new User(username.getText().toString(), password.getText().toString(), emailAddress);
 
                     checkEmailFree(user);
                 } else {
