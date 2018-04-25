@@ -8,7 +8,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <ImageView
         android:id="@+id/capturedImg"
         android:layout_width="match_parent"
@@ -17,8 +16,6 @@
 
         android:layout_gravity="center_horizontal"
         android:background="@drawable/black_screen"/>
-        <!--android:scaleType="fitXY" />-->
-
 
     <LinearLayout
         android:id="@+id/text_and_button"
@@ -33,9 +30,7 @@
 
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:orientation="horizontal"
-        >
-
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/comment_input_edit_text"
@@ -57,7 +52,6 @@
             android:src="@drawable/ic_send_black_24dp" />
 
     </LinearLayout>
-
 
 </RelativeLayout>
 

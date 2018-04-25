@@ -207,7 +207,6 @@ public class CommentDialog extends Activity {
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
-
         File image = File.createTempFile(
                 imageFileName,
                 ".jpg",

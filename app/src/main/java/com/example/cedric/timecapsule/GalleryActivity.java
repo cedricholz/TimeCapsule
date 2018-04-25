@@ -56,10 +56,6 @@ public class GalleryActivity extends Activity {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 3);
         iRecyclerView.setLayoutManager(layoutManager);
 
-//        ArrayList<ImageCell> imageCells = prepareData();
-//        GalleryAdapter adapter = new GalleryAdapter(this, imageCells);
-//        recyclerView.setAdapter(adapter);
-
         // firebase setup
         database = FirebaseDatabase.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -80,17 +76,6 @@ public class GalleryActivity extends Activity {
 
         getPhotos();
     }
-
-//    private ArrayList<ImageCell> prepareData() {
-//        ArrayList<ImageCell> theimage = new ArrayList<>();
-//        for (int i = 0; i < image_ids.length; i++) {
-//            ImageCell imagecell = new ImageCell();
-//            imagecell.setImg(image_ids[i]);
-//            theimage.add(imagecell);
-//        }
-//
-//        return theimage;
-//    }
 
     public void setChatButtonListener() {
         chatButton.setOnClickListener(new View.OnClickListener() {

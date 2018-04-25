@@ -1,10 +1,16 @@
 package com.example.cedric.timecapsule;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,13 +21,21 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,13 +43,15 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class InsideCommentDialog extends Activity {
-
+    private static final int CAMERA_REQUEST_CODE = 1;
     public String myLastPost = "";
     android.support.v7.widget.Toolbar titleBar;
     FirebaseDatabase database;
-    DatabaseReference myRef;
+    FirebaseStorage storage;
 
+    DatabaseReference myRef;
     DatabaseReference headRef;
+    StorageReference storageRef;
 
     Utils u;
     String headUsername;
@@ -49,15 +65,20 @@ public class InsideCommentDialog extends Activity {
     String refKey = "locations";
 
     String photoUrl = "";
+    String mCurrentPhotoPath;
+    private int maxCommentLength;
 
     private EditText textField;
     private ImageButton sendButton;
+    private ImageButton cameraButton;
     private String username = "";
     private String boxKey = "";
     private RecyclerView mCommentRecyclerView;
     private RecyclerView.Adapter mCommentAdapter;
     private ArrayList<Comment> mComments = new ArrayList<>();
     private HashMap<String, Comment> mCommentHashMap = new HashMap<>();
+    private Uri photoURI;
+    private ProgressDialog mProgress;
 
     private int commentLevel = 2;
 
@@ -73,7 +94,6 @@ public class InsideCommentDialog extends Activity {
         Intent thisIntent = getIntent();
         Bundle intentExtras = thisIntent.getExtras();
 
-
         mCommentRecyclerView = findViewById(R.id.inside_comment_recycler);
         mCommentRecyclerView.setHasFixedSize(true);
         mCommentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -81,7 +101,7 @@ public class InsideCommentDialog extends Activity {
         username = getUsername();
 
         u = new Utils();
-
+        maxCommentLength = u.getMaxCommentLength();
 
         if (intentExtras != null) {
 
@@ -93,7 +113,6 @@ public class InsideCommentDialog extends Activity {
             headVotes = (String) intentExtras.get("headVotes");
             boxKey = (String) intentExtras.get("boxKey");
 
-
             photoUrl = (String) intentExtras.get("photoUrl");
 
             refKey = "locations/" + boxKey + "/messages/" + headDate + "/commentMessages";
@@ -102,20 +121,22 @@ public class InsideCommentDialog extends Activity {
             Comment headComment = new Comment(headMessage, headUsername, headDate, headVotes, boxKey, true, headReplies, headRefString, commentLevel, photoUrl);
             mComments.add(headComment);
             mCommentHashMap.put(headDate + headMessage, headComment);
-
-
+            mProgress = new ProgressDialog(this);
         }
 
-
         database = FirebaseDatabase.getInstance();
+        storage = FirebaseStorage.getInstance();
+        
         myRef = database.getReference(refKey);
-
         headRef = database.getReference(headRefString);
+        storageRef = storage.getReference();
 
         textField = findViewById(R.id.inside_comment_input_edit_text);
         sendButton = findViewById(R.id.send_button);
+        cameraButton = findViewById(R.id.camera_button);
 
-        setButtonListener();
+        setSendButtonListener();
+        setCameraButtonListener();
 
         setmCommentAdapter();
 
@@ -126,7 +147,7 @@ public class InsideCommentDialog extends Activity {
     }
 
 
-    public void setButtonListener() {
+    public void setSendButtonListener() {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -142,13 +163,124 @@ public class InsideCommentDialog extends Activity {
                         InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         mgr.hideSoftInputFromWindow(textField.getWindowToken(), 0);
 
-                        postNewComment(text);
+                        postNewComment(text, "");
                     } else {
                         Toast.makeText(InsideCommentDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
+    }
+
+    public void setCameraButtonListener() {
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                takePictureIntent();
+            }
+        });
+    }
+
+    public void takePictureIntent() {
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (pictureIntent.resolveActivity(getPackageManager()) != null) {
+
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+
+            } catch (IOException ex) {
+                // failed while creating the file
+                System.out.println("Failed to create Image");
+            }
+
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider", photoFile);
+                pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(pictureIntent, CAMERA_REQUEST_CODE);
+            }
+
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+
+        mCurrentPhotoPath = image.getAbsolutePath();
+
+        return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
+
+            // user clicked "post" button from Preview Activity
+            if (data != null && data.getStringExtra("user_permission") != null) {
+                mProgress.setMessage("Uploading...");
+                mProgress.show();
+
+                Uri uri = photoURI;
+
+                final String caption = (String) data.getStringExtra("caption");
+
+                final StorageReference filepath = storageRef.child("Photos").child(uri.getLastPathSegment());
+                filepath.putFile(photoURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(InsideCommentDialog.this, "Upload Successful!", Toast.LENGTH_SHORT).show();
+                        mProgress.dismiss();
+
+                        filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                String downloadURL = uri.toString();
+                                postImage(caption, downloadURL);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle any errors
+                            }
+                        });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(InsideCommentDialog.this, "Upload Failed!", Toast.LENGTH_SHORT).show();
+                        mProgress.dismiss();
+                    }
+                });
+
+            } else { // Takes user to the Preview Activity
+                Intent i = new Intent(InsideCommentDialog.this, PreviewActivity.class);
+                i.putExtra("image", mCurrentPhotoPath);
+
+                startActivityForResult(i, 1);
+            }
+        }
+    }
+
+    public void postImage(String caption, String downloadURL) {
+        if (caption.length() <= maxCommentLength) {
+            postNewComment(caption, downloadURL);
+        } else {
+            Toast.makeText(InsideCommentDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public ArrayList<Comment> sortComments(ArrayList<Comment> comments) {
@@ -182,13 +314,14 @@ public class InsideCommentDialog extends Activity {
         mCommentRecyclerView.smoothScrollToPosition(0);
     }
 
-    private void postNewComment(String commentText) {
+    private void postNewComment(String commentText, String downloadURL) {
         Date curDate = new Date();
         String timeStamp = Long.toString(System.currentTimeMillis());
 
         myRef.child(timeStamp).child("user").setValue(username);
         myRef.child(timeStamp).child("my_message").setValue(commentText);
         myRef.child(timeStamp).child("upVotes").setValue("1");
+        myRef.child(timeStamp).child("photoURL").setValue(downloadURL);
 
         headReplies = Integer.toString(Integer.parseInt(headReplies) + 1);
         headRef.child(headDate).child("replies").setValue(headReplies);
@@ -212,13 +345,12 @@ public class InsideCommentDialog extends Activity {
                 String u = (String) dataSnapshot.child("user").getValue();
                 String m = (String) dataSnapshot.child("my_message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
-
+                String photoURL = (String) dataSnapshot.child("photoURL").getValue();
 
                 String timeStamp =  dataSnapshot.getKey();
 
-
                 String replies = "";
-                Comment c = new Comment(m, u, timeStamp, votes, boxKey, false, replies, refKey, 2, "");
+                Comment c = new Comment(m, u, timeStamp, votes, boxKey, false, replies, refKey, 2, photoURL);
 
                 if (votes != null) {
 
@@ -227,7 +359,6 @@ public class InsideCommentDialog extends Activity {
                     mCommentHashMap.put(timeStamp + m, c);
                     setmCommentAdapter();
                 }
-
             }
 
             @Override
@@ -245,16 +376,16 @@ public class InsideCommentDialog extends Activity {
                 String u = (String) dataSnapshot.child("user").getValue();
                 String m = (String) dataSnapshot.child("my_message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
+                String photoURL = (String) dataSnapshot.child("photoURL").getValue();
 
                 String timeStamp = dataSnapshot.getKey();
 
                 String replies = "";
-                Comment c = new Comment(m, u, timeStamp, votes, boxKey, false, replies, refKey, 2, "");
+                Comment c = new Comment(m, u, timeStamp, votes, boxKey, false, replies, refKey, 2, photoURL);
 
                 if (m == null) {
                     getNewChildData(timeStamp);
                 }
-
 
                 if (c != null && m != null) {
                     mComments.add(c);

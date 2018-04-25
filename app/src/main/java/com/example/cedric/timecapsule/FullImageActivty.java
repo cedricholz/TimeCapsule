@@ -20,7 +20,7 @@ public class FullImageActivty extends AppCompatActivity {
 
         capturedImg = findViewById(R.id.capturedImg);
 
-        // retrieving downloadURL from GalleryAdapter
+        // retrieving downloadURL
         Intent i = getIntent();
         Bundle intentExtras = i.getExtras();
 
