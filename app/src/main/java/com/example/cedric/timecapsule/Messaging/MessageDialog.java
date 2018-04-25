@@ -135,7 +135,8 @@ public class MessageDialog extends Activity {
         setAdapterAndUpdateData();
     }
 
-    private void getNewMessage(String k) {
+    private void getNewMessage(final String k) {
+
         myRef.child(messageKey).child(k).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -144,14 +145,17 @@ public class MessageDialog extends Activity {
                 String m = (String) dataSnapshot.child("my_message").getValue();
                 String date = (String) dataSnapshot.child("date").getValue();
 
+                if (m == null) {
+                    getNewMessage(k);
+                } else {
+                    Date d = new Date(date);
 
-                Date d = new Date(date);
+                    Message message = new Message(m, u, d, messageKey);
 
-                Message message = new Message(m, u, d, messageKey);
+                    mMessages.add(message);
 
-                mMessages.add(message);
-
-                setAdapterAndUpdateData();
+                    setAdapterAndUpdateData();
+                }
 
             }
 
@@ -174,7 +178,7 @@ public class MessageDialog extends Activity {
                 String date = (String) dataSnapshot.child("date").getValue();
 
 
-                if (m == null){
+                if (m == null) {
                     getNewMessage(dataSnapshot.getKey());
                 }
 
