@@ -42,7 +42,7 @@
             android:background="@color/white"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"
-            android:src="@drawable/cameraicon" />
+            android:src="@drawable/ic_camera_alt_black_24dp" />
 
         <!-- new comment edit text  -->
         <EditText
