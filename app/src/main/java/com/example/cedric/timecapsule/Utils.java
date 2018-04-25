@@ -18,13 +18,13 @@ public class Utils {
     // All markers within this range in Kilometers will be visible
     private double visibleMarkerDistancekm = 100.0;
     // A box can be accessed when you are within this distance in meters.
-    private double validDistanceMeters = 25.0;
+    private double validDistanceMeters = 50;
     // New boxes are not reloaded every time we get a new location, we wait until we have
     // moved this far from our original position before updating
     private double validDistanceToRequestNewPinsKm = 5.0;
     // Markers cannot be created too close together, this is the acceptable
     // distance between them.
-    private double validDistanceFromMarkerForNewMarkerKm = .1;
+    private double validDistanceFromMarkerForNewMarkerKm = .07;
     // The amount of characters you can put into a comment
     private int maxCommentLength = 300;
     private int maxMessageLength = 300;

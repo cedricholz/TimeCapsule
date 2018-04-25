@@ -451,20 +451,5 @@ public class CommentDialog extends Activity {
         myRef.child(key).child("messages").child(timeStamp).child("replies").setValue("0");
         myRef.child(key).child("messages").child(timeStamp).child("photoURL").setValue(photoURL);
 
-
-//        myLastPost = username + commentText;
-//
-//        String replies = "0";
-//
-//        Comment newComment = new Comment(commentText, username, curDate, "1", key, false,
-//                replies, refKey, commentLevel, photoURL);
-//
-//        mComments.add(newComment);
-//        mComments = sortComments(mComments);
-//
-//        commentHashMap.put(curDate.toString() + commentText, newComment);
-//        setAdapterAndUpdateData();
-
-
     }
 }

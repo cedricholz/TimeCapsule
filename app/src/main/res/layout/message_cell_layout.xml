@@ -31,28 +31,47 @@
         android:text="username"
         android:textColor="@color/lightGreen"
         android:textSize="16dp"
-        android:textStyle="bold" />
 
+        android:textStyle="bold" />
 
 
     <!-- comment body text -->
 
     <TextView
+        android:id="@+id/left_message_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:id="@+id/left_message_text_view"
         android:layout_below="@+id/left_username_text_view"
-        android:textColor="#fff"
         android:background="@drawable/their_message"
-        android:paddingVertical="12dp"
-        android:paddingHorizontal="16dp"
         android:elevation="2dp"
-        android:textSize="18dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
         android:text="Hello Friendo"
-        />
+        android:textColor="#fff"
+        android:textSize="18dp" />
 
 
+    <RelativeLayout
+        android:id="@+id/left_image_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/left_message_text_view"
+        android:elevation="2dp"
+        android:layout_alignParentStart="true"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:visibility="gone"
+        android:background="@drawable/their_message">
+
+
+        <ImageView
+            android:id="@+id/left_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@drawable/oski_bear" />
+
+    </RelativeLayout>
 
     <!-- time elapsed text view -->
     <TextView
@@ -60,7 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/ll"
-        android:layout_below="@+id/left_message_text_view"
+        android:layout_below="@+id/left_image_layout"
         android:text="1 Hr"
         android:textSize="12dp" />
 
@@ -68,22 +87,41 @@
     <!--Right-->
 
 
-
     <TextView
+        android:id="@+id/right_message_text_view"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/my_message"
+        android:elevation="2dp"
+        android:padding="10dp"
+        android:text="Placeholder message"
+        android:textColor="#fff"
+        android:textSize="18dp"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/right_image_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:id="@+id/right_message_text_view"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/my_message"
-        android:textColor="#fff"
-        android:padding="10dp"
+        android:layout_below="@+id/right_message_text_view"
         android:elevation="2dp"
-        android:textSize="18dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
         android:visibility="gone"
-        android:text="Placeholder message"
-        />
+        android:background="@drawable/my_message">
+
+
+        <ImageView
+            android:id="@+id/right_image"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@drawable/oski_bear" />
+
+    </RelativeLayout>
 
     <!-- time elapsed text view -->
     <TextView
@@ -92,10 +130,14 @@
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/ll"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/right_message_text_view"
+        android:layout_below="@+id/right_image_layout"
         android:text="2 Hr"
         android:textSize="10dp"
         android:visibility="gone" />
+
+
+
+
 
 
 </RelativeLayout>
