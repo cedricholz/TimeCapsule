@@ -180,6 +180,7 @@ public class CommentDialog extends Activity {
                 photoFile = createImageFile();
             } catch (IOException ex) {
                 // failed while creating the file
+                System.out.println("Failed to create Image");
             }
 
             // Continue only if the File was successfully created
@@ -197,6 +198,8 @@ public class CommentDialog extends Activity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+
         File image = File.createTempFile(
                 imageFileName,
                 ".jpg",
@@ -279,6 +282,12 @@ public class CommentDialog extends Activity {
                 return c2.upVotes.compareTo(c1.upVotes);
             }
         });
+
+
+        for(Comment c: comments){
+            System.out.println(c.upVotes);
+        }
+
         return comments;
     }
 
@@ -370,6 +379,7 @@ public class CommentDialog extends Activity {
                 if (c != null) {
                     c.upVotes = (String) dataSnapshot.child("upVotes").getValue();
                     c.replies = (String) dataSnapshot.child("replies").getValue();
+                    mComments = sortComments(mComments);
                     setAdapterAndUpdateData();
                 }
 

@@ -43,7 +43,7 @@
         android:layout_height="200dp"
         android:layout_below="@+id/ll"
         android:layout_toStartOf="@+id/vote_layout"
-        android:background="@drawable/oski_bear"
+        android:background="@drawable/loading_image"
         android:visibility="gone" />
 
     <!-- comment body text -->

@@ -34,7 +34,6 @@ public class PreviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
-
         postBtn = findViewById(R.id.btnPost);
         capturedImage = findViewById(R.id.capturedImg);
         caption = findViewById(R.id.comment_input_edit_text);
@@ -50,7 +49,6 @@ public class PreviewActivity extends AppCompatActivity {
 
         setPostButtonListener();
     }
-
 
     public void setPostButtonListener() {
         postBtn.setOnClickListener(new View.OnClickListener() {

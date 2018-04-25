@@ -96,7 +96,6 @@ public class LoginActivity extends AppCompatActivity {
 
         u = new Utils();
 
-
     }
 
 

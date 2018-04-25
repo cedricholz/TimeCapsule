@@ -17,7 +17,7 @@
         android:layout_alignParentStart="true"
 
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/oski_bear"
+        android:background="@drawable/loading_image"
         android:scaleType="fitXY" />
 
 
@@ -43,7 +43,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="What is this photo?"
-            android:layout_weight="3"
+            android:layout_weight="5"
             android:layout_marginLeft="10dp"
             android:inputType="textShortMessage" />
 
