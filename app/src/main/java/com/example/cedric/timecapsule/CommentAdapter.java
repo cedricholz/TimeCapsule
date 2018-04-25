@@ -292,7 +292,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
         handleVoteButtonColor();
 
         // imageView
-        if (comment.photoUrl.length() >= 1) {
+        if (comment.photoUrl != null && comment.photoUrl.length() >= 1) {
             Picasso.get().load(comment.photoUrl).into(placeView);
             placeView.setVisibility(View.VISIBLE);
         }

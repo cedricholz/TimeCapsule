@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -37,8 +39,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -178,6 +184,9 @@ public class CommentDialog extends Activity {
             File photoFile = null;
             try {
                 photoFile = createImageFile();
+
+                resizeImage(mCurrentPhotoPath, mCurrentPhotoPath);
+
             } catch (IOException ex) {
                 // failed while creating the file
                 System.out.println("Failed to create Image");
@@ -207,7 +216,26 @@ public class CommentDialog extends Activity {
         );
 
         mCurrentPhotoPath = image.getAbsolutePath();
+
         return image;
+    }
+
+    public static void resizeImage(String sPath,String sTo) throws IOException {
+
+        Bitmap photo = BitmapFactory.decodeFile(sPath);
+        photo = Bitmap.createScaledBitmap(photo, 300, 300, false);
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        photo.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+
+        File f = new File(sTo);
+        f.createNewFile();
+        FileOutputStream fo = new FileOutputStream(f);
+        fo.write(bytes.toByteArray());
+        fo.close();
+
+        File file =  new File(sPath);
+        file.delete();
+
     }
 
     @Override
@@ -221,6 +249,8 @@ public class CommentDialog extends Activity {
                 mProgress.setMessage("Uploading...");
                 mProgress.show();
                 Uri uri = photoURI;
+
+
 
                 final String caption = (String) data.getStringExtra("caption");
 
@@ -253,6 +283,9 @@ public class CommentDialog extends Activity {
 
             } else { // Takes user to the Preview Activity
                 Intent i = new Intent(CommentDialog.this, PreviewActivity.class);
+
+
+
                 i.putExtra("image", mCurrentPhotoPath);
 
                 startActivityForResult(i, 1);
