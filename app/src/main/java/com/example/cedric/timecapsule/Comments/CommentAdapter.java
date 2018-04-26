@@ -67,7 +67,7 @@ public class CommentAdapter extends RecyclerView.Adapter {
     }
 }
 
-class CommentViewHolder extends RecyclerView.ViewHolder {
+class CommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
     // each data item is just a string in this case
     public RelativeLayout mCommentBubbleLayout;
@@ -108,6 +108,8 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     public CommentViewHolder(View itemView, Context mContext) {
 
         super(itemView);
+
+        itemView.setOnClickListener(this);
 
         this.mContext = mContext;
 
@@ -213,28 +215,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        mCommentTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                if (commentLevel == 1) {
-
-                    Intent insideCommentIntent = new Intent(view.getContext(), InsideCommentDialog.class);
-                    insideCommentIntent.putExtra("headUsername", commentUsername);
-                    insideCommentIntent.putExtra("headMessage", message);
-                    insideCommentIntent.putExtra("headDate", timeStamp);
-                    insideCommentIntent.putExtra("headReplies", replies);
-                    insideCommentIntent.putExtra("headVotes", upVotes);
-                    insideCommentIntent.putExtra("boxKey", boxKey);
-                    insideCommentIntent.putExtra("highresUrl", highresUrl);
-                    insideCommentIntent.putExtra("thumbUrl", thumbUrl);
-
-
-                    view.getContext().startActivity(insideCommentIntent);
-
-                }
-            }
-        });
 
         mUsernameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -247,16 +228,14 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
 
                     view.getContext().startActivity(messengerIntent);
                 }
-
             }
         });
-
     }
 
     void bind(Comment comment) {
 
         highresUrl = comment.highresUrl;
-        thumbUrl = comment.highresUrl;
+        thumbUrl = comment.thumbUrl;
 
         commentUsername = comment.username;
         replies = comment.replies;
@@ -301,19 +280,22 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
         handleVoteButtonColor();
 
         // imageView
+
         if (thumbUrl != null && thumbUrl.length() >= 1) {
+
             Picasso.get().load(thumbUrl).into(placeView);
+
             placeView.setVisibility(View.VISIBLE);
             placeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext, "Image", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(mContext, FullImageActivty.class);
                     intent.putExtra("image", highresUrl);
                     mContext.startActivity(intent);
                 }
             });
         }
+
     }
 
     public void handleVoteButtonColor() {
@@ -330,4 +312,24 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
+    @Override
+    public void onClick(View view) {
+
+        if (commentLevel == 1) {
+
+            Intent insideCommentIntent = new Intent(view.getContext(), InsideCommentDialog.class);
+            insideCommentIntent.putExtra("headUsername", commentUsername);
+            insideCommentIntent.putExtra("headMessage", message);
+            insideCommentIntent.putExtra("headDate", timeStamp);
+            insideCommentIntent.putExtra("headReplies", replies);
+            insideCommentIntent.putExtra("headVotes", upVotes);
+            insideCommentIntent.putExtra("boxKey", boxKey);
+            insideCommentIntent.putExtra("highresUrl", highresUrl);
+            insideCommentIntent.putExtra("thumbUrl", thumbUrl);
+
+
+            view.getContext().startActivity(insideCommentIntent);
+
+        }
+    }
 }

@@ -65,7 +65,7 @@ public class PreviewActivity extends AppCompatActivity {
             Float height = new Float(bitmap.getHeight());
             Float ratio = width / height;
 
-            int scaledDimensions = 128;
+            int scaledDimensions = 400;
             thumb = Bitmap.createScaledBitmap(bitmap, (int) (scaledDimensions * ratio), scaledDimensions, false);
 
         }

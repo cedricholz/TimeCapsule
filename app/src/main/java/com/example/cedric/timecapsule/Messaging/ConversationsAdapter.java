@@ -54,7 +54,7 @@ public class ConversationsAdapter extends RecyclerView.Adapter {
     }
 }
 
-class ConversationsViewHolder extends RecyclerView.ViewHolder {
+class ConversationsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     // each data item is just a string in this case
     public RelativeLayout mConversationBubbleLayout;
@@ -72,6 +72,8 @@ class ConversationsViewHolder extends RecyclerView.ViewHolder {
 
         super(itemView);
 
+        itemView.setOnClickListener(this);
+
         mConversationBubbleLayout = itemView.findViewById(R.id.conversation_cell_layout);
 
         conversation_username_text_view = mConversationBubbleLayout.findViewById(R.id.conversation_username_text_view);
@@ -82,37 +84,12 @@ class ConversationsViewHolder extends RecyclerView.ViewHolder {
 
         myUsername = u.getUsername(itemView.getContext());
 
-        setListeners();
     }
 
     public void openMessage(View view) {
         Intent insideCommentIntent = new Intent(view.getContext(), MessageDialog.class);
         insideCommentIntent.putExtra("commentUsername", commentUsername);
         view.getContext().startActivity(insideCommentIntent);
-    }
-
-    public void setListeners() {
-        conversation_username_text_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMessage(view);
-            }
-        });
-
-        conversation_date_text_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMessage(view);
-            }
-        });
-
-        conversation_comment_text_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMessage(view);
-            }
-        });
-
     }
 
 
@@ -123,4 +100,8 @@ class ConversationsViewHolder extends RecyclerView.ViewHolder {
         conversation_comment_text_view.setText(convo.mostRecentMessage);
     }
 
+    @Override
+    public void onClick(View view) {
+        openMessage(view);
+    }
 }

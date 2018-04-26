@@ -1,5 +1,7 @@
 package com.example.cedric.timecapsule.Comments;
 
+import com.squareup.picasso.RequestCreator;
+
 import java.util.Date;
 
 // custom class made for storing a message. you can update this class
@@ -18,6 +20,7 @@ public class Comment {
 
     public String thumbUrl;
 
+
     Comment(String text, String username, String timeStamp, String upVotes, String boxKey, Boolean headComment, String replies,
             String refKey, int commentLevel, String highresUrl, String thumbUrl) {
         this.text = text;
@@ -33,7 +36,6 @@ public class Comment {
 
         this.highresUrl = highresUrl;
         this.thumbUrl = thumbUrl;
-
 
     }
 

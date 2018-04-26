@@ -474,7 +474,7 @@ public class InsideCommentDialog extends Activity {
                 if (c != null) {
                     c.upVotes = (String) dataSnapshot.child("upVotes").getValue();
                     c.replies = (String) dataSnapshot.child("replies").getValue();
-                    setmCommentAdapter();
+                    //setmCommentAdapter();
                 }
             }
 

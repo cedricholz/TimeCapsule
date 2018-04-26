@@ -415,7 +415,7 @@ public class CommentDialog extends Activity {
                 if (c != null && message != null && dataSnapshot.child("upVotes") != null && dataSnapshot.child("replies") != null) {
                     c.upVotes = (String) dataSnapshot.child("upVotes").getValue();
                     c.replies = (String) dataSnapshot.child("replies").getValue();
-                    mComments = sortComments(mComments);
+                    //mComments = sortComments(mComments);
                     setAdapterAndUpdateData();
                 }
             }
