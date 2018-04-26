@@ -14,10 +14,12 @@ public class Comment {
     public String replies;
     public String refKey;
     public int commentLevel;
-    public String photoUrl;
+    public String highresUrl;
+
+    public String thumbUrl;
 
     Comment(String text, String username, String timeStamp, String upVotes, String boxKey, Boolean headComment, String replies,
-            String refKey, int commentLevel, String photoUrl) {
+            String refKey, int commentLevel, String highresUrl, String thumbUrl) {
         this.text = text;
         this.username = username;
         this.timeStamp = timeStamp;
@@ -29,8 +31,8 @@ public class Comment {
 
         this.commentLevel = commentLevel;
 
-        this.photoUrl = photoUrl;
-
+        this.highresUrl = highresUrl;
+        this.thumbUrl = thumbUrl;
 
 
     }

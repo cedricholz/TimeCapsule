@@ -75,6 +75,14 @@ public class CommentDialog extends Activity {
     private int commentLevel = 1;
     private int maxCommentLength;
 
+    public static String encodeURL(String string) {
+        return string.replace(".", ",");
+    }
+
+    public static String deocodeURL(String string) {
+        return string.replace(",", ".");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,7 +152,7 @@ public class CommentDialog extends Activity {
                         InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         mgr.hideSoftInputFromWindow(textField.getWindowToken(), 0);
 
-                        postNewComment(text, "");
+                        postNewComment(text, "", "");
                     } else {
                         Toast.makeText(CommentDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
                     }
@@ -195,7 +203,6 @@ public class CommentDialog extends Activity {
                 pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(pictureIntent, CAMERA_REQUEST_CODE);
             }
-
         }
     }
 
@@ -215,23 +222,42 @@ public class CommentDialog extends Activity {
         return image;
     }
 
-    public static void resizeImage(String sPath,String sTo) throws IOException {
 
-        Bitmap photo = BitmapFactory.decodeFile(sPath);
-        photo = Bitmap.createScaledBitmap(photo, 300, 300, false);
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        photo.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+    public void storeThumbNail(Bitmap bitmap, String url, final String caption, final String highresUrl) {
+        if (bitmap != null) {
 
-        File f = new File(sTo);
-        f.createNewFile();
-        FileOutputStream fo = new FileOutputStream(f);
-        fo.write(bytes.toByteArray());
-        fo.close();
+            final StorageReference filepath = storageRef.child("Thumbnails").child(url);
 
-        File file =  new File(sPath);
-        file.delete();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] bitmapData = baos.toByteArray();
 
+            UploadTask uploadTask = filepath.putBytes(bitmapData);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(CommentDialog.this, "Upload Successful!", Toast.LENGTH_SHORT).show();
+                    mProgress.dismiss();
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    String thumbUrl = taskSnapshot.getDownloadUrl().toString();
+                    postImage(caption, highresUrl, thumbUrl);
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Toast.makeText(CommentDialog.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                    mProgress.dismiss();
+                }
+            });
+        }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -244,28 +270,22 @@ public class CommentDialog extends Activity {
                 mProgress.setMessage("Uploading...");
                 mProgress.show();
 
-//                try {
-//                    resizeImage(mCurrentPhotoPath, mCurrentPhotoPath);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
                 Uri uri = photoURI;
 
                 final String caption = (String) data.getStringExtra("caption");
+
+                final Bitmap thumb = (Bitmap) data.getParcelableExtra("thumbnail");
 
                 final StorageReference filepath = storageRef.child("Photos").child(uri.getLastPathSegment());
                 filepath.putFile(photoURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(CommentDialog.this, "Upload Successful!", Toast.LENGTH_SHORT).show();
-                        mProgress.dismiss();
 
                         filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                String downloadURL = uri.toString();
-                                postImage(caption, downloadURL);
+                                String highresUrl = uri.toString();
+                                storeThumbNail(thumb, uri.getLastPathSegment().split("Photos/")[1], caption, highresUrl);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -277,7 +297,7 @@ public class CommentDialog extends Activity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(CommentDialog.this, "Upload Failed!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CommentDialog.this, "Upload Failed", Toast.LENGTH_SHORT).show();
                         mProgress.dismiss();
                     }
                 });
@@ -291,20 +311,12 @@ public class CommentDialog extends Activity {
         }
     }
 
-    public void postImage(String caption, String downloadURL) {
+    public void postImage(String caption, String highresUrl, String thumbUrl) {
         if (caption.length() <= maxCommentLength) {
-            postNewComment(caption, downloadURL);
+            postNewComment(caption, highresUrl, thumbUrl);
         } else {
             Toast.makeText(CommentDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public static String encodeURL(String string) {
-        return string.replace(".", ",");
-    }
-
-    public static String deocodeURL(String string) {
-        return string.replace(",", ".");
     }
 
     public ArrayList<Comment> sortComments(ArrayList<Comment> comments) {
@@ -332,13 +344,14 @@ public class CommentDialog extends Activity {
                 String m = (String) dataSnapshot.child("my_message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
                 String replies = (String) dataSnapshot.child("replies").getValue();
-                String photoUrl = (String) dataSnapshot.child("photoURL").getValue();
+                String highresUrl = (String) dataSnapshot.child("highresUrl").getValue();
+                String thumbUrl = (String) dataSnapshot.child("thumbUrl").getValue();
 
                 String timeStamp = dataSnapshot.getKey();
 
 
                 Comment c = new Comment(m, u, timeStamp, votes, key, false, replies,
-                        refKey, commentLevel, photoUrl);
+                        refKey, commentLevel, highresUrl, thumbUrl);
 
                 if (votes != null) {
                     mComments.add(c);
@@ -369,7 +382,8 @@ public class CommentDialog extends Activity {
                 String m = (String) dataSnapshot.child("my_message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
                 String replies = (String) dataSnapshot.child("replies").getValue();
-                String photoUrl = (String) dataSnapshot.child("photoURL").getValue();
+                String highresUrl = (String) dataSnapshot.child("highresUrl").getValue();
+                String thumbUrl = (String) dataSnapshot.child("thumbUrl").getValue();
 
                 if (m == null) {
                     getNewChildData(dataSnapshot.getKey());
@@ -380,7 +394,7 @@ public class CommentDialog extends Activity {
 
 
                     Comment c = new Comment(m, u, timestamp, votes, key, false, replies,
-                            refKey, commentLevel, photoUrl);
+                            refKey, commentLevel, highresUrl, thumbUrl);
 
                     mComments.add(c);
 
@@ -395,7 +409,6 @@ public class CommentDialog extends Activity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {
-
                 String timestamp = dataSnapshot.getKey();
                 String message = (String) dataSnapshot.child("my_message").getValue();
                 Comment c = commentHashMap.get(timestamp + message);
@@ -432,19 +445,20 @@ public class CommentDialog extends Activity {
     }
 
 
-    private void postNewComment(String commentText, String photoURL) {
+    private void postNewComment(String commentText, String highresUrl, String thumbUrl) {
 
         String timeStamp = Long.toString(System.currentTimeMillis());
 
-        if (photoURL != "") {
-            myRef.child(key).child("Photo Gallery").child(timeStamp).setValue(photoURL);
+        if (highresUrl != "") {
+            myRef.child(key).child("Photo Gallery").child(timeStamp).setValue(highresUrl);
         }
 
         myRef.child(key).child("messages").child(timeStamp).child("user").setValue(username);
         myRef.child(key).child("messages").child(timeStamp).child("my_message").setValue(commentText);
         myRef.child(key).child("messages").child(timeStamp).child("upVotes").setValue("1");
         myRef.child(key).child("messages").child(timeStamp).child("replies").setValue("0");
-        myRef.child(key).child("messages").child(timeStamp).child("photoURL").setValue(photoURL);
+        myRef.child(key).child("messages").child(timeStamp).child("highresUrl").setValue(highresUrl);
+        myRef.child(key).child("messages").child(timeStamp).child("thumbUrl").setValue(thumbUrl);
 
     }
 }

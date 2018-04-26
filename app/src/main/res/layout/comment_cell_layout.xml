@@ -37,15 +37,20 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+
     <ImageButton
         android:id="@+id/place_view"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/ll"
         android:layout_toStartOf="@+id/vote_layout"
-        android:background="@drawable/loading_image"
-        android:scaleType="fitXY"
-        android:visibility="gone" />
+        android:src="@drawable/loading_image"
+        android:background="@color/white"
+        android:adjustViewBounds="true"
+        android:visibility="gone"
+        android:scaleType="fitCenter"
+        />
+
 
     <!-- comment body text -->
 
@@ -107,8 +112,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/ll"
-        android:layout_weight="1"
-        android:layout_below="@+id/comment_text_view">
+        android:layout_below="@+id/comment_text_view"
+        android:layout_weight="1">
 
         <TextView
             android:id="@+id/date_text_view"

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -36,6 +37,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -67,9 +69,12 @@ public class InsideCommentDialog extends Activity {
     String headVotes;
     String refKey = "locations";
 
-    String photoUrl = "";
+
     String mCurrentPhotoPath;
     private int maxCommentLength;
+
+    private String highresUrl;
+    private String thumbUrl;
 
     private EditText textField;
     private ImageButton sendButton;
@@ -116,12 +121,13 @@ public class InsideCommentDialog extends Activity {
             headVotes = (String) intentExtras.get("headVotes");
             boxKey = (String) intentExtras.get("boxKey");
 
-            photoUrl = (String) intentExtras.get("photoUrl");
+            highresUrl = (String) intentExtras.get("highresUrl");
+            thumbUrl = (String) intentExtras.get("thumbUrl");
 
             refKey = "locations/" + boxKey + "/messages/" + headDate + "/commentMessages";
             headRefString = "locations/" + boxKey + "/messages/";
 
-            Comment headComment = new Comment(headMessage, headUsername, headDate, headVotes, boxKey, true, headReplies, headRefString, commentLevel, photoUrl);
+            Comment headComment = new Comment(headMessage, headUsername, headDate, headVotes, boxKey, true, headReplies, headRefString, commentLevel, highresUrl, thumbUrl);
             mComments.add(headComment);
             mCommentHashMap.put(headDate + headMessage, headComment);
             mProgress = new ProgressDialog(this);
@@ -129,7 +135,7 @@ public class InsideCommentDialog extends Activity {
 
         database = FirebaseDatabase.getInstance();
         storage = FirebaseStorage.getInstance();
-        
+
         myRef = database.getReference(refKey);
         headRef = database.getReference(headRefString);
         storageRef = storage.getReference();
@@ -166,7 +172,7 @@ public class InsideCommentDialog extends Activity {
                         InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         mgr.hideSoftInputFromWindow(textField.getWindowToken(), 0);
 
-                        postNewComment(text, "");
+                        postNewComment(text, "", "");
                     } else {
                         Toast.makeText(InsideCommentDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
                     }
@@ -206,7 +212,6 @@ public class InsideCommentDialog extends Activity {
                 pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(pictureIntent, CAMERA_REQUEST_CODE);
             }
-
         }
     }
 
@@ -226,6 +231,42 @@ public class InsideCommentDialog extends Activity {
         return image;
     }
 
+
+    public void storeThumbNail(Bitmap bitmap, String url, final String caption, final String highresUrl) {
+        if (bitmap != null) {
+
+            final StorageReference filepath = storageRef.child("Thumbnails").child(url);
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] bitmapData = baos.toByteArray();
+
+            UploadTask uploadTask = filepath.putBytes(bitmapData);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(InsideCommentDialog.this, "Upload Successful!", Toast.LENGTH_SHORT).show();
+                    mProgress.dismiss();
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    String thumbUrl = taskSnapshot.getDownloadUrl().toString();
+                    postImage(caption, highresUrl, thumbUrl);
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Toast.makeText(InsideCommentDialog.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                    mProgress.dismiss();
+                }
+            });
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -241,18 +282,18 @@ public class InsideCommentDialog extends Activity {
 
                 final String caption = (String) data.getStringExtra("caption");
 
+                final Bitmap thumb = (Bitmap) data.getParcelableExtra("thumbnail");
+
                 final StorageReference filepath = storageRef.child("Photos").child(uri.getLastPathSegment());
                 filepath.putFile(photoURI).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(InsideCommentDialog.this, "Upload Successful!", Toast.LENGTH_SHORT).show();
-                        mProgress.dismiss();
 
                         filepath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                String downloadURL = uri.toString();
-                                postImage(caption, downloadURL);
+                                String highresUrl = uri.toString();
+                                storeThumbNail(thumb, uri.getLastPathSegment().split("Photos/")[1], caption, highresUrl);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -264,7 +305,7 @@ public class InsideCommentDialog extends Activity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(InsideCommentDialog.this, "Upload Failed!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(InsideCommentDialog.this, "Upload Failed", Toast.LENGTH_SHORT).show();
                         mProgress.dismiss();
                     }
                 });
@@ -278,9 +319,9 @@ public class InsideCommentDialog extends Activity {
         }
     }
 
-    public void postImage(String caption, String downloadURL) {
+    public void postImage(String caption, String highresUrl, String thumbUrl) {
         if (caption.length() <= maxCommentLength) {
-            postNewComment(caption, downloadURL);
+            postNewComment(caption, highresUrl, thumbUrl);
         } else {
             Toast.makeText(InsideCommentDialog.this, "Comment cannot be larger than 300 characters", Toast.LENGTH_SHORT).show();
         }
@@ -317,27 +358,19 @@ public class InsideCommentDialog extends Activity {
         mCommentRecyclerView.smoothScrollToPosition(0);
     }
 
-    private void postNewComment(String commentText, String downloadURL) {
+    private void postNewComment(String commentText, String highresUrl, String thumbUrl) {
         Date curDate = new Date();
         String timeStamp = Long.toString(System.currentTimeMillis());
 
         myRef.child(timeStamp).child("user").setValue(username);
         myRef.child(timeStamp).child("my_message").setValue(commentText);
         myRef.child(timeStamp).child("upVotes").setValue("1");
-        myRef.child(timeStamp).child("photoURL").setValue(downloadURL);
+        myRef.child(timeStamp).child("highresUrl").setValue(highresUrl);
+        myRef.child(timeStamp).child("thumbUrl").setValue(thumbUrl);
 
         headReplies = Integer.toString(Integer.parseInt(headReplies) + 1);
         headRef.child(headDate).child("replies").setValue(headReplies);
 
-//        String replies = "0";
-//        Comment newComment = new Comment(commentText, username, curDate, "1", boxKey, false, replies, refKey, commentLevel, "");
-//
-//        mComments.add(newComment);
-//        mComments = sortComments(mComments);
-//
-//        mCommentHashMap.put(curDate.toString() + commentText, newComment);
-
-//        setmCommentAdapter();
     }
 
     private void getNewChildData(String commentKey) {
@@ -348,12 +381,13 @@ public class InsideCommentDialog extends Activity {
                 String u = (String) dataSnapshot.child("user").getValue();
                 String m = (String) dataSnapshot.child("my_message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
-                String photoURL = (String) dataSnapshot.child("photoURL").getValue();
+                String highresUrl = (String) dataSnapshot.child("highresUrl").getValue();
+                String thumbUrl = (String) dataSnapshot.child("thumbUrl").getValue();
 
-                String timeStamp =  dataSnapshot.getKey();
+                String timeStamp = dataSnapshot.getKey();
 
                 String replies = "";
-                Comment c = new Comment(m, u, timeStamp, votes, boxKey, false, replies, refKey, 2, photoURL);
+                Comment c = new Comment(m, u, timeStamp, votes, boxKey, false, replies, refKey, 2, highresUrl, thumbUrl);
 
                 if (votes != null) {
 
@@ -379,12 +413,13 @@ public class InsideCommentDialog extends Activity {
                 String u = (String) dataSnapshot.child("user").getValue();
                 String m = (String) dataSnapshot.child("my_message").getValue();
                 String votes = (String) dataSnapshot.child("upVotes").getValue();
-                String photoURL = (String) dataSnapshot.child("photoURL").getValue();
+                String highresUrl = (String) dataSnapshot.child("highresUrl").getValue();
+                String thumbUrl = (String) dataSnapshot.child("thumbUrl").getValue();
 
                 String timeStamp = dataSnapshot.getKey();
 
                 String replies = "";
-                Comment c = new Comment(m, u, timeStamp, votes, boxKey, false, replies, refKey, 2, photoURL);
+                Comment c = new Comment(m, u, timeStamp, votes, boxKey, false, replies, refKey, 2, highresUrl, thumbUrl);
 
                 if (m == null) {
                     getNewChildData(timeStamp);

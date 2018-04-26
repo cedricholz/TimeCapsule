@@ -99,7 +99,8 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
     private ImageButton downButton;
     private ImageView placeView;
 
-    private String photoUrl;
+    private String highresUrl;
+    private String thumbUrl;
 
     private Utils u;
 
@@ -225,7 +226,8 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
                     insideCommentIntent.putExtra("headReplies", replies);
                     insideCommentIntent.putExtra("headVotes", upVotes);
                     insideCommentIntent.putExtra("boxKey", boxKey);
-                    insideCommentIntent.putExtra("photoUrl", photoUrl);
+                    insideCommentIntent.putExtra("highresUrl", highresUrl);
+                    insideCommentIntent.putExtra("thumbUrl", thumbUrl);
 
 
                     view.getContext().startActivity(insideCommentIntent);
@@ -253,7 +255,9 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
 
     void bind(Comment comment) {
 
-        photoUrl = comment.photoUrl;
+        highresUrl = comment.highresUrl;
+        thumbUrl = comment.highresUrl;
+
         commentUsername = comment.username;
         replies = comment.replies;
 
@@ -297,15 +301,15 @@ class CommentViewHolder extends RecyclerView.ViewHolder {
         handleVoteButtonColor();
 
         // imageView
-        if (photoUrl != null && photoUrl.length() >= 1) {
-            Picasso.get().load(photoUrl).into(placeView);
+        if (thumbUrl != null && thumbUrl.length() >= 1) {
+            Picasso.get().load(thumbUrl).into(placeView);
             placeView.setVisibility(View.VISIBLE);
             placeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mContext, "Image", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(mContext, FullImageActivty.class);
-                    intent.putExtra("image", photoUrl);
+                    intent.putExtra("image", highresUrl);
                     mContext.startActivity(intent);
                 }
             });
