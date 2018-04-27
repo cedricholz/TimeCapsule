@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -40,7 +44,7 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.8.2'
 
-
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

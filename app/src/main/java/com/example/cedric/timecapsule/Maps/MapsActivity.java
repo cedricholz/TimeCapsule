@@ -19,7 +19,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cedric.timecapsule.Comments.CommentDialog;
@@ -47,6 +50,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
+import com.yarolegovich.lovelydialog.LovelyCustomDialog;
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
@@ -315,39 +319,66 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    // TODO making private
     public void addButtonListeners() {
 
         addButton = findViewById(R.id.addButton);
 
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
+        addButton.setOnClickListener(arg0 -> {
+            final LovelyCustomDialog x = new LovelyCustomDialog(MapsActivity.this, R.style.EditTextTintTheme)
+                    .setView(R.layout.customtest)
+                    .setTopColorRes(R.color.lightGreen)
+                    .setTitle("Create New Box")
+                    .setTopTitleColor(R.color.black)
+                    .setMessage(curAddress)
+                    .setIcon(R.drawable.newbox);
+            x.show();
+            x.configureView((rootView) -> {
+                final EditText inputField = rootView.findViewById(R.id.input_field_location);
+                TextView confirmButton = rootView.findViewById(R.id.confirm_button_location);
+                confirmButton.setOnClickListener(arg1 -> {
+                    String text = inputField.getText().toString();
+                    CheckBox checkBox = rootView.findViewById(R.id.private_checkbox);
+                    if (userLocation != null && text.length() > 0) {
+                        createBoxIfFree(userLocation, text, checkBox.isChecked());
+                    } else {
+                        if (userLocation == null) {
+                            Toast.makeText(MapsActivity.this, "Unable to Create Box, Please Check That Your Location Is Turned On.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
-                new LovelyTextInputDialog(MapsActivity.this, R.style.EditTextTintTheme)
-                        .setTopColorRes(R.color.lightGreen)
-                        .setTitle("Create New Box")
-                        .setConfirmButtonColor(R.color.black)
-                        .setNegativeButtonColor(R.color.black)
-                        .setTopTitleColor(R.color.black)
-                        .setHint("Enter Box Name...")
-                        .setMessage(curAddress)
-                        .setIcon(R.drawable.newbox)
-                        .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
-                            @Override
-                            public void onTextInputConfirmed(String text) {
 
-                                if (userLocation != null && text.length() > 0) {
-                                    createBoxIfFree(userLocation, text);
-                                } else {
-                                    if (userLocation == null) {
-                                        Toast.makeText(MapsActivity.this, "Unable to Create Box, Please Check That Your Location Is Turned On.", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }
-                        })
-                        .setNegativeButton("CANCEL", null)
-                        .show();
-            }
+                TextView negativeButton = rootView.findViewById(R.id.negative_button_location);
+                negativeButton.setText("CANCEL");
+                negativeButton.setOnClickListener(arg1 -> x.dismiss());
+            });
+//            x.show();
+
+//                new LovelyTextInputDialog(MapsActivity.this, R.style.EditTextTintTheme)
+//                        .setTopColorRes(R.color.lightGreen)
+//                        .setTitle("Create New Box")
+//                        .setConfirmButtonColor(R.color.black)
+//                        .setNegativeButtonColor(R.color.black)
+//                        .setTopTitleColor(R.color.black)
+//                        .setHint("Enter Box Name...")
+//                        .setMessage(curAddress)
+//                        .setIcon(R.drawable.newbox)
+//                        .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
+//                            @Override
+//                            public void onTextInputConfirmed(String text) {
+//
+//                                if (userLocation != null && text.length() > 0) {
+//                                    createBoxIfFree(userLocation, text);
+//                                } else {
+//                                    if (userLocation == null) {
+//                                        Toast.makeText(MapsActivity.this, "Unable to Create Box, Please Check That Your Location Is Turned On.", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//                            }
+//                        })
+//                        .setNegativeButton("CANCEL", null)
+//                        .show();
         });
         boxesButton = findViewById(R.id.boxesButton);
         boxesButton.setOnClickListener(new View.OnClickListener() {
@@ -404,6 +435,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         editor.putString("placeTiles", jsonPlaceTiles).commit();
     }
 
+    // TODO private boxes
     public void getNearbyMarkers(final LatLng loc) {
 
         if (lastLocation == null || u.getDistance(loc, lastLocation) >= u.getValidDistanceToRequestNewPinsKm()) {
@@ -476,8 +508,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
-    public void createBoxIfFree(LatLng loc, final String title) {
+    // TODO making boxes
+    public void createBoxIfFree(LatLng loc, final String title, boolean checked) {
         GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(loc.latitude, loc.longitude), u.getValidDistanceFromMarkerForNewMarkerKm());
         locationMarked = false;
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
