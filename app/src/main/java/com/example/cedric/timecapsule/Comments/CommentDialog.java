@@ -37,6 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.yarolegovich.lovelydialog.LovelyStandardDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -66,6 +67,7 @@ public class CommentDialog extends Activity {
     private ImageButton sendButton;
     private ImageButton cameraButton;
     private ImageButton photoGalleryButton;
+    private ImageButton privateButton;
     private String username = "";
     private String key = "";
     private RecyclerView mRecyclerView;
@@ -125,10 +127,12 @@ public class CommentDialog extends Activity {
         sendButton = findViewById(R.id.send_button);
         cameraButton = findViewById(R.id.camera_button);
         photoGalleryButton = findViewById(R.id.photo_gallery);
+        privateButton = findViewById(R.id.private_settings);
 
         setSendButtonListener();
         setCameraButtonListener();
         setPhotoGalleryButtonListener();
+        setPrivateButtonListener();
 
         getComments();
 
@@ -178,6 +182,43 @@ public class CommentDialog extends Activity {
                 i.putExtra("key", key);
                 startActivity(i);
             }
+        });
+    }
+
+    public void setPrivateButtonListener() {
+        privateButton.setOnClickListener(arg0 -> {
+            DatabaseReference x = myRef.child(key)
+                    .child("users");
+            x.addListenerForSingleValueEvent(new ValueEventListener() {
+               @Override
+               public void onDataChange(DataSnapshot dataSnapshot) {
+                   HashMap<String, String> users = (HashMap<String, String>) dataSnapshot.getValue();
+                   if (users == null) {
+                       new LovelyStandardDialog(CommentDialog.this, R.style.EditTextTintTheme)
+                               .setTopColorRes(R.color.lightGreen)
+                               .setTitle("Sharing Settings")
+                               .setTopTitleColor(R.color.black)
+                               .setMessage("Would you like to make this box private?")
+                               .setNegativeButton("No", null)
+                               .setPositiveButton("Ok", view -> x.child(username).setValue("1"))
+                               .show();
+                   } else {
+                       new LovelyStandardDialog(CommentDialog.this, R.style.EditTextTintTheme)
+                               .setTopColorRes(R.color.lightGreen)
+                               .setTitle("Sharing Settings")
+                               .setTopTitleColor(R.color.black)
+                               .setMessage("Would you like to make this box public?")
+                               .setNegativeButton("No", null)
+                               .setPositiveButton("Ok", view -> x.removeValue())
+                               .show();
+                   }
+               }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         });
     }
 

@@ -46,18 +46,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.yarolegovich.lovelydialog.LovelyCustomDialog;
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
-import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.io.IOException;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -346,6 +348,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Toast.makeText(MapsActivity.this, "Unable to Create Box, Please Check That Your Location Is Turned On.", Toast.LENGTH_SHORT).show();
                         }
                     }
+                    x.dismiss();
                 });
 
 
@@ -353,78 +356,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 negativeButton.setText("CANCEL");
                 negativeButton.setOnClickListener(arg1 -> x.dismiss());
             });
-//            x.show();
-
-//                new LovelyTextInputDialog(MapsActivity.this, R.style.EditTextTintTheme)
-//                        .setTopColorRes(R.color.lightGreen)
-//                        .setTitle("Create New Box")
-//                        .setConfirmButtonColor(R.color.black)
-//                        .setNegativeButtonColor(R.color.black)
-//                        .setTopTitleColor(R.color.black)
-//                        .setHint("Enter Box Name...")
-//                        .setMessage(curAddress)
-//                        .setIcon(R.drawable.newbox)
-//                        .setConfirmButton(android.R.string.ok, new LovelyTextInputDialog.OnTextInputConfirmListener() {
-//                            @Override
-//                            public void onTextInputConfirmed(String text) {
-//
-//                                if (userLocation != null && text.length() > 0) {
-//                                    createBoxIfFree(userLocation, text);
-//                                } else {
-//                                    if (userLocation == null) {
-//                                        Toast.makeText(MapsActivity.this, "Unable to Create Box, Please Check That Your Location Is Turned On.", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }
-//                            }
-//                        })
-//                        .setNegativeButton("CANCEL", null)
-//                        .show();
         });
         boxesButton = findViewById(R.id.boxesButton);
-        boxesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
+        boxesButton.setOnClickListener(arg0 -> {
 
-                nearbyDialogIntent = new Intent(MapsActivity.this, NearbyDialog.class);
-                startActivity(nearbyDialogIntent);
+            nearbyDialogIntent = new Intent(MapsActivity.this, NearbyDialog.class);
+            startActivity(nearbyDialogIntent);
 
-            }
         });
 
         messagesButton = findViewById(R.id.messaging);
-        messagesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                Intent allMessagesIntent = new Intent(MapsActivity.this, ConversationsDialog.class);
-                startActivity(allMessagesIntent);
-            }
+        messagesButton.setOnClickListener(arg0 -> {
+            Intent allMessagesIntent = new Intent(MapsActivity.this, ConversationsDialog.class);
+            startActivity(allMessagesIntent);
         });
 
 
         logoutButton = findViewById(R.id.logout);
 
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-
-                new LovelyStandardDialog(MapsActivity.this, LovelyStandardDialog.ButtonLayout.HORIZONTAL)
-                        .setTopColorRes(R.color.indigo)
-                        .setButtonsColorRes(R.color.darkDeepOrange)
-                        .setIcon(R.drawable.ic_power_settings_white_24dp)
-                        .setTitle("Log Out")
-                        .setMessage("Do you want to log out?")
-                        .setPositiveButton(android.R.string.ok, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                u.setUsername(MapsActivity.this, "");
-                                Intent allMessagesIntent = new Intent(MapsActivity.this, StartActivity.class);
-                                startActivity(allMessagesIntent);
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .show();
-            }
-        });
+        logoutButton.setOnClickListener(arg0 -> new LovelyStandardDialog(MapsActivity.this, LovelyStandardDialog.ButtonLayout.HORIZONTAL)
+                .setTopColorRes(R.color.indigo)
+                .setButtonsColorRes(R.color.darkDeepOrange)
+                .setIcon(R.drawable.ic_power_settings_white_24dp)
+                .setTitle("Log Out")
+                .setMessage("Do you want to log out?")
+                .setPositiveButton(android.R.string.ok, v -> {
+                    u.setUsername(MapsActivity.this, "");
+                    Intent allMessagesIntent = new Intent(MapsActivity.this, StartActivity.class);
+                    startActivity(allMessagesIntent);
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .show());
 
     }
 
@@ -464,23 +426,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         fileName = splitString[2];
                     }
 
-                    if (!title.equals(lastAdded)) {
-                        DecimalFormat df = new DecimalFormat();
-                        df.setMaximumFractionDigits(2);
+                    if (!title.equals(lastAdded) ) {
+                        String finalFileName = fileName;
+                        String finalTitle = title;
+                        String finalAddress = address;
+                        FirebaseDatabase.getInstance()
+                                .getReference("locations")
+                                .child(title + "%" + curAddress + "%oski_bear")
+                                .child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                HashMap<String, String> users = (HashMap<String, String>) dataSnapshot.getValue();
+                                if (users == null || users.containsKey(username)) {
+                                    DecimalFormat df = new DecimalFormat();
+                                    df.setMaximumFractionDigits(2);
 
-                        String distance = df.format(u.getDistance(userLocation, markerLatLng) / 1000) + " KM";
-                        PlaceTile pt = new PlaceTile(fileName, title, distance, address);
-                        placeTiles.add(pt);
+                                    String distance = df.format(u.getDistance(userLocation, markerLatLng) / 1000) + " KM";
+                                    PlaceTile pt = new PlaceTile(finalFileName, finalTitle, distance, finalAddress);
+                                    placeTiles.add(pt);
 
-                        savePlaceTiles();
+                                    savePlaceTiles();
 
-                        MarkerOptions m = new MarkerOptions();
-                        m.position(markerLatLng).title(title);
-                        m.position(markerLatLng).snippet(address);
-                        m.icon(BitmapDescriptorFactory.fromResource(R.drawable.orange));
+                                    MarkerOptions m = new MarkerOptions();
+                                    m.position(markerLatLng).title(finalTitle);
+                                    m.position(markerLatLng).snippet(finalAddress);
+                                    m.icon(BitmapDescriptorFactory.fromResource(R.drawable.orange));
 
-                        Marker mark = mMap.addMarker(m);
-                        mark.setTag(fileName);
+                                    Marker mark = mMap.addMarker(m);
+                                    mark.setTag(finalFileName);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                //TODO databaseerror
+                            }
+                        });
                     }
                     lastAdded = title;
                 }
@@ -545,6 +526,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 System.err.println("There was an error saving the location to GeoFire: " + error);
                             } else {
                                 System.out.println("Location saved on server successfully!");
+                                if (checked) FirebaseDatabase.getInstance()
+                                        .getReference("locations")
+                                        .child(title + "%" + curAddress + "%oski_bear")
+                                        .child("users")
+                                        .child(username).setValue("1");
                             }
                         }
                     });
