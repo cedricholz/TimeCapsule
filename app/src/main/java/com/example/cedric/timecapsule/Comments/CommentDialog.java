@@ -132,12 +132,12 @@ public class CommentDialog extends Activity {
         photoGalleryButton = findViewById(R.id.photo_gallery);
         privateButton = findViewById(R.id.private_settings);
 
-        DatabaseReference x = myRef.child(key);
+        DatabaseReference x = database.getReference("users");
         x.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 HashMap<String, Object> hashMap = (HashMap<String, Object>) dataSnapshot.getValue();
-                if (((HashMap<String, String>) hashMap.get("users")).containsKey(username)) {
+                if (hashMap.containsKey(username)) {
                     privateButton.setVisibility(View.VISIBLE);
                     creator = (String) hashMap.get("creator");
                 }
