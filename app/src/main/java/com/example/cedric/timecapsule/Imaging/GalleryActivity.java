@@ -22,19 +22,6 @@ import java.util.ArrayList;
 
 public class GalleryActivity extends Activity {
 
-    private final Integer image_ids[] = {
-        R.drawable.bell_bears,
-        R.drawable.bench_bears,
-        R.drawable.oski_bear,
-        R.drawable.strawberry_creek,
-        R.drawable.bench_bears,
-        R.drawable.bell_bears,
-        R.drawable.bench_bears,
-        R.drawable.oski_bear,
-        R.drawable.strawberry_creek,
-        R.drawable.bench_bears
-    };
-
     private String key = "";
     private ArrayList<ImageCell> images = new ArrayList<ImageCell>();
     private ImageButton chatButton;
@@ -91,7 +78,6 @@ public class GalleryActivity extends Activity {
         databaseReference.child(key).child("Photo Gallery").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
-
                 String downloadURL = (String) dataSnapshot.getValue();
                 ImageCell ic = new ImageCell();
                 ic.setImg(downloadURL);

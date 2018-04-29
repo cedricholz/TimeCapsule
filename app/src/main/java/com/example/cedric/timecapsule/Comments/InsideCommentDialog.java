@@ -362,6 +362,11 @@ public class InsideCommentDialog extends Activity {
         Date curDate = new Date();
         String timeStamp = Long.toString(System.currentTimeMillis());
 
+        if (highresUrl != "") {
+            DatabaseReference galleryRef = database.getReference("locations/" + boxKey);
+            galleryRef.child("Photo Gallery").child(timeStamp).setValue(highresUrl);
+        }
+
         myRef.child(timeStamp).child("user").setValue(username);
         myRef.child(timeStamp).child("my_message").setValue(commentText);
         myRef.child(timeStamp).child("upVotes").setValue("1");
