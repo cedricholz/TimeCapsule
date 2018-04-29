@@ -20,6 +20,7 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cedric.timecapsule.Imaging.GalleryActivity;
@@ -38,6 +39,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
+import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -69,6 +71,7 @@ public class CommentDialog extends Activity {
     private ImageButton photoGalleryButton;
     private ImageButton privateButton;
     private String username = "";
+    private String creator = "";
     private String key = "";
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -129,6 +132,23 @@ public class CommentDialog extends Activity {
         photoGalleryButton = findViewById(R.id.photo_gallery);
         privateButton = findViewById(R.id.private_settings);
 
+        DatabaseReference x = myRef.child(key);
+        x.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                HashMap<String, Object> hashMap = (HashMap<String, Object>) dataSnapshot.getValue();
+                if (((HashMap<String, String>) hashMap.get("users")).containsKey(username)) {
+                    privateButton.setVisibility(View.VISIBLE);
+                    creator = (String) hashMap.get("creator");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         setSendButtonListener();
         setCameraButtonListener();
         setPhotoGalleryButtonListener();
@@ -187,38 +207,52 @@ public class CommentDialog extends Activity {
 
     public void setPrivateButtonListener() {
         privateButton.setOnClickListener(arg0 -> {
-            DatabaseReference x = myRef.child(key)
-                    .child("users");
-            x.addListenerForSingleValueEvent(new ValueEventListener() {
-               @Override
-               public void onDataChange(DataSnapshot dataSnapshot) {
-                   HashMap<String, String> users = (HashMap<String, String>) dataSnapshot.getValue();
-                   if (users == null) {
-                       new LovelyStandardDialog(CommentDialog.this, R.style.EditTextTintTheme)
-                               .setTopColorRes(R.color.lightGreen)
-                               .setTitle("Sharing Settings")
-                               .setTopTitleColor(R.color.black)
-                               .setMessage("Would you like to make this box private?")
-                               .setNegativeButton("No", null)
-                               .setPositiveButton("Ok", view -> x.child(username).setValue("1"))
-                               .show();
-                   } else {
-                       new LovelyStandardDialog(CommentDialog.this, R.style.EditTextTintTheme)
-                               .setTopColorRes(R.color.lightGreen)
-                               .setTitle("Sharing Settings")
-                               .setTopTitleColor(R.color.black)
-                               .setMessage("Would you like to make this box public?")
-                               .setNegativeButton("No", null)
-                               .setPositiveButton("Ok", view -> x.removeValue())
-                               .show();
-                   }
-               }
+            if (!username.equals(creator)) {
+                Toast.makeText(CommentDialog.this, "You are not the creator of this private box", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                LovelyTextInputDialog textInputDialog = new LovelyTextInputDialog(CommentDialog.this, R.style.EditTextTintTheme)
+                        .setTopColorRes(R.color.lightGreen)
+                        .setTitle("Sharing Settings")
+                        .setTopTitleColor(R.color.black)
+                        .setMessage("Who would you like to share this box with?");
+                textInputDialog
+                        .setNegativeButton("Done", null)
+                        .setHint("Username")
+                        .configureView(rootView -> {
+                            TextView confirmButton = rootView.findViewById(R.id.ld_btn_confirm);
+                            EditText editText = rootView.findViewById(R.id.ld_text_input);
+                            confirmButton.setText("Share");
+                            confirmButton.setOnClickListener(view -> {
+                                String content = editText.getText().toString();
+                                if (!content.equals("")) {
+                                    FirebaseDatabase.getInstance()
+                                            .getReference("usernames").addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            HashMap<String, String> users = (HashMap<String, String>) dataSnapshot.getValue();
+                                            if (users.containsKey(content)) {
+                                                myRef.child(key)
+                                                        .child("users")
+                                                        .child(content).setValue("1");
+                                                editText.setText("");
+                                                Toast.makeText(CommentDialog.this, "Box shared with user", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(CommentDialog.this, "User does not exist", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
+                                        }
+                                    });
+                                }
+                            });
+
+                        })
+                        .show();
+            }
         });
     }
 

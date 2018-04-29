@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/ic_lock_black_24dp"
             android:layout_gravity="right"
+            android:visibility="gone"
             android:layout_marginRight="10dp"/>
         <ImageButton
             android:id="@+id/photo_gallery"

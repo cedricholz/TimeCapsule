@@ -54,6 +54,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.yarolegovich.lovelydialog.LovelyCustomDialog;
 import com.yarolegovich.lovelydialog.LovelyStandardDialog;
+import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 
 import java.io.IOException;
 
@@ -62,6 +63,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -526,22 +528,75 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 System.err.println("There was an error saving the location to GeoFire: " + error);
                             } else {
                                 System.out.println("Location saved on server successfully!");
-                                if (checked) FirebaseDatabase.getInstance()
-                                        .getReference("locations")
-                                        .child(title + "%" + curAddress + "%oski_bear")
-                                        .child("users")
-                                        .child(username).setValue("1");
+                                if (checked) {
+                                    FirebaseDatabase.getInstance()
+                                            .getReference("locations")
+                                            .child(title + "%" + curAddress + "%oski_bear")
+                                            .child("users")
+                                            .child(username).setValue("1");
+                                    FirebaseDatabase.getInstance()
+                                            .getReference("locations")
+                                            .child(title + "%" + curAddress + "%oski_bear")
+                                            .child("creator").setValue(username);
+
+                                }
                             }
                         }
                     });
+                    if (checked) {
+                        LovelyTextInputDialog textInputDialog = new LovelyTextInputDialog(MapsActivity.this, R.style.EditTextTintTheme)
+                                .setTopColorRes(R.color.lightGreen)
+                                .setTitle("Sharing Settings")
+                                .setTopTitleColor(R.color.black)
+                                .setMessage("Who would you like to share this box with?");
+                        textInputDialog
+                                .setNegativeButton("Done", view -> {
+                                    boxDialogIntent = new Intent(MapsActivity.this, CommentDialog.class);
+                                    boxDialogIntent.putExtra("boxName", title);
+                                    boxDialogIntent.putExtra("address", curAddress);
+                                    boxDialogIntent.putExtra("username", username);
+                                    boxDialogIntent.putExtra("imageName", "oski_bear");
 
-                    boxDialogIntent = new Intent(MapsActivity.this, CommentDialog.class);
-                    boxDialogIntent.putExtra("boxName", title);
-                    boxDialogIntent.putExtra("address", curAddress);
-                    boxDialogIntent.putExtra("username", username);
-                    boxDialogIntent.putExtra("imageName", "oski_bear");
+                                    startActivity(boxDialogIntent);
+                                    textInputDialog.dismiss();
+                                })
+                                .setHint("Username")
+                                .configureView(rootView -> {
+                                    TextView confirmButton = rootView.findViewById(R.id.ld_btn_confirm);
+                                    EditText editText = rootView.findViewById(R.id.ld_text_input);
+                                    confirmButton.setText("Share");
+                                    confirmButton.setOnClickListener(view -> {
+                                        String content = editText.getText().toString();
+                                        if (!content.equals("")) {
+                                            FirebaseDatabase.getInstance()
+                                                    .getReference("usernames").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    HashMap<String, String> users = (HashMap<String, String>) dataSnapshot.getValue();
+                                                    if (users.containsKey(content)) {
+                                                        FirebaseDatabase.getInstance()
+                                                                .getReference("locations")
+                                                                .child(title + "%" + curAddress + "%oski_bear")
+                                                                .child("users")
+                                                                .child(content).setValue("1");
+                                                        editText.setText("");
+                                                        Toast.makeText(MapsActivity.this, "Box shared with user", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(MapsActivity.this, "User does not exist", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
 
-                    startActivity(boxDialogIntent);
+                                                @Override
+                                                public void onCancelled(DatabaseError databaseError) {
+
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                })
+                                .show();
+                    }
                 } else {
                     Toast.makeText(MapsActivity.this, "This Location Already Has A Box...", Toast.LENGTH_SHORT).show();
                 }
