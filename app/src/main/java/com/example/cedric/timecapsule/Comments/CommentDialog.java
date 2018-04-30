@@ -219,21 +219,22 @@ public class CommentDialog extends Activity {
                         .setTopTitleColor(R.color.black)
                         .setMessage("Who would you like to share this box with?");
                 textInputDialog
-                        .setNegativeButton("Done", null)
+                        .setNegativeButton("Cancel", null)
                         .setHint("Username")
                         .configureView(rootView -> {
                             TextView confirmButton = rootView.findViewById(R.id.ld_btn_confirm);
                             EditText editText = rootView.findViewById(R.id.ld_text_input);
                             confirmButton.setText("Share");
                             confirmButton.setOnClickListener(view -> {
-                                String content = editText.getText().toString();
+                                String content = editText.getText().toString().trim().toLowerCase();
                                 if (!content.equals("")) {
-                                    FirebaseDatabase.getInstance()
-                                            .getReference("usernames").addListenerForSingleValueEvent(new ValueEventListener() {
+
+                                    myRef.child("lowercaseUsers").child(content.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
-                                            HashMap<String, String> users = (HashMap<String, String>) dataSnapshot.getValue();
-                                            if (users.containsKey(content)) {
+                                            String user = (String) dataSnapshot.getKey();
+
+                                            if (user != null) {
                                                 myRef.child(key)
                                                         .child("users")
                                                         .child(content).setValue("1");

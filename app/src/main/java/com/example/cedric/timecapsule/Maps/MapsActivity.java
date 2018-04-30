@@ -148,10 +148,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
 
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
             Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (lastKnownLocation == null){
+            if (lastKnownLocation == null) {
                 lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             }
 
@@ -277,7 +277,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
                 Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                if (lastKnownLocation == null){
+                if (lastKnownLocation == null) {
                     lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 }
 //
@@ -428,7 +428,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         fileName = splitString[2];
                     }
 
-                    if (!title.equals(lastAdded) ) {
+                    if (!title.equals(lastAdded)) {
                         String finalFileName = fileName;
                         String finalTitle = title;
                         String finalAddress = address;
@@ -550,7 +550,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 .setTopTitleColor(R.color.black)
                                 .setMessage("Would you like to share this box with someone?");
                         textInputDialog
-                                .setNegativeButton("NO", view -> {
+                                .setNegativeButton("CLOSE", view -> {
                                     boxDialogIntent = new Intent(MapsActivity.this, CommentDialog.class);
                                     boxDialogIntent.putExtra("boxName", title);
                                     boxDialogIntent.putExtra("address", curAddress);
@@ -568,12 +568,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     confirmButton.setOnClickListener(view -> {
                                         String content = editText.getText().toString();
                                         if (!content.equals("")) {
-                                            FirebaseDatabase.getInstance()
-                                                    .getReference("usernames").addListenerForSingleValueEvent(new ValueEventListener() {
+                                            myRef.child("lowercaseUsers").child(content.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    HashMap<String, String> users = (HashMap<String, String>) dataSnapshot.getValue();
-                                                    if (users.containsKey(content)) {
+
+                                                    String user = (String) dataSnapshot.getKey();
+
+                                                    if (user != null) {
                                                         FirebaseDatabase.getInstance()
                                                                 .getReference("locations")
                                                                 .child(title + "%" + curAddress + "%oski_bear")

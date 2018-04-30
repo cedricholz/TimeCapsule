@@ -25,6 +25,7 @@ public class SignUpActivity extends AppCompatActivity {
     // Firebase
     FirebaseDatabase database;
     DatabaseReference users;
+    DatabaseReference lowercaseUserNames;
     DatabaseReference userNames;
 
     // User Input
@@ -59,6 +60,7 @@ public class SignUpActivity extends AppCompatActivity {
         users = database.getReference("users");
 
         userNames = database.getReference("usernames");
+        lowercaseUserNames = database.getReference("lowercaseUsers");
 
         // setting up user input
         username = (EditText) findViewById(R.id.SignUpUsername);
@@ -117,10 +119,9 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void checkUsernameFree(final User user) {
-        userNames.child(encodeString(user.getUsername())).addListenerForSingleValueEvent(new ValueEventListener() {
+        lowercaseUserNames.child(encodeString(user.getUsername()).toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 if (dataSnapshot.getValue() != null) {
                     Toast.makeText(SignUpActivity.this, "That Username Already Exists!",
                             Toast.LENGTH_SHORT).show();
@@ -145,6 +146,8 @@ public class SignUpActivity extends AppCompatActivity {
 
 
         userNames.child(encodeString(user.getUsername())).setValue("1");
+
+        lowercaseUserNames.child(encodeString(user.getUsername()).toLowerCase()).setValue("1");
 
         Toast.makeText(SignUpActivity.this, "Success!",
                 Toast.LENGTH_SHORT).show();

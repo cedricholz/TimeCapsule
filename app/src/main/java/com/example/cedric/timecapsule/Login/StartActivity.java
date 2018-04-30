@@ -10,12 +10,20 @@ import com.example.cedric.timecapsule.Maps.MapsActivity;
 import com.example.cedric.timecapsule.R;
 import com.example.cedric.timecapsule.UserInformation.User;
 import com.example.cedric.timecapsule.Utils.Utils;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class StartActivity extends AppCompatActivity {
 
     Button signUpBtn, logInBtn;
 
     Utils u = new Utils();
+    FirebaseDatabase database;
+
+    DatabaseReference lowercaseUserNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +32,9 @@ public class StartActivity extends AppCompatActivity {
 
         signUpBtn = (Button) findViewById(R.id.btnSignUp);
         logInBtn = (Button) findViewById(R.id.btnLogIn);
+
+        database = FirebaseDatabase.getInstance();
+        lowercaseUserNames = database.getReference("lowercaseUsers");
 
         // user clicked sign-up button
         signUpBtn.setOnClickListener(new View.OnClickListener() {
@@ -65,13 +76,29 @@ public class StartActivity extends AppCompatActivity {
         String username = u.getUsername(StartActivity.this);
 
         if (!username.equals("Default") && !username.equals("")) {
-
-            String password = u.getPassword(StartActivity.this);
-            String email = u.getEmail(StartActivity.this);
-
-            User user = new User(username, password, email);
-            startMaps(user);
+            checkIfUsernameExists(username);
         }
     }
+
+
+    private void checkIfUsernameExists(String username) {
+        lowercaseUserNames.child(username.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    String password = u.getPassword(StartActivity.this);
+                    String email = u.getEmail(StartActivity.this);
+
+                    User user = new User(username, password, email);
+                    startMaps(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
 
 }
