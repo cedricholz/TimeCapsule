@@ -364,7 +364,8 @@ public class InsideCommentDialog extends Activity {
 
         if (highresUrl != "") {
             DatabaseReference galleryRef = database.getReference("locations/" + boxKey);
-            galleryRef.child("Photo Gallery").child(timeStamp).setValue(highresUrl);
+            galleryRef.child("Photo Gallery").child(timeStamp).child("highresUrl").setValue(highresUrl);
+            galleryRef.child("Photo Gallery").child(timeStamp).child("thumbUrl").setValue(highresUrl);
         }
 
         myRef.child(timeStamp).child("user").setValue(username);

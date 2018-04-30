@@ -209,8 +209,7 @@ public class CommentDialog extends Activity {
         privateButton.setOnClickListener(arg0 -> {
             if (!username.equals(creator)) {
                 Toast.makeText(CommentDialog.this, "You are not the creator of this private box", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 LovelyTextInputDialog textInputDialog = new LovelyTextInputDialog(CommentDialog.this, R.style.EditTextTintTheme)
                         .setTopColorRes(R.color.lightGreen)
                         .setTitle("Sharing Settings")
@@ -525,7 +524,8 @@ public class CommentDialog extends Activity {
         String timeStamp = Long.toString(System.currentTimeMillis());
 
         if (highresUrl != "") {
-            myRef.child(key).child("Photo Gallery").child(timeStamp).setValue(highresUrl);
+            myRef.child(key).child("Photo Gallery").child(timeStamp).child("highresUrl").setValue(highresUrl);
+            myRef.child(key).child("Photo Gallery").child(timeStamp).child("thumbUrl").setValue(highresUrl);
         }
 
         myRef.child(key).child("messages").child(timeStamp).child("user").setValue(username);

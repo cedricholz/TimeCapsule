@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 } else {
-                    Toast.makeText(LoginActivity.this, "Email Address is not registered",
+                    Toast.makeText(LoginActivity.this, "Email Address not registered",
                             Toast.LENGTH_SHORT).show();
                 }
             }

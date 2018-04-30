@@ -1,13 +1,19 @@
 package com.example.cedric.timecapsule.Imaging;
 
 public class ImageCell {
-    private String downloadURL;
+    private String highresUrl;
+    private String thumbUrl;
 
-    public String getImg() {
-        return downloadURL;
+    public String getHighresUrl() {
+        return highresUrl;
     }
 
-    public void setImg(String downloadURL) {
-        this.downloadURL = downloadURL;
+    public String getThumbUrl() {
+        return thumbUrl;
+    }
+
+    public void setImg(String highresUrl, String thumbUrl) {
+        this.highresUrl = highresUrl;
+        this.thumbUrl = highresUrl;
     }
 }

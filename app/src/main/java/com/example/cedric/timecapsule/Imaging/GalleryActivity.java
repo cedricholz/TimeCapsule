@@ -54,8 +54,8 @@ public class GalleryActivity extends Activity {
         Intent i = getIntent();
         Bundle intentExtras = i.getExtras();
 
-        if(intentExtras !=null) {
-            key =(String) intentExtras.get("key");
+        if (intentExtras != null) {
+            key = (String) intentExtras.get("key");
         }
 
         chatButton = findViewById(R.id.chat_button);
@@ -78,9 +78,12 @@ public class GalleryActivity extends Activity {
         databaseReference.child(key).child("Photo Gallery").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
-                String downloadURL = (String) dataSnapshot.getValue();
+
+                String highresUrl = (String) dataSnapshot.child("highresUrl").getValue();
+                String thumbUrl = (String) dataSnapshot.child("thumbUrl").getValue();
+
                 ImageCell ic = new ImageCell();
-                ic.setImg(downloadURL);
+                ic.setImg(highresUrl, thumbUrl);
                 images.add(ic);
                 setAdapterAndUpdateData();
             }

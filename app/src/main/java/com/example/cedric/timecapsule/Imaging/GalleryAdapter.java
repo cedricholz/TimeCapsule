@@ -36,13 +36,12 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHold
     @Override
     public void onBindViewHolder(final GalleryAdapter.ViewHolder viewHolder, final int i) {
         viewHolder.img.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        Picasso.get().load(galleryList.get(i).getImg()).into(viewHolder.img);
+        Picasso.get().load(galleryList.get(i).getThumbUrl()).into(viewHolder.img);
         viewHolder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Toast.makeText(context, "Image", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(context, FullImageActivty.class);
-            intent.putExtra("image", galleryList.get(i).getImg());
+            intent.putExtra("image", galleryList.get(i).getHighresUrl());
             context.startActivity(intent);
             }
         });

@@ -146,7 +146,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         userNames.child(encodeString(user.getUsername())).setValue("1");
 
-        Toast.makeText(SignUpActivity.this, "Success Register!",
+        Toast.makeText(SignUpActivity.this, "Success!",
                 Toast.LENGTH_SHORT).show();
 
         Intent i = new Intent(SignUpActivity.this, LoginActivity.class);
