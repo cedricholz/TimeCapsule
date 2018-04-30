@@ -14,20 +14,25 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
-        app:titleTextColor="@color/darkBlueGrey"
-        app:title="Messages"
-        app:subtitle=""
         android:elevation="2dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Messages"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:layout_marginRight="10dp" />
 
         <ImageButton
             android:id="@+id/photo_gallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_mail_blue_24dp"
-            android:layout_gravity="center"
-            android:layout_marginRight="10dp"/>
+            android:layout_toRightOf="@+id/toolbar_title"/>
 
     </android.support.v7.widget.Toolbar>
 

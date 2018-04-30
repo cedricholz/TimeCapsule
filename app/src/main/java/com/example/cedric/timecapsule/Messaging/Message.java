@@ -9,12 +9,16 @@ public class Message {
     public String username;
     public Date date;
     public String messageKey;
+    public String highresUrl;
+    public String thumbUrl;
 
-    Message(String text, String username, Date date, String messageKey) {
+    Message(String text, String username, Date date, String messageKey, String highresUrl, String thumbUrl) {
         this.text = text;
         this.username = username;
         this.date = date;
         this.messageKey = messageKey;
+        this.highresUrl = highresUrl;
+        this.thumbUrl = thumbUrl;
     }
 
     // returns a string indicating how long ago this post was made

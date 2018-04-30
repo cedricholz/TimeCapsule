@@ -2,15 +2,23 @@ package com.example.cedric.timecapsule.Messaging;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.cedric.timecapsule.Imaging.FullImageActivty;
 import com.example.cedric.timecapsule.R;
 import com.example.cedric.timecapsule.Utils.Utils;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -33,7 +41,7 @@ public class MessageAdapter extends RecyclerView.Adapter {
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.message_cell_layout, parent, false);
 
-        return new MessageViewHolder(view);
+        return new MessageViewHolder(view, mContext);
     }
 
 
@@ -57,6 +65,8 @@ class MessageViewHolder extends RecyclerView.ViewHolder {
 
     // each data item is just a string in this case
     public RelativeLayout mMessageBubbleLayout;
+    public RelativeLayout leftPlaceLayout;
+    public RelativeLayout rightPlaceLayout;
 
     public TextView mLeftUsernameTextView;
     public TextView mRightUsernameTextView;
@@ -71,17 +81,29 @@ class MessageViewHolder extends RecyclerView.ViewHolder {
     public String messageKey = "";
     public String message = "";
 
+    public FirebaseDatabase database;
+    public FirebaseStorage storage;
+    public DatabaseReference myRef;
+    public StorageReference storageRef;
+
+    public ImageView leftPlaceView;
+    public ImageView rightPlaceView;
+
+    public Context mContext;
+
     Utils u;
     private String myUsername = "";
+    private String highresUrl;
+    private String thumbUrl;
 
-    public MessageViewHolder(View itemView) {
-
+    public MessageViewHolder(View itemView, Context mContext) {
         super(itemView);
+
+        this.mContext = mContext;
 
         mMessageBubbleLayout = itemView.findViewById(R.id.message_cell_layout);
 
         mLeftUsernameTextView = mMessageBubbleLayout.findViewById(R.id.left_username_text_view);
-
 
         mLeftDateTextView = mMessageBubbleLayout.findViewById(R.id.left_date_text_view);
         mRightDateTextView = mMessageBubbleLayout.findViewById(R.id.right_date_text_view);
@@ -89,11 +111,15 @@ class MessageViewHolder extends RecyclerView.ViewHolder {
         mLeftMessageTextView = mMessageBubbleLayout.findViewById(R.id.left_message_text_view);
         mRightMessageTextView = mMessageBubbleLayout.findViewById(R.id.right_message_text_view);
 
+        leftPlaceView = mMessageBubbleLayout.findViewById(R.id.left_image);
+        rightPlaceView = mMessageBubbleLayout.findViewById(R.id.right_image);
+
+        leftPlaceLayout = mMessageBubbleLayout.findViewById(R.id.left_image_layout);
+        rightPlaceLayout = mMessageBubbleLayout.findViewById(R.id.right_image_layout);
 
         u = new Utils();
 
         myUsername = u.getUsername(itemView.getContext());
-
     }
 
     void bind(Message message) {
@@ -101,21 +127,61 @@ class MessageViewHolder extends RecyclerView.ViewHolder {
         String messageUser = message.username;
         String dateText = message.elapsedTimeString();
 
+        highresUrl = message.highresUrl;
+        thumbUrl = message.thumbUrl;
+
         if (messageUser.equals(myUsername)) {
             mLeftUsernameTextView.setVisibility(View.GONE);
             mLeftDateTextView.setVisibility(View.GONE);
             mLeftMessageTextView.setVisibility(View.GONE);
+            leftPlaceLayout.setVisibility(View.GONE);
 
-            mRightDateTextView.setVisibility(View.VISIBLE);
-            mRightMessageTextView.setVisibility(View.VISIBLE);
+            if (message.text != "" && message.text.length() >= 1) {
+                mRightDateTextView.setVisibility(View.VISIBLE);
+                mRightMessageTextView.setVisibility(View.VISIBLE);
+                mRightMessageTextView.setText(message.text);
+            }
 
-            mRightMessageTextView.setText(message.text);
-            mRightDateTextView.setText(dateText);
+            if (thumbUrl != null && thumbUrl.length() >= 1) {
+                rightPlaceLayout.setVisibility(View.VISIBLE);
+                Picasso.get().load(thumbUrl).into(rightPlaceView);
+
+                rightPlaceView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mContext, FullImageActivty.class);
+                        intent.putExtra("image", highresUrl);
+                        mContext.startActivity(intent);
+                    }
+                });
+            }
         } else {
+            mRightDateTextView.setVisibility(View.GONE);
+            mRightMessageTextView.setVisibility(View.GONE);
+            rightPlaceLayout.setVisibility(View.GONE);
 
             mLeftUsernameTextView.setText(message.username);
-            mLeftMessageTextView.setText(message.text);
             mLeftDateTextView.setText(dateText);
+            mLeftMessageTextView.setVisibility(View.GONE);
+
+            if (message.text != "" && message.text.length() >= 1) {
+                mLeftMessageTextView.setVisibility(View.VISIBLE);
+                mLeftMessageTextView.setText(message.text);
+            }
+
+            if (thumbUrl != null && thumbUrl.length() >= 1) {
+                leftPlaceLayout.setVisibility(View.VISIBLE);
+                Picasso.get().load(thumbUrl).into(leftPlaceView);
+
+                leftPlaceView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mContext, FullImageActivty.class);
+                        intent.putExtra("image", highresUrl);
+                        mContext.startActivity(intent);
+                    }
+                });
+            }
         }
 
         date = message.date.toString();

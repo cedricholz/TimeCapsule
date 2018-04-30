@@ -132,9 +132,7 @@ public class CommentDialog extends Activity {
         photoGalleryButton = findViewById(R.id.photo_gallery);
         privateButton = findViewById(R.id.private_settings);
 
-
         getCreator();
-
 
         setSendButtonListener();
         setCameraButtonListener();

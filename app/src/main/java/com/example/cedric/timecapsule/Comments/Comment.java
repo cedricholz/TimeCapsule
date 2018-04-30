@@ -31,9 +31,7 @@ public class Comment {
         this.headComment = headComment;
         this.replies = replies;
         this.refKey = refKey;
-
         this.commentLevel = commentLevel;
-
         this.highresUrl = highresUrl;
         this.thumbUrl = thumbUrl;
 
