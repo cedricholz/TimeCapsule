@@ -548,7 +548,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 .setTopColorRes(R.color.lightGreen)
                                 .setTitle("Sharing Settings")
                                 .setTopTitleColor(R.color.black)
-                                .setMessage("Would you like to share this box with someone?");
+                                .setMessage("Enter a username to share this box with someone");
                         textInputDialog
                                 .setNegativeButton("CLOSE", view -> {
                                     boxDialogIntent = new Intent(MapsActivity.this, CommentDialog.class);

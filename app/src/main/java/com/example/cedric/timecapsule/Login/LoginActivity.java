@@ -104,6 +104,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void startMaps(User user) {
         Intent i = new Intent(LoginActivity.this, MapsActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
         String username = user.getUsername();
 
         u.setUsername(LoginActivity.this, username);
