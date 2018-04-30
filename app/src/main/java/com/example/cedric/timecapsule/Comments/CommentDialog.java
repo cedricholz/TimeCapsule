@@ -132,22 +132,9 @@ public class CommentDialog extends Activity {
         photoGalleryButton = findViewById(R.id.photo_gallery);
         privateButton = findViewById(R.id.private_settings);
 
-        DatabaseReference x = database.getReference("users");
-        x.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                HashMap<String, Object> hashMap = (HashMap<String, Object>) dataSnapshot.getValue();
-                if (hashMap.containsKey(username)) {
-                    privateButton.setVisibility(View.VISIBLE);
-                    creator = (String) hashMap.get("creator");
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+        getCreator();
 
-            }
-        });
 
         setSendButtonListener();
         setCameraButtonListener();
@@ -158,6 +145,22 @@ public class CommentDialog extends Activity {
 
         mProgress = new ProgressDialog(this);
 
+    }
+
+    public void getCreator() {
+        myRef.child(key).child("creator").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                creator = (String) dataSnapshot.getValue();
+                if (creator != null) {
+                    privateButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     public void setSendButtonListener() {
