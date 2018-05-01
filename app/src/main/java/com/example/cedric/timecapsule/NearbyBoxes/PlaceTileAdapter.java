@@ -55,7 +55,7 @@ public class PlaceTileAdapter extends RecyclerView.Adapter {
     }
 }
 
-class PlaceTileViewHolder extends RecyclerView.ViewHolder {
+class PlaceTileViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     // each data item is just a string in this case
     public RelativeLayout mPlaceBubbleLayout;
@@ -76,27 +76,6 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder {
 
         this.placeTiles = placeTiles;
         u = new Utils();
-
-        mPlaceImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime > 1000) {
-                    PlaceTile recyclerTile = placeTiles.get(getAdapterPosition());
-                    Double distance = Double.parseDouble(recyclerTile.distance.split(" ")[0]);
-
-                    if (distance < u.getValidDistanceKm()) {
-                        Intent createBoxIntent = new Intent(itemView.getContext(), CommentDialog.class);
-                        createBoxIntent.putExtra("boxName", recyclerTile.placeName);
-                        createBoxIntent.putExtra("address", recyclerTile.address);
-                        createBoxIntent.putExtra("imageName", recyclerTile.imageName);
-                        itemView.getContext().startActivity(createBoxIntent);
-                    } else {
-                        Toast.makeText(itemView.getContext(), "You Are Too Far Away To Access This Box...", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-            }
-        });
     }
 
     void bind(PlaceTile placeTile) {
@@ -110,4 +89,22 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder {
         mPlaceImage.setImageResource(imageId);
     }
 
+    @Override
+    public void onClick(View view) {
+        if (SystemClock.elapsedRealtime() - mLastClickTime > 1000) {
+            PlaceTile recyclerTile = placeTiles.get(getAdapterPosition());
+            Double distance = Double.parseDouble(recyclerTile.distance.split(" ")[0]);
+
+            if (distance < u.getValidDistanceKm()) {
+                Intent createBoxIntent = new Intent(itemView.getContext(), CommentDialog.class);
+                createBoxIntent.putExtra("boxName", recyclerTile.placeName);
+                createBoxIntent.putExtra("address", recyclerTile.address);
+                createBoxIntent.putExtra("imageName", recyclerTile.imageName);
+                itemView.getContext().startActivity(createBoxIntent);
+            } else {
+                Toast.makeText(itemView.getContext(), "You Are Too Far Away To Access This Box...", Toast.LENGTH_SHORT).show();
+            }
+        }
+        mLastClickTime = SystemClock.elapsedRealtime();
+    }
 }
