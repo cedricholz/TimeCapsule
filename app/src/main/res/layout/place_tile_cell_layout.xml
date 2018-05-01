@@ -57,8 +57,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/place_tile_distance"
+        android:background="@drawable/ic_lock_black_24dp"
         android:visibility="gone"
-        app:srcCompat="@drawable/ic_lock_black_24dp" />
+        />
 
     <TextView
         android:id="@+id/place_tile_distance"
@@ -91,7 +92,7 @@
             android:id="@+id/photos_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_camera_alt_black_24dp" />
+            android:background="@drawable/ic_camera_alt_black_24dp" />
 
         <TextView
             android:id="@+id/num_photos"
@@ -109,9 +110,9 @@
             android:id="@+id/comments_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
             android:layout_toRightOf="@+id/num_photos"
-            app:srcCompat="@drawable/small_message" />
+            android:background="@drawable/small_message"
+            android:paddingLeft="10dp" />
 
         <TextView
             android:id="@+id/num_comments"
