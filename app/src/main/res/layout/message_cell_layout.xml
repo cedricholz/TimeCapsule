@@ -61,15 +61,16 @@
         android:layout_alignParentStart="true"
         android:paddingHorizontal="16dp"
         android:paddingVertical="12dp"
-        android:visibility="gone"
-        android:background="@drawable/their_message">
+        android:background="@drawable/their_message"
+        android:visibility="gone">
 
 
         <ImageView
             android:id="@+id/left_image"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="@drawable/oski_bear" />
+            android:background="@drawable/oski_bear"
+            android:scaleType="fitXY"/>
 
     </RelativeLayout>
 
@@ -83,9 +84,7 @@
         android:text="1 Hr"
         android:textSize="12dp" />
 
-
     <!--Right-->
-
 
     <TextView
         android:id="@+id/right_message_text_view"
@@ -119,7 +118,8 @@
             android:id="@+id/right_image"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="@drawable/oski_bear" />
+            android:background="@drawable/loading_image"
+            android:scaleType="fitXY"/>
 
     </RelativeLayout>
 
@@ -134,10 +134,6 @@
         android:text="2 Hr"
         android:textSize="10dp"
         android:visibility="gone" />
-
-
-
-
 
 
 </RelativeLayout>
