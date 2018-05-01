@@ -355,7 +355,7 @@ public class InsideCommentDialog extends Activity {
     private void setmCommentAdapter() {
         mCommentAdapter = new CommentAdapter(this, mComments);
         mCommentRecyclerView.setAdapter(mCommentAdapter);
-        mCommentRecyclerView.smoothScrollToPosition(0);
+        //mCommentRecyclerView.smoothScrollToPosition(0);
     }
 
     private void postNewComment(String commentText, String highresUrl, String thumbUrl) {
@@ -410,6 +410,9 @@ public class InsideCommentDialog extends Activity {
             }
         });
     }
+
+
+
 
     private void getComments() {
         myRef.addChildEventListener(new ChildEventListener() {
@@ -480,7 +483,7 @@ public class InsideCommentDialog extends Activity {
                 if (c != null) {
                     c.upVotes = (String) dataSnapshot.child("upVotes").getValue();
                     c.replies = (String) dataSnapshot.child("replies").getValue();
-                    //setmCommentAdapter();
+                    setmCommentAdapter();
                 }
             }
 

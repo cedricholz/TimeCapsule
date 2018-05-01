@@ -83,7 +83,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     public String message = "";
     public String commentUsername = "";
     public String myUsername = "";
-    public String downloadURL = "";
+
 
     public String replies = "";
     public Context mContext;
