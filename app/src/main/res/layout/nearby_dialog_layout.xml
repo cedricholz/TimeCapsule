@@ -16,7 +16,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
         app:titleTextColor="@color/darkBlueGrey"
-        app:title="Your Boxes"
+        app:title="Nearby Boxes"
         app:subtitle=""
         android:elevation="2dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
@@ -40,6 +40,8 @@
         android:layout_alignParentEnd="true"
         android:background="@color/white"
         android:text="Refresh Landmarks"
-        android:textColor="@color/lightGreen" />
+        android:textColor="@color/lightGreen"
+        android:visibility="gone"
+        />
 
 </RelativeLayout>

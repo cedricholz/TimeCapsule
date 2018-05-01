@@ -1,7 +1,7 @@
-<FrameLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_main"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.cedric.timecapsule.Maps.MapsActivity">
@@ -16,66 +16,71 @@
 
     <RelativeLayout
 
-        android:layout_width="60dp"
-        android:layout_height="145dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-        android:layout_margin="7dp"
-        android:background="@drawable/background_card"
+
+        android:background="#D9FFFFFF"
+        android:layout_margin="10dp"
+
         android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/messaging"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@color/white"
-            android:src="@drawable/ic_mail_blue_24dp" />
+
 
         <ImageButton
             android:id="@+id/boxesButton"
+            android:padding="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
+
+            android:background="#D9FFFFFF"
             android:src="@drawable/smallthreeblocks" />
 
 
         <ImageButton
-            android:id="@+id/addButton"
+            android:id="@+id/messaging"
+            android:padding="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/boxesButton"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"
-            android:background="@color/white"
+            android:layout_centerInParent="true"
+
+
+            android:background="#D9FFFFFF"
+            android:src="@drawable/ic_mail_blue_24dp" />
+
+        <ImageButton
+            android:id="@+id/addButton"
+            android:paddingBottom="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_centerHorizontal="true"
+
+            android:layout_below="@+id/messaging"
+            android:background="#D9FFFFFF"
             android:src="@drawable/newbox" />
 
 
     </RelativeLayout>
 
-    <RelativeLayout
 
-        android:layout_width="60dp"
-        android:layout_height="55dp"
+    <ImageButton
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
-        android:layout_margin="7dp"
-        android:background="@drawable/background_card"
-        android:orientation="vertical">
+        android:layout_marginBottom="13dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#D9FFFFFF"
 
-        <ImageButton
-            android:id="@+id/logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="9dp"
-            android:paddingRight="3dp"
-            android:background="@color/white"
-            android:src="@drawable/ic_power_settings_new_black_24dp" />
+        android:src="@drawable/ic_power_settings_new_black_24dp" />
 
-    </RelativeLayout>
+
 
 </FrameLayout>
 

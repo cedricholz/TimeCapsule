@@ -96,9 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-
         u = new Utils();
-
     }
 
 
@@ -124,8 +122,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (!email.isEmpty()) {
                         User login = dataSnapshot.child(encodeString(email)).getValue(User.class);
                         if (login.getPassword().equals(u.getHashedPassword(password))) {
-                            Toast.makeText(LoginActivity.this, "Login Successful",
-                                    Toast.LENGTH_SHORT).show();
+
 
                             u.setUsername(LoginActivity.this, login.getUsername());
                             u.setPassword(LoginActivity.this, login.getPassword());

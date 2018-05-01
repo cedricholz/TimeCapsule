@@ -4,7 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 
+import com.example.cedric.timecapsule.NearbyBoxes.Place;
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -161,5 +168,34 @@ public class Utils {
 
         editor.putString("email", email).commit();
     }
+
+
+    public void addBearLandmarksToFirebase(Context c) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("locations");
+        GeoFire geoFire = new GeoFire(myRef);
+
+
+        String jsonString = loadJSONFromAsset("bear_statues.json", c);
+        Place[] landmarks = new Gson().fromJson(jsonString, Place[].class);
+
+        for (Place lm : landmarks) {
+            String[] coordinatesSplit = lm.getCoordinates().split(",");
+            Double lat = Double.parseDouble(coordinatesSplit[0]);
+            Double lon = Double.parseDouble(coordinatesSplit[1]);
+
+            geoFire.setLocation(lm.getLandmark_name() + "%University Of California, Berkeley%" + lm.getFilename(), new GeoLocation(lat, lon), new GeoFire.CompletionListener() {
+                @Override
+                public void onComplete(String key, DatabaseError error) {
+                    if (error != null) {
+                        System.err.println("There was an error saving the location to GeoFire: " + error);
+                    } else {
+                        System.out.println("Location saved on server successfully!");
+                    }
+                }
+            });
+        }
+    }
+
 
 }

@@ -2,39 +2,43 @@
 
 <!-- layout file for a single cell in the comment recycler view -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/place_tile_cell_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
 
-    android:background="?android:attr/selectableItemBackground"
+    android:layout_margin="5dp"
+    android:background="@drawable/nearby"
     android:clickable="true"
+    android:elevation="2dp"
     android:focusable="true"
+
     android:orientation="vertical"
-    android:paddingBottom="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp">
+
+    android:padding="10dp"
+
+    >
 
     <LinearLayout
         android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <!-- username text view -->
         <ImageButton
             android:id="@+id/place_image_view"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:textColor="@color/lightGreen"
+            android:adjustViewBounds="true"
             android:background="@color/white"
             android:scaleType="centerCrop"
-            android:adjustViewBounds="true"
-            android:textSize="16dp"
             android:src="@drawable/strawberry_creek"
+            android:textColor="@color/lightGreen"
+            android:textSize="16dp"
             android:textStyle="bold" />
-
     </LinearLayout>
 
     <!-- comment body text -->
@@ -44,17 +48,84 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll"
         android:paddingBottom="5dp"
-        android:paddingTop="5dp"
         android:text="StrawBerry Creek Topiary Bear"
         android:textSize="16sp" />
 
 
-    <TextView
-        android:id="@+id/place_tile_distance"
+    <ImageView
+        android:id="@+id/lock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/place_tile_name"
+        android:layout_toLeftOf="@+id/place_tile_distance"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_lock_black_24dp" />
+
+    <TextView
+        android:id="@+id/place_tile_distance"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:text="110 Meters Away"
         android:textSize="10sp" />
+
+
+    <TextView
+        android:id="@+id/date_added"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/place_tile_distance"
+        android:paddingTop="15dp"
+        android:text="Added 4/30/2018"
+        android:textSize="10sp" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/place_tile_name">
+
+
+        <ImageView
+            android:id="@+id/photos_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_camera_alt_black_24dp" />
+
+        <TextView
+            android:id="@+id/num_photos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/photos_image"
+            android:paddingLeft="2dp"
+            android:text="2"
+            android:textSize="18sp" />
+
+
+        <ImageView
+            android:id="@+id/comments_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:layout_toRightOf="@+id/num_photos"
+            app:srcCompat="@drawable/small_message" />
+
+        <TextView
+            android:id="@+id/num_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/comments_image"
+            android:paddingLeft="2dp"
+            android:text="46"
+            android:textSize="18sp" />
+
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

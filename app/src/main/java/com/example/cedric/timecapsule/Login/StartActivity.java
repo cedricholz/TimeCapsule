@@ -78,29 +78,12 @@ public class StartActivity extends AppCompatActivity {
         String username = u.getUsername(StartActivity.this);
 
         if (!username.equals("Default") && !username.equals("")) {
-            checkIfUsernameExists(username);
+            String password = u.getPassword(StartActivity.this);
+            String email = u.getEmail(StartActivity.this);
+
+            User user = new User(username, password, email);
+            startMaps(user);
         }
     }
-
-
-    private void checkIfUsernameExists(String username) {
-        lowercaseUserNames.child(username.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    String password = u.getPassword(StartActivity.this);
-                    String email = u.getEmail(StartActivity.this);
-
-                    User user = new User(username, password, email);
-                    startMaps(user);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
 
 }

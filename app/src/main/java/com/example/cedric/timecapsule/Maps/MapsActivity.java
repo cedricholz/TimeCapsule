@@ -114,33 +114,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         u = new Utils();
 
         placeTiles = new ArrayList<>();
-        //addBearLandmarksToFirebase();
+        //u.addBearLandmarksToFirebase();
 
         addButtonListeners();
     }
 
-    public void addBearLandmarksToFirebase() {
-
-        String jsonString = u.loadJSONFromAsset("bear_statues.json", this);
-        Place[] landmarks = new Gson().fromJson(jsonString, Place[].class);
-
-        for (Place lm : landmarks) {
-            String[] coordinatesSplit = lm.getCoordinates().split(",");
-            Double lat = Double.parseDouble(coordinatesSplit[0]);
-            Double lon = Double.parseDouble(coordinatesSplit[1]);
-
-            geoFire.setLocation(lm.getLandmark_name() + "%University Of California, Berkeley%" + lm.getFilename(), new GeoLocation(lat, lon), new GeoFire.CompletionListener() {
-                @Override
-                public void onComplete(String key, DatabaseError error) {
-                    if (error != null) {
-                        System.err.println("There was an error saving the location to GeoFire: " + error);
-                    } else {
-                        System.out.println("Location saved on server successfully!");
-                    }
-                }
-            });
-        }
-    }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -323,7 +301,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    // TODO making private
+
     public void addButtonListeners() {
 
         addButton = findViewById(R.id.addButton);
@@ -364,8 +342,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             nearbyDialogIntent = new Intent(MapsActivity.this, NearbyDialog.class);
             startActivity(nearbyDialogIntent);
-
         });
+
 
         messagesButton = findViewById(R.id.messaging);
         messagesButton.setOnClickListener(arg0 -> {
@@ -491,14 +469,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    // TODO making boxes
+    public void checkIfBoxIsPrivate(String key) {
+
+        myRef.child(key).child("creator").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String creator = (String) dataSnapshot.getValue();
+                if (creator != null) {
+                    locationMarked = true;
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+
+    }
+
     public void createBoxIfFree(LatLng loc, final String title, boolean checked) {
         GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(loc.latitude, loc.longitude), u.getValidDistanceFromMarkerForNewMarkerKm());
         locationMarked = false;
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                locationMarked = true;
+                checkIfBoxIsPrivate(key);
             }
 
             @Override

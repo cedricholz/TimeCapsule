@@ -80,7 +80,7 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder {
         mPlaceImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                if (SystemClock.elapsedRealtime() - mLastClickTime > 1000){
+                if (SystemClock.elapsedRealtime() - mLastClickTime > 1000) {
                     PlaceTile recyclerTile = placeTiles.get(getAdapterPosition());
                     Double distance = Double.parseDouble(recyclerTile.distance.split(" ")[0]);
 
