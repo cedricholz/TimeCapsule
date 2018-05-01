@@ -92,6 +92,7 @@
             android:id="@+id/photos_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:background="@drawable/ic_camera_alt_black_24dp" />
 
         <TextView
@@ -102,6 +103,7 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/photos_image"
             android:paddingLeft="2dp"
+
             android:text="2"
             android:textSize="18sp" />
 
@@ -111,8 +113,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/num_photos"
+            android:layout_marginLeft="15dp"
+
             android:background="@drawable/small_message"
-            android:paddingLeft="10dp" />
+             />
 
         <TextView
             android:id="@+id/num_comments"

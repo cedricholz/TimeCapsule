@@ -73,7 +73,7 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder implements View.OnClic
         mPlaceImage = mPlaceBubbleLayout.findViewById(R.id.place_image_view);
         mPlaceTileName = mPlaceBubbleLayout.findViewById(R.id.place_tile_name);
         mPLaceTileDistance = mPlaceBubbleLayout.findViewById(R.id.place_tile_distance);
-
+        itemView.setOnClickListener(this);
         this.placeTiles = placeTiles;
         u = new Utils();
     }
