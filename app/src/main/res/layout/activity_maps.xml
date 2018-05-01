@@ -50,7 +50,7 @@
 
 
             android:background="#D9FFFFFF"
-            android:src="@drawable/ic_mail_blue_24dp" />
+            android:src="@drawable/ic_email" />
 
         <ImageButton
             android:id="@+id/addButton"
