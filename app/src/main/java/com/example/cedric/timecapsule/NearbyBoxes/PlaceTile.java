@@ -12,10 +12,11 @@ public class PlaceTile implements Serializable {
     public String numComments;
     public String distance;
     public String address;
+    public String key;
 
     public String timestamp;
 
-    public PlaceTile(String imageName, String placeName, String distance, String address, String numPhotos, String numComments, String timestamp) {
+    public PlaceTile(String imageName, String placeName, String distance, String address, String numPhotos, String numComments, String timestamp, String key) {
         this.imageName = imageName;
         this.placeName = placeName;
         this.distance = distance;
@@ -25,6 +26,8 @@ public class PlaceTile implements Serializable {
         this.numComments = numComments;
 
         this.timestamp = timestamp;
+
+        this.key = key;
     }
 
     public String getDate() {

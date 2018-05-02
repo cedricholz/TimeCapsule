@@ -426,8 +426,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
-
     }
 
 
@@ -436,8 +434,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         df.setMaximumFractionDigits(2);
 
         String distance = df.format(u.getDistance(userLocation, markerLatLng) / 1000) + " KM";
-        PlaceTile pt = new PlaceTile(finalFileName, finalTitle, distance, finalAddress, "0", "0", "0");
+        PlaceTile pt = new PlaceTile(finalFileName, finalTitle, distance, finalAddress, "0", "0", "0", key);
         getPlaceTileDataAndAdd(key, pt);
+
 
         MarkerOptions m = new MarkerOptions();
         m.position(markerLatLng).title(finalTitle);

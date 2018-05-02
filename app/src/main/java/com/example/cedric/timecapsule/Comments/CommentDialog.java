@@ -230,7 +230,7 @@ public class CommentDialog extends Activity {
                                     myRef.child("lowercaseUsers").child(content.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
-                                            String user = (String) dataSnapshot.getKey();
+                                            String user = dataSnapshot.getKey();
 
                                             if (user != null) {
                                                 myRef.child(key)

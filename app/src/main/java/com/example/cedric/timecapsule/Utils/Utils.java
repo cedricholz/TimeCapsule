@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 
 import com.example.cedric.timecapsule.NearbyBoxes.Place;
+import com.example.cedric.timecapsule.NearbyBoxes.PlaceTile;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.maps.model.LatLng;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 
 public class Utils {
@@ -169,6 +171,13 @@ public class Utils {
         editor.putString("email", email).commit();
     }
 
+
+    public void savePlaceTiles(SharedPreferences prefs, ArrayList<PlaceTile> placeTiles) {
+        SharedPreferences.Editor editor = prefs.edit();
+        Gson gson = new Gson();
+        String jsonPlaceTiles = gson.toJson(placeTiles);
+        editor.putString("placeTiles", jsonPlaceTiles).commit();
+    }
 
     public void addBearLandmarksToFirebase(Context c) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();

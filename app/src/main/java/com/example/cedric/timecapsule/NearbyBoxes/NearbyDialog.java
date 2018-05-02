@@ -11,20 +11,33 @@ import android.view.Window;
 import android.widget.Button;
 
 import com.example.cedric.timecapsule.R;
+import com.example.cedric.timecapsule.Utils.Utils;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 
 public class NearbyDialog extends Activity {
 
+    FirebaseDatabase database;
+    SharedPreferences prefs;
+    DatabaseReference myRef;
+    Utils u;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private ArrayList<PlaceTile> mPlaceTiles = new ArrayList<>();
+    private HashMap<String, PlaceTile> mPlaceTileHashmap = new HashMap<>();
     private Button refreshButton;
 
     @Override
@@ -39,10 +52,20 @@ public class NearbyDialog extends Activity {
 
         setRefreshListener();
 
+        u = new Utils();
+
+        prefs = this.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("locations");
+
         mPlaceTiles = getmPlaceTiles();
 
         if (mPlaceTiles != null) {
             mPlaceTiles = sortTiles(mPlaceTiles);
+
+            setPlaceTileListeners();
             setAdapterAndUpdateData();
         }
     }
@@ -58,26 +81,67 @@ public class NearbyDialog extends Activity {
         });
     }
 
+
+    public void setPlaceTileListeners() {
+
+        for (PlaceTile pt : mPlaceTiles) {
+            listenForAddedNumCommentsAndPhotos(pt);
+        }
+    }
+
+
+    private void listenForAddedNumCommentsAndPhotos(PlaceTile pt) {
+        myRef.child(pt.key).child("data").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String photos = (String) dataSnapshot.child("photos").getValue();
+                String comments = (String) dataSnapshot.child("comments").getValue();
+
+                boolean updated = false;
+                if (photos != null && !photos.equals(pt.numPhotos)) {
+                    updated = true;
+                    pt.numPhotos = photos;
+                }
+                if (comments != null && !comments.equals(pt.numComments)) {
+                    updated = true;
+                    pt.numComments = comments;
+                }
+
+                if (updated) {
+                    u.savePlaceTiles(prefs, mPlaceTiles);
+                    setAdapterAndUpdateData();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // work left
+            }
+        });
+    }
+
+
     public ArrayList<PlaceTile> getmPlaceTiles() {
-            SharedPreferences settings = this.getSharedPreferences(
-                    "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        SharedPreferences settings = this.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
 
-            List<PlaceTile> placeTiles;
+        List<PlaceTile> placeTiles;
 
-            if (settings.contains("placeTiles")) {
-                String jsonPlaceTile = settings.getString("placeTiles", "");
+        if (settings.contains("placeTiles")) {
+            String jsonPlaceTile = settings.getString("placeTiles", "");
 
-                Gson gson = new Gson();
+            Gson gson = new Gson();
 
-                PlaceTile[] placeTileArray = gson.fromJson(jsonPlaceTile, PlaceTile[].class);
+            PlaceTile[] placeTileArray = gson.fromJson(jsonPlaceTile, PlaceTile[].class);
 
-                placeTiles = Arrays.asList(placeTileArray);
-                placeTiles = new ArrayList<>(placeTiles);
+            placeTiles = Arrays.asList(placeTileArray);
+            placeTiles = new ArrayList<>(placeTiles);
 
-                return  (ArrayList<PlaceTile>) placeTiles;
+            return (ArrayList<PlaceTile>) placeTiles;
 
-            } else {
-                return new ArrayList<>();
+        } else {
+            return new ArrayList<>();
         }
     }
 
