@@ -398,15 +398,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    public void getPlaceTileDataAndAdd(String key, PlaceTile pt) {
+
+        myRef.child(key).child("data").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String photos = (String) dataSnapshot.child("photos").getValue();
+                String comments = (String) dataSnapshot.child("comments").getValue();
+                String timestamp = (String) dataSnapshot.child("timestamp").getValue();
+
+                if (photos != null) {
+                    pt.numPhotos = photos;
+                }
+                if (comments != null) {
+                    pt.numComments = comments;
+                }
+
+                if (timestamp != null) {
+                    pt.timestamp = timestamp;
+                }
+
+                placeTiles.add(pt);
+                savePlaceTiles();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+
+    }
+
+
     public void setMarker(String key, String finalFileName, String finalTitle, String finalAddress, LatLng markerLatLng) {
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(2);
 
         String distance = df.format(u.getDistance(userLocation, markerLatLng) / 1000) + " KM";
-        PlaceTile pt = new PlaceTile(finalFileName, finalTitle, distance, finalAddress);
-        placeTiles.add(pt);
-
-        savePlaceTiles();
+        PlaceTile pt = new PlaceTile(finalFileName, finalTitle, distance, finalAddress, "0", "0", "0");
+        getPlaceTileDataAndAdd(key, pt);
 
         MarkerOptions m = new MarkerOptions();
         m.position(markerLatLng).title(finalTitle);
@@ -544,7 +575,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                             .child("creator").setValue(username);
                                 }
                                 String timeStamp = Long.toString(System.currentTimeMillis());
-                                myRef.child(key).child("date").setValue(timeStamp);
+                                myRef.child(key).child("data").child("timestamp").setValue(timeStamp);
                             }
                         }
                     });

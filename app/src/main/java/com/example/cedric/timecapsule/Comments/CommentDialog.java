@@ -523,14 +523,14 @@ public class CommentDialog extends Activity {
 
 
     public void updateCounter(String type) {
-        myRef.child(key).child(type).addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.child(key).child("data").child(type).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() == null) {
-                    myRef.child(key).child(type).setValue("1");
+                    myRef.child(key).child("data").child(type).setValue("1");
                 } else {
                     int count = Integer.parseInt((String) dataSnapshot.getValue()) + 1;
-                    myRef.child(key).child(type).setValue(Integer.toString(count));
+                    myRef.child(key).child("data").child(type).setValue(Integer.toString(count));
                 }
             }
 

@@ -61,7 +61,11 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder implements View.OnClic
     public RelativeLayout mPlaceBubbleLayout;
     public ImageButton mPlaceImage;
     public TextView mPlaceTileName;
-    public TextView mPLaceTileDistance;
+    public TextView mPlaceTilenumPhotos;
+    public TextView mPlaceTilenumComments;
+    public TextView mPlaceTiledateAdded;
+
+    public TextView mPlaceTileDistance;
     public ArrayList<PlaceTile> placeTiles;
 
     Utils u;
@@ -72,7 +76,14 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder implements View.OnClic
         mPlaceBubbleLayout = itemView.findViewById(R.id.place_tile_cell_relative_layout);
         mPlaceImage = mPlaceBubbleLayout.findViewById(R.id.place_image_view);
         mPlaceTileName = mPlaceBubbleLayout.findViewById(R.id.place_tile_name);
-        mPLaceTileDistance = mPlaceBubbleLayout.findViewById(R.id.place_tile_distance);
+        mPlaceTileDistance = mPlaceBubbleLayout.findViewById(R.id.place_tile_distance);
+
+        mPlaceTilenumPhotos = mPlaceBubbleLayout.findViewById(R.id.num_photos);
+        mPlaceTilenumComments = mPlaceBubbleLayout.findViewById(R.id.num_comments);
+
+        mPlaceTiledateAdded = mPlaceBubbleLayout.findViewById(R.id.date_added);
+
+
         itemView.setOnClickListener(this);
         this.placeTiles = placeTiles;
         u = new Utils();
@@ -80,13 +91,19 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder implements View.OnClic
 
     void bind(PlaceTile placeTile) {
         mPlaceTileName.setText(placeTile.placeName);
-        mPLaceTileDistance.setText(placeTile.distance);
+        mPlaceTileDistance.setText(placeTile.distance);
         Context context = mPlaceImage.getContext();
 
         String imageName = placeTile.imageName;
 
         int imageId = context.getResources().getIdentifier(imageName, "drawable", context.getPackageName());
         mPlaceImage.setImageResource(imageId);
+
+        mPlaceTilenumComments.setText(placeTile.numComments);
+        mPlaceTilenumPhotos.setText(placeTile.numPhotos);
+
+        mPlaceTiledateAdded.setText(placeTile.getDate());
+
     }
 
     @Override
