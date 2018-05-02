@@ -19,49 +19,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
-
-        android:background="#D9FFFFFF"
         android:layout_margin="10dp"
-
+        android:background="#D9FFFFFF"
         android:orientation="vertical">
-
 
 
         <ImageButton
             android:id="@+id/boxesButton"
-            android:padding="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_centerHorizontal="true"
-
             android:background="#D9FFFFFF"
+            android:padding="5dp"
             android:src="@drawable/smallthreeblocks" />
 
 
         <ImageButton
             android:id="@+id/messaging"
-            android:padding="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/boxesButton"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
-
-
             android:background="#D9FFFFFF"
+
+
+            android:padding="5dp"
             android:src="@drawable/ic_email" />
 
         <ImageButton
             android:id="@+id/addButton"
-            android:paddingBottom="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:layout_centerHorizontal="true"
-
             android:layout_below="@+id/messaging"
+            android:layout_centerHorizontal="true"
             android:background="#D9FFFFFF"
+            android:paddingBottom="5dp"
             android:src="@drawable/newbox" />
 
 
@@ -79,7 +72,6 @@
         android:background="#D9FFFFFF"
 
         android:src="@drawable/ic_power_settings_new_black_24dp" />
-
 
 
 </FrameLayout>
