@@ -171,6 +171,31 @@ public class Utils {
         editor.putString("email", email).commit();
     }
 
+    public void setLocation(Context c, Double lat, Double lon) {
+        String stringLat = Double.toString(lat);
+        String stringLon = Double.toString(lon);
+
+        SharedPreferences prefs = c.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putString("lat", stringLat).commit();
+        editor.putString("lon", stringLon).commit();
+    }
+
+    public LatLng getLocation(Context c) {
+
+        SharedPreferences prefs = c.getSharedPreferences(
+                "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        Double lat = Double.parseDouble(prefs.getString("lat", "0"));
+        Double lon = Double.parseDouble(prefs.getString("lon", "0"));
+
+        return new LatLng(lat, lon);
+
+    }
+
 
     public void savePlaceTiles(SharedPreferences prefs, ArrayList<PlaceTile> placeTiles) {
         SharedPreferences.Editor editor = prefs.edit();

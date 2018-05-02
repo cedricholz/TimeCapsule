@@ -18,7 +18,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -29,7 +28,6 @@ import com.example.cedric.timecapsule.Comments.CommentDialog;
 import com.example.cedric.timecapsule.Login.StartActivity;
 import com.example.cedric.timecapsule.Messaging.ConversationsDialog;
 import com.example.cedric.timecapsule.NearbyBoxes.NearbyDialog;
-import com.example.cedric.timecapsule.NearbyBoxes.Place;
 import com.example.cedric.timecapsule.NearbyBoxes.PlaceTile;
 import com.example.cedric.timecapsule.R;
 import com.example.cedric.timecapsule.Utils.Utils;
@@ -59,13 +57,9 @@ import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 import java.io.IOException;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -82,7 +76,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String username = "DEFAULT";
     private int mapStyle;
     private FirebaseDatabase database;
-    private DatabaseReference myRef;
+    private DatabaseReference locationsRef;
+
+    private DatabaseReference usersRef;
     private GeoFire geoFire;
     private Utils u;
     private ArrayList<PlaceTile> placeTiles;
@@ -110,8 +106,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         username = prefs.getString("username", "Anonymous");
 
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("locations");
-        geoFire = new GeoFire(myRef);
+        locationsRef = database.getReference("locations");
+        usersRef = database.getReference("users");
+
+        geoFire = new GeoFire(locationsRef);
 
         u = new Utils();
 
@@ -203,6 +201,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 lastLocation = userLocation;
 
                 userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+                u.setLocation(MapsActivity.this, location.getLatitude(), location.getLongitude());
+
 //                mMap.clear();
 
                 getNearbyMarkers(userLocation);
@@ -381,7 +382,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void checkIfBoxIsPrivate(String key, String finalFileName, String finalTitle, String finalAddress, LatLng markerLatLng) {
 
-        myRef.child(key).child("creator").addListenerForSingleValueEvent(new ValueEventListener() {
+        locationsRef.child(key).child("creator").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String creator = (String) dataSnapshot.getValue();
@@ -400,7 +401,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void getPlaceTileDataAndAdd(String key, PlaceTile pt) {
 
-        myRef.child(key).child("data").addListenerForSingleValueEvent(new ValueEventListener() {
+        locationsRef.child(key).child("data").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String photos = (String) dataSnapshot.child("photos").getValue();
@@ -449,7 +450,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void checkIfHaveAccess(String key, String finalFileName, String finalTitle, String finalAddress, LatLng markerLatLng) {
 
-        myRef.child(key).child("users").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+        locationsRef.child(key).child("users").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String myUsername = (String) dataSnapshot.getValue();
@@ -552,6 +553,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     m.position(userLocation).snippet(curAddress);
                     m.icon(BitmapDescriptorFactory.fromResource(R.drawable.orange));
 
+
                     Marker mark = mMap.addMarker(m);
                     mark.setTag("oski_bear");
 
@@ -563,18 +565,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             } else {
                                 System.out.println("Location saved on server successfully!");
                                 if (checked) {
-                                    FirebaseDatabase.getInstance()
-                                            .getReference("locations")
-                                            .child(key)
-                                            .child("users")
-                                            .child(username).setValue("1");
-                                    FirebaseDatabase.getInstance()
-                                            .getReference("locations")
-                                            .child(key)
-                                            .child("creator").setValue(username);
+                                    locationsRef.child(key).child("users").child(username).setValue("1");
+                                    locationsRef.child(key).child("creator").setValue(username);
                                 }
                                 String timeStamp = Long.toString(System.currentTimeMillis());
-                                myRef.child(key).child("data").child("timestamp").setValue(timeStamp);
+                                locationsRef.child(key).child("data").child("timestamp").setValue(timeStamp);
+
+                                usersRef.child(username).child("boxes").child(key).setValue("1");
+
+
                             }
                         }
                     });
@@ -603,7 +602,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     confirmButton.setOnClickListener(view -> {
                                         String content = editText.getText().toString();
                                         if (!content.equals("")) {
-                                            myRef.child("lowercaseUsers").child(content.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            locationsRef.child("lowercaseUsers").child(content.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
 

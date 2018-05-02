@@ -9,22 +9,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.example.cedric.timecapsule.R;
 import com.example.cedric.timecapsule.Utils.Utils;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.gson.Gson;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -32,13 +33,19 @@ public class NearbyDialog extends Activity {
 
     FirebaseDatabase database;
     SharedPreferences prefs;
-    DatabaseReference myRef;
+    DatabaseReference locationsRef;
+    DatabaseReference usersRef;
+
     Utils u;
+    android.support.v7.widget.Toolbar titleBar;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private ArrayList<PlaceTile> mPlaceTiles = new ArrayList<>();
-    private HashMap<String, PlaceTile> mPlaceTileHashmap = new HashMap<>();
-    private Button refreshButton;
+    private ArrayList<PlaceTile> nearbyPlaceTiles = new ArrayList<>();
+    private ArrayList<PlaceTile> userPlaceTiles = new ArrayList<>();
+    private ImageButton boxesSwitcher;
+    private String username;
+    private boolean nearby = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,67 +57,156 @@ public class NearbyDialog extends Activity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        setRefreshListener();
+        titleBar = findViewById(R.id.my_toolbar);
+        boxesSwitcher = findViewById(R.id.boxes_switcher);
 
         u = new Utils();
+
+        username = u.getUsername(this);
 
         prefs = this.getSharedPreferences(
                 "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
 
         database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("locations");
+        locationsRef = database.getReference("locations");
+        usersRef = database.getReference("users");
 
-        mPlaceTiles = getmPlaceTiles();
+        nearbyPlaceTiles = getNearbyPlaceTiles();
 
-        if (mPlaceTiles != null) {
-            mPlaceTiles = sortTiles(mPlaceTiles);
+        if (nearbyPlaceTiles != null) {
+            nearbyPlaceTiles = sortTiles(nearbyPlaceTiles);
 
-            setPlaceTileListeners();
-            setAdapterAndUpdateData();
+            setNearbyPlaceTileListeners();
+            setAdapterAndUpdateData(nearbyPlaceTiles);
         }
+
+        getUserBoxes();
+
+        setBoxesSwitcherListener();
     }
 
-    public void setRefreshListener() {
-        refreshButton = findViewById(R.id.refresh);
-        refreshButton.setOnClickListener(new View.OnClickListener() {
+    public void getUserBoxes() {
+        usersRef.child(username).child("boxes").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String boxKey = ds.getKey();
+                    addUserBox(boxKey);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // work left
+            }
+        });
+    }
+
+    public void addUserBox(String key) {
+        locationsRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String[] keyData = dataSnapshot.getKey().split("%");
+
+                String numPhotos = (String) dataSnapshot.child("data").child("photos").getValue();
+                if (numPhotos == null) {
+                    numPhotos = "0";
+                }
+
+                String numComments = (String) dataSnapshot.child("data").child("comments").getValue();
+                if (numComments == null) {
+                    numComments = "0";
+
+                }
+                String timestamp = (String) dataSnapshot.child("data").child("timestamp").getValue();
+
+                Double placeLat = (Double) dataSnapshot.child("l").child("0").getValue();
+                Double placeLon = (Double) dataSnapshot.child("l").child("1").getValue();
+
+                if (placeLat != null) {
+                    LatLng placeDist = new LatLng(placeLat, placeLon);
+
+                    LatLng userLocation = u.getLocation(NearbyDialog.this);
+
+                    DecimalFormat df = new DecimalFormat();
+                    df.setMaximumFractionDigits(2);
+
+                    String distance = df.format(u.getDistance(placeDist, userLocation) / 1000) + " KM";
+
+
+                    PlaceTile pt = new PlaceTile(keyData[2], keyData[0], distance, keyData[1], numPhotos, numComments, timestamp, key);
+
+                    listenForAddedNumCommentsAndPhotos(pt);
+                    userPlaceTiles.add(pt);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // work left
+            }
+        });
+    }
+
+    public void setBoxesSwitcherListener() {
+        boxesSwitcher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                mPlaceTiles = sortTiles(getmPlaceTiles());
-                setAdapterAndUpdateData();
+
+                if (!nearby) {
+                    titleBar.setTitle("Nearby Boxes");
+                    nearbyPlaceTiles = sortTiles(nearbyPlaceTiles);
+                    setAdapterAndUpdateData(nearbyPlaceTiles);
+                    nearby = true;
+                } else {
+                    titleBar.setTitle("My Boxes");
+                    userPlaceTiles = sortTiles(userPlaceTiles);
+                    setAdapterAndUpdateData(userPlaceTiles);
+                    nearby = false;
+                }
+
             }
         });
     }
 
 
-    public void setPlaceTileListeners() {
-
-        for (PlaceTile pt : mPlaceTiles) {
+    public void setNearbyPlaceTileListeners() {
+        for (PlaceTile pt : nearbyPlaceTiles) {
             listenForAddedNumCommentsAndPhotos(pt);
         }
     }
 
 
     private void listenForAddedNumCommentsAndPhotos(PlaceTile pt) {
-        myRef.child(pt.key).child("data").addListenerForSingleValueEvent(new ValueEventListener() {
+
+        locationsRef.child(pt.key).child("data").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 String photos = (String) dataSnapshot.child("photos").getValue();
                 String comments = (String) dataSnapshot.child("comments").getValue();
+                String timestamp = (String) dataSnapshot.child("timestamp").getValue();
 
                 boolean updated = false;
-                if (photos != null && !photos.equals(pt.numPhotos)) {
+                if (photos != null && !photos.equals(pt.numPhotos) && !photos.equals("")) {
                     updated = true;
                     pt.numPhotos = photos;
                 }
-                if (comments != null && !comments.equals(pt.numComments)) {
+                if (comments != null && !comments.equals(pt.numComments) && !comments.equals("")) {
                     updated = true;
                     pt.numComments = comments;
                 }
+                if (timestamp != null && !timestamp.equals(pt.timestamp) && !timestamp.equals("")) {
+                    updated = true;
+                    pt.timestamp = timestamp;
+                }
 
                 if (updated) {
-                    u.savePlaceTiles(prefs, mPlaceTiles);
-                    setAdapterAndUpdateData();
+                    u.savePlaceTiles(prefs, nearbyPlaceTiles);
+                    setAdapterAndUpdateData(nearbyPlaceTiles);
                 }
             }
 
@@ -122,7 +218,7 @@ public class NearbyDialog extends Activity {
     }
 
 
-    public ArrayList<PlaceTile> getmPlaceTiles() {
+    public ArrayList<PlaceTile> getNearbyPlaceTiles() {
         SharedPreferences settings = this.getSharedPreferences(
                 "com.example.cedric.timecapsule", Context.MODE_PRIVATE);
 
@@ -155,8 +251,8 @@ public class NearbyDialog extends Activity {
     }
 
 
-    private void setAdapterAndUpdateData() {
-        mAdapter = new PlaceTileAdapter(this, mPlaceTiles);
+    private void setAdapterAndUpdateData(ArrayList<PlaceTile> pt) {
+        mAdapter = new PlaceTileAdapter(this, pt);
         mRecyclerView.setAdapter(mAdapter);
         // scroll to the last
         // mRecyclerView.smoothScrollToPosition(mPlaceTiles.size() - 1);
