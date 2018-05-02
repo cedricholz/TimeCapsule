@@ -435,7 +435,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         df.setMaximumFractionDigits(2);
 
         String distance = df.format(u.getDistance(userLocation, markerLatLng) / 1000) + " KM";
-        PlaceTile pt = new PlaceTile(finalFileName, finalTitle, distance, finalAddress, "0", "0", "0", key);
+        PlaceTile pt = new PlaceTile(finalFileName, finalTitle, distance, finalAddress, "0", "0", "0", key, false);
         getPlaceTileDataAndAdd(key, pt);
 
 
@@ -567,6 +567,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 if (checked) {
                                     locationsRef.child(key).child("users").child(username).setValue("1");
                                     locationsRef.child(key).child("creator").setValue(username);
+                                    locationsRef.child(key).child("data").child("isPrivate").setValue("true");
                                 }
                                 String timeStamp = Long.toString(System.currentTimeMillis());
                                 locationsRef.child(key).child("data").child("timestamp").setValue(timeStamp);
@@ -606,7 +607,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                 @Override
                                                 public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                                    String user = (String) dataSnapshot.getKey();
+                                                    String user = dataSnapshot.getKey();
 
                                                     if (user != null) {
                                                         FirebaseDatabase.getInstance()

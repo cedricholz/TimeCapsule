@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,11 +65,10 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder implements View.OnClic
     public TextView mPlaceTilenumPhotos;
     public TextView mPlaceTilenumComments;
     public TextView mPlaceTiledateAdded;
-
     public TextView mPlaceTileDistance;
     public ArrayList<PlaceTile> placeTiles;
-
     Utils u;
+    private ImageView mLockImage;
     private long mLastClickTime = 0;
 
     public PlaceTileViewHolder(final View itemView, final ArrayList<PlaceTile> placeTiles) {
@@ -82,6 +82,8 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder implements View.OnClic
         mPlaceTilenumComments = mPlaceBubbleLayout.findViewById(R.id.num_comments);
 
         mPlaceTiledateAdded = mPlaceBubbleLayout.findViewById(R.id.date_added);
+
+        mLockImage = mPlaceBubbleLayout.findViewById(R.id.lock);
 
 
         itemView.setOnClickListener(this);
@@ -103,6 +105,10 @@ class PlaceTileViewHolder extends RecyclerView.ViewHolder implements View.OnClic
         mPlaceTilenumPhotos.setText(placeTile.numPhotos);
 
         mPlaceTiledateAdded.setText(placeTile.getDate());
+
+        if (placeTile.isPrivate) {
+            mLockImage.setVisibility(View.VISIBLE);
+        }
 
     }
 

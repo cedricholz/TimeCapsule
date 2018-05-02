@@ -120,6 +120,12 @@ public class NearbyDialog extends Activity {
                     numComments = "0";
 
                 }
+
+                boolean isPrivate = false;
+                if (dataSnapshot.child("creator").getValue() != null) {
+                    isPrivate = true;
+                }
+
                 String timestamp = (String) dataSnapshot.child("data").child("timestamp").getValue();
 
                 Double placeLat = (Double) dataSnapshot.child("l").child("0").getValue();
@@ -136,7 +142,7 @@ public class NearbyDialog extends Activity {
                     String distance = df.format(u.getDistance(placeDist, userLocation) / 1000) + " KM";
 
 
-                    PlaceTile pt = new PlaceTile(keyData[2], keyData[0], distance, keyData[1], numPhotos, numComments, timestamp, key);
+                    PlaceTile pt = new PlaceTile(keyData[2], keyData[0], distance, keyData[1], numPhotos, numComments, timestamp, key, isPrivate);
 
                     listenForAddedNumCommentsAndPhotos(pt);
                     userPlaceTiles.add(pt);
@@ -189,6 +195,7 @@ public class NearbyDialog extends Activity {
                 String photos = (String) dataSnapshot.child("photos").getValue();
                 String comments = (String) dataSnapshot.child("comments").getValue();
                 String timestamp = (String) dataSnapshot.child("timestamp").getValue();
+                String isPrivate = (String) dataSnapshot.child("isPrivate").getValue();
 
                 boolean updated = false;
                 if (photos != null && !photos.equals(pt.numPhotos) && !photos.equals("")) {
@@ -203,6 +210,16 @@ public class NearbyDialog extends Activity {
                     updated = true;
                     pt.timestamp = timestamp;
                 }
+
+                if (isPrivate != null && !isPrivate.equals("")) {
+
+                    if (pt.isPrivate == false) {
+                        updated = true;
+                        pt.isPrivate = true;
+
+                    }
+                }
+
 
                 if (updated) {
                     u.savePlaceTiles(prefs, nearbyPlaceTiles);
