@@ -437,6 +437,8 @@ public class CommentDialog extends Activity {
                     commentHashMap.put(timeStamp + m, c);
 
                     setAdapterAndUpdateData();
+                } else {
+                    getNewChildData(commentKey);
                 }
             }
 

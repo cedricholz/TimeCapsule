@@ -247,7 +247,7 @@ class CommentViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         mUsernameTextView.setText(comment.username);
         boolean isHead = comment.headComment;
 
-        if (comment.replies != null && !comment.replies.equals("0")) {
+        if (comment.replies != null && !comment.replies.equals("0") && comment.replies !=  "") {
             String replyString;
             if (comment.replies.equals("1")) {
                 replyString = comment.replies + " Reply";

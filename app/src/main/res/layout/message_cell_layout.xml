@@ -67,10 +67,12 @@
 
         <ImageView
             android:id="@+id/left_image"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/oski_bear"
-            android:scaleType="fitXY"/>
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            />
 
     </RelativeLayout>
 
@@ -116,10 +118,13 @@
 
         <ImageView
             android:id="@+id/right_image"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/loading_image"
-            android:scaleType="fitXY"/>
+
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+           />
 
     </RelativeLayout>
 

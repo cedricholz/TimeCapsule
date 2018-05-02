@@ -138,6 +138,8 @@ class MessageViewHolder extends RecyclerView.ViewHolder {
 
             if (message.text != "" && message.text.length() >= 1) {
                 mRightDateTextView.setVisibility(View.VISIBLE);
+                mRightDateTextView.setText(message.elapsedTimeString());
+
                 mRightMessageTextView.setVisibility(View.VISIBLE);
                 mRightMessageTextView.setText(message.text);
             }

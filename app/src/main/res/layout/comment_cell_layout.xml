@@ -46,8 +46,9 @@
         android:layout_toStartOf="@+id/vote_layout"
         android:src="@drawable/loading_image"
         android:background="@color/white"
-        android:adjustViewBounds="true"
+
         android:visibility="gone"
+        android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         />
 

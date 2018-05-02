@@ -377,6 +377,62 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         editor.putString("placeTiles", jsonPlaceTiles).commit();
     }
 
+    public void checkIfBoxIsPrivate(String key, String finalFileName, String finalTitle, String finalAddress, LatLng markerLatLng) {
+
+        myRef.child(key).child("creator").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String creator = (String) dataSnapshot.getValue();
+                if (creator != null) {
+                    checkIfHaveAccess(key, finalFileName, finalTitle, finalAddress, markerLatLng);
+                } else {
+                    setMarker(key, finalFileName, finalTitle, finalAddress, markerLatLng);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void setMarker(String key, String finalFileName, String finalTitle, String finalAddress, LatLng markerLatLng) {
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+
+        String distance = df.format(u.getDistance(userLocation, markerLatLng) / 1000) + " KM";
+        PlaceTile pt = new PlaceTile(finalFileName, finalTitle, distance, finalAddress);
+        placeTiles.add(pt);
+
+        savePlaceTiles();
+
+        MarkerOptions m = new MarkerOptions();
+        m.position(markerLatLng).title(finalTitle);
+        m.position(markerLatLng).snippet(finalAddress);
+        m.icon(BitmapDescriptorFactory.fromResource(R.drawable.orange));
+
+        Marker mark = mMap.addMarker(m);
+        mark.setTag(finalFileName);
+    }
+
+    public void checkIfHaveAccess(String key, String finalFileName, String finalTitle, String finalAddress, LatLng markerLatLng) {
+
+        myRef.child(key).child("users").child(username).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String myUsername = (String) dataSnapshot.getValue();
+                if (myUsername != null) {
+                    setMarker(key, finalFileName, finalTitle, finalAddress, markerLatLng);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+
     // TODO private boxes
     public void getNearbyMarkers(final LatLng loc) {
 
@@ -410,38 +466,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         String finalFileName = fileName;
                         String finalTitle = title;
                         String finalAddress = address;
-                        FirebaseDatabase.getInstance()
-                                .getReference("locations")
-                                .child(title + "%" + curAddress + "%oski_bear")
-                                .child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                HashMap<String, String> users = (HashMap<String, String>) dataSnapshot.getValue();
-                                if (users == null || users.containsKey(username)) {
-                                    DecimalFormat df = new DecimalFormat();
-                                    df.setMaximumFractionDigits(2);
-
-                                    String distance = df.format(u.getDistance(userLocation, markerLatLng) / 1000) + " KM";
-                                    PlaceTile pt = new PlaceTile(finalFileName, finalTitle, distance, finalAddress);
-                                    placeTiles.add(pt);
-
-                                    savePlaceTiles();
-
-                                    MarkerOptions m = new MarkerOptions();
-                                    m.position(markerLatLng).title(finalTitle);
-                                    m.position(markerLatLng).snippet(finalAddress);
-                                    m.icon(BitmapDescriptorFactory.fromResource(R.drawable.orange));
-
-                                    Marker mark = mMap.addMarker(m);
-                                    mark.setTag(finalFileName);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                //TODO databaseerror
-                            }
-                        });
+                        checkIfBoxIsPrivate(key, finalFileName, finalTitle, finalAddress, markerLatLng);
                     }
                     lastAdded = title;
                 }
@@ -469,32 +494,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void checkIfBoxIsPrivate(String key) {
-
-        myRef.child(key).child("creator").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String creator = (String) dataSnapshot.getValue();
-                if (creator != null) {
-                    locationMarked = true;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-
-
-    }
-
     public void createBoxIfFree(LatLng loc, final String title, boolean checked) {
         GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(loc.latitude, loc.longitude), u.getValidDistanceFromMarkerForNewMarkerKm());
         locationMarked = false;
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                checkIfBoxIsPrivate(key);
+                locationMarked = true;
             }
 
             @Override

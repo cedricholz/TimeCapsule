@@ -329,7 +329,7 @@ public class MessageDialog extends Activity {
                 String highresUrl = (String) dataSnapshot.child("highresUrl").getValue();
                 String thumbUrl = (String) dataSnapshot.child("thumbUrl").getValue();
 
-                if (m == null) {
+                if (date == null) {
                     getNewMessage(k);
                 } else {
                     Date d = new Date(date);
@@ -363,7 +363,7 @@ public class MessageDialog extends Activity {
                 String highresUrl = (String) dataSnapshot.child("highresUrl").getValue();
                 String thumbUrl = (String) dataSnapshot.child("thumbUrl").getValue();
 
-                if (m == null) {
+                if (m == null || date == null) {
                     getNewMessage(dataSnapshot.getKey());
                 }
 
