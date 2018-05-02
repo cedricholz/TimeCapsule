@@ -59,7 +59,9 @@ import com.yarolegovich.lovelydialog.LovelyTextInputDialog;
 import java.io.IOException;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -533,15 +535,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 if (checked) {
                                     FirebaseDatabase.getInstance()
                                             .getReference("locations")
-                                            .child(title + "%" + curAddress + "%oski_bear")
+                                            .child(key)
                                             .child("users")
                                             .child(username).setValue("1");
                                     FirebaseDatabase.getInstance()
                                             .getReference("locations")
-                                            .child(title + "%" + curAddress + "%oski_bear")
+                                            .child(key)
                                             .child("creator").setValue(username);
-
                                 }
+                                String timeStamp = Long.toString(System.currentTimeMillis());
+                                myRef.child(key).child("date").setValue(timeStamp);
                             }
                         }
                     });

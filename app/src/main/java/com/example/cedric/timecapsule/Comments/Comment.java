@@ -1,7 +1,5 @@
 package com.example.cedric.timecapsule.Comments;
 
-import com.squareup.picasso.RequestCreator;
-
 import java.util.Date;
 
 // custom class made for storing a message. you can update this class

@@ -470,7 +470,6 @@ public class CommentDialog extends Activity {
                 if (m != null) {
                     String timestamp = dataSnapshot.getKey();
 
-
                     Comment c = new Comment(m, u, timestamp, votes, key, false, replies,
                             refKey, commentLevel, highresUrl, thumbUrl);
 
@@ -523,6 +522,25 @@ public class CommentDialog extends Activity {
     }
 
 
+    public void updateCounter(String type) {
+        myRef.child(key).child(type).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() == null) {
+                    myRef.child(key).child(type).setValue("1");
+                } else {
+                    int count = Integer.parseInt((String) dataSnapshot.getValue()) + 1;
+                    myRef.child(key).child(type).setValue(Integer.toString(count));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void postNewComment(String commentText, String highresUrl, String thumbUrl) {
 
         String timeStamp = Long.toString(System.currentTimeMillis());
@@ -530,6 +548,7 @@ public class CommentDialog extends Activity {
         if (highresUrl != "") {
             myRef.child(key).child("Photo Gallery").child(timeStamp).child("highresUrl").setValue(highresUrl);
             myRef.child(key).child("Photo Gallery").child(timeStamp).child("thumbUrl").setValue(highresUrl);
+            updateCounter("photos");
         }
 
         myRef.child(key).child("messages").child(timeStamp).child("user").setValue(username);
@@ -538,6 +557,8 @@ public class CommentDialog extends Activity {
         myRef.child(key).child("messages").child(timeStamp).child("replies").setValue("0");
         myRef.child(key).child("messages").child(timeStamp).child("highresUrl").setValue(highresUrl);
         myRef.child(key).child("messages").child(timeStamp).child("thumbUrl").setValue(thumbUrl);
+
+        updateCounter("comments");
 
     }
 }
