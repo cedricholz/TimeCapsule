@@ -18,12 +18,25 @@ We provide a tool to help newcomers to an area become aware of local activities,
 
 ## Guide to Build and Run
 
-- download Android Studio
+- Download Android Studio
 
-- git clone in your preferred directory with following command
+- Git clone in your preferred directory with following command
 ''' bash
 git clone https://github.com/cs160-spring2018/proj-team-u.git
 '''
 
 - Click "Open an existing Android Studio project" and select proj-team-u folder
 ![android studio setup](/android_setup.png)
+
+- Attach your mobile device with USB cord or create a virtual device (We tested our mobile application with Virtual Device "Nexus 6 API 23") and click Run.
+
+#### Tips:
+- If you are testing with a virtual device, make sure to send your GPS location (longitude and latitude) to get started.
+![android studio setup](/giving_location.png)
+- Please check whether you are connected with the Firebase Realtime Database and Firebase Storage as shown.
+
+![android studio setup](/realtime_db.png)
+![android studio setup](/storage.png)
+
+####
+- Have fun!
