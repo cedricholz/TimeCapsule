@@ -21,9 +21,9 @@ We provide a tool to help newcomers to an area become aware of local activities,
 - Download Android Studio
 
 - Git clone in your preferred directory with following command
-''' bash
+``` bash
 git clone https://github.com/cs160-spring2018/proj-team-u.git
-'''
+```
 
 - Click "Open an existing Android Studio project" and select proj-team-u folder
 ![android studio setup](/android_setup.png)
