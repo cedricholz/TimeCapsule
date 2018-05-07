@@ -33,10 +33,12 @@ git clone https://github.com/cs160-spring2018/proj-team-u.git
 #### Tips:
 - If you are testing with a virtual device, make sure to send your GPS location (longitude and latitude) to get started.
 ![android studio setup](/giving_location.png)
-- Please check whether you are connected with the Firebase Realtime Database and Firebase Storage as shown.
+- Please check whether you are connected with the Firebase Realtime Database and Firebase Storage as shown. If you have a problem connecting to firebase database or firebase storage, please contact Justin Kim (hsjk@berkeley.edu) and he will assist you in helping you connect to firebase.
 
 ![android studio setup](/realtime_db.png)
 ![android studio setup](/storage.png)
+
+
 
 ####
 - Have fun!
